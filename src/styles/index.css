@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Palette - Temporary Elegant Boutique Direction */
+  --brand-primary: #7A2832;   /* Deep Wine / Burgundy */
+  --brand-accent: #C87D7D;    /* Muted Rose */
+  --brand-gold: #C5A059;      /* Antique Gold Accent */
+  
+  --brand-50: #FDF6F5;
+  --brand-100: #F9ECE9;
+  --brand-200: #F3D5D0;
+  --brand-300: #E7B0A8;
+  --brand-400: #D5867B;
+  --brand-500: #B75245;
+  --brand-600: #963B30;
+  --brand-700: #7A2832;
+  --brand-800: #611C24;
+  --brand-900: #4A131A;
+
+  /* Warm Ivory / Neutral Canvas */
+  --ivory-bg: #FDFBF7;
+  --ivory-50: #FDFBF7;
+  --ivory-100: #FAF7F2;
+  --ivory-200: #F4EFEA;
+  --ivory-300: #EEE7DE;
+  --ivory-400: #E4D9CC;
+
+  /* Typography Colors */
+  --text-primary: #231F20;
+  --text-secondary: #5C5552;
+  --text-muted: #8A817D;
+  --text-light: #B3AAA5;
+
+  /* Borders & Dividers */
+  --border-light: #ECE5DA;
+  --border-subtle: #F0EAE1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ivory-100);
+}
+::-webkit-scrollbar-thumb {
+  background: #D8CEBE;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-accent);
+}
+
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--ivory-bg);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-gold {
+  color: var(--brand-gold);
+}
+
+.bg-gold {
+  background-color: var(--brand-gold);
+}
+
