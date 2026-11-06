@@ -26,3 +26,4 @@ export const PAYMENT_METHODS: PaymentOption[] = [
     isProvisional: true,
   },
 ];
+

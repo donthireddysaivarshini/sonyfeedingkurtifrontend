@@ -13,8 +13,8 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
   activeCategorySlug,
 }) => {
   return (
-    <section id="categories" className="py-12 sm:py-16 bg-ivory-50 border-b border-ivory-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="categories" className="py-12 sm:py-16 bg-ivory-50 border-b border-ivory-300 w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
@@ -31,7 +31,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
         </div>
 
         {/* 8 Circular Categories Presentation (GSS Clothing Style) */}
-        <div className="flex sm:grid sm:grid-cols-4 lg:grid-cols-8 gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-4 sm:pb-0 px-2 sm:px-0 scroll-smooth">
+        <div className="w-full flex sm:grid sm:grid-cols-4 lg:grid-cols-8 gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-4 sm:pb-0 px-2 sm:px-0 scroll-smooth items-start justify-start sm:justify-center">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategorySlug === cat.slug;
             return (
@@ -43,7 +43,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                 {/* Circular Image Container */}
                 <div className="relative mb-2.5">
                   <div
-                    className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden p-1 transition-all duration-300 ease-out ${
+                    className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden p-1 transition-all duration-300 ease-out bg-white ${
                       isActive
                         ? 'ring-2 ring-brand-700 ring-offset-2 scale-105'
                         : 'ring-1 ring-ivory-300 group-hover:ring-2 group-hover:ring-brand-700 group-hover:ring-offset-2 group-hover:scale-105'
@@ -56,29 +56,23 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                       loading="lazy"
                     />
                   </div>
-
-                  {/* Feeding Indicator Dot */}
-                  <span
-                    className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-brand-700 border-2 border-white flex items-center justify-center text-[8px] text-white font-bold"
-                    title="Feeding option available"
-                  >
-                    ✓
-                  </span>
                 </div>
 
-                {/* Category Name & Count */}
-                <h3
-                  className={`text-xs sm:text-sm font-semibold transition-colors duration-200 line-clamp-1 ${
-                    isActive
-                      ? 'text-brand-700 font-bold'
-                      : 'text-ink-primary group-hover:text-brand-700'
-                  }`}
-                >
-                  {cat.name}
-                </h3>
-                <span className="text-[10px] text-ink-muted block mt-0.5 group-hover:text-ink-secondary">
-                  {cat.itemCount}
-                </span>
+                {/* Category Name & Count without truncating text */}
+                <div className="min-h-[2.5rem] flex flex-col items-center justify-start">
+                  <h3
+                    className={`text-xs sm:text-sm font-semibold transition-colors duration-200 text-center leading-snug px-0.5 ${
+                      isActive
+                        ? 'text-brand-700 font-bold'
+                        : 'text-ink-primary group-hover:text-brand-700'
+                    }`}
+                  >
+                    {cat.name}
+                  </h3>
+                  <span className="text-[10px] text-ink-muted block mt-0.5 group-hover:text-ink-secondary">
+                    {cat.itemCount}
+                  </span>
+                </div>
               </div>
             );
           })}
@@ -88,4 +82,3 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
     </section>
   );
 };
-

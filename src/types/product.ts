@@ -18,7 +18,7 @@ export interface ProductColor {
   imageIndex?: number;
 }
 
-export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL';
+export type ProductSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | '3XL' | 'Free Size';
 
 export interface ProductVariant {
   id: string;
@@ -89,8 +89,9 @@ export interface Product {
     description: string;
   };
   
-  rating: number;
-  reviewCount: number;
+  // Reviews & ratings are optional (populated post-launch)
+  rating?: number;
+  reviewCount?: number;
   reviews?: ProductReview[];
   
   isBestseller?: boolean;

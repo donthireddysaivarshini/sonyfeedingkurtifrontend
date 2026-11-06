@@ -47,11 +47,11 @@ export const BrandStorySection: React.FC = () => {
             </h2>
 
             <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
-              At <strong>Sony Feeding Kurtis</strong>, we believe entering motherhood should never mean compromising on your signature ethnic style or feeling awkward in public gatherings.
+              At <strong>Sony Feeding Kurtis</strong>, our mission is to offer thoughtfully designed women's ethnic wear that supports comfortable nursing access while celebrating traditional Indian aesthetics.
             </p>
 
             <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
-              Every kurti, frock, 3-piece suit, and lehenga in our boutique is meticulously tailored with twin concealed side zippers. Nested discreetly behind heritage borders and princess seams, our zips provide instant, one-handed nursing convenience without looking like medical or generic maternity clothes.
+              Our feeding-friendly designs incorporate twin concealed side zippers integrated along seams for discreet nursing convenience, while our standard ethnic wear collections offer classic tailored elegance for festive and everyday occasions.
             </p>
 
             {/* Core Values Bullets */}
@@ -61,8 +61,8 @@ export const BrandStorySection: React.FC = () => {
                   <Award className="w-4 h-4" />
                 </div>
                 <div>
-                  <h5 className="text-xs font-bold text-ink-primary">Handcrafted Silhouettes</h5>
-                  <p className="text-[11px] text-ink-muted">Tailored to drape comfortably pre & postpartum.</p>
+                  <h5 className="text-xs font-bold text-ink-primary">Comfortable Silhouettes</h5>
+                  <p className="text-[11px] text-ink-muted">Tailored to drape comfortably for daily wear.</p>
                 </div>
               </div>
 
@@ -71,8 +71,8 @@ export const BrandStorySection: React.FC = () => {
                   <Heart className="w-4 h-4" />
                 </div>
                 <div>
-                  <h5 className="text-xs font-bold text-ink-primary">Infant-Safe Textiles</h5>
-                  <p className="text-[11px] text-ink-muted">Hypoallergenic pure cottons and organic dyes.</p>
+                  <h5 className="text-xs font-bold text-ink-primary">Gentle Fabrics</h5>
+                  <p className="text-[11px] text-ink-muted">Soft mulmul cotton, chanderi, and georgette blends.</p>
                 </div>
               </div>
             </div>

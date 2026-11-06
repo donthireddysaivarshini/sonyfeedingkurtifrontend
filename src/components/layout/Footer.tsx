@@ -4,7 +4,7 @@ import { CATEGORIES } from '../../data/categories';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-ivory-200/90 text-ink-primary border-t border-ivory-300 pt-16 pb-8 transition-colors">
+    <footer className="bg-ivory-200/90 text-ink-primary border-t border-ivory-300 pt-14 pb-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Feature Badges Bar */}
@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
             </div>
             <div>
               <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Concealed Zips</h5>
-              <p className="text-[11px] text-ink-secondary">Dual invisible nursing openings</p>
+              <p className="text-[11px] text-ink-secondary">Dual invisible nursing openings on select styles</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -23,8 +23,8 @@ export const Footer: React.FC = () => {
               <ShieldCheck className="w-5 h-5 text-brand-700" />
             </div>
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">100% Breathable</h5>
-              <p className="text-[11px] text-ink-secondary">Baby-safe natural cottons & silks</p>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Selected Fabrics</h5>
+              <p className="text-[11px] text-ink-secondary">Soft mulmul cotton & festive silk blends</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -32,8 +32,8 @@ export const Footer: React.FC = () => {
               <Heart className="w-5 h-5 text-brand-700" />
             </div>
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Maternity & Beyond</h5>
-              <p className="text-[11px] text-ink-secondary">Flattering pre & post baby fit</p>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Maternity Ease</h5>
+              <p className="text-[11px] text-ink-secondary">Relaxed cuts for pre & postpartum wear</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -41,8 +41,8 @@ export const Footer: React.FC = () => {
               <Mail className="w-5 h-5 text-brand-700" />
             </div>
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Free Shipping</h5>
-              <p className="text-[11px] text-ink-secondary">All over India on orders ₹999+</p>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Pan-India Delivery</h5>
+              <p className="text-[11px] text-ink-secondary">Courier delivery across Indian postal codes</p>
             </div>
           </div>
         </div>
@@ -50,39 +50,32 @@ export const Footer: React.FC = () => {
         {/* Main Footer Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 py-12">
           
-          {/* Column 1: Brand Info (2 cols on lg) */}
+          {/* Column 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <span className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-brand-700 block uppercase">
               SONY FEEDING KURTIS
             </span>
             <p className="text-xs text-ink-secondary leading-relaxed max-w-sm">
-              Crafting premium Indian ethnic wear that lovingly embraces the journey of motherhood. 
-              Our designs seamlessly blend handcrafted elegance with discreet feeding access, so every mother feels confident, dignified, and comfortable.
+              Indian women's ethnic wear boutique specializing in frocks, co-ord sets, sarees, and maternity-friendly feeding kurtis designed for traditional grace and everyday ease.
             </p>
             <div className="flex items-center space-x-3 pt-2">
               <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
+                href="#"
+                aria-label="Instagram placeholder"
                 className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
               >
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
+                href="#"
+                aria-label="Facebook placeholder"
                 className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
               >
                 <Facebook className="w-4 h-4" />
               </a>
               <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
+                href="#"
+                aria-label="YouTube placeholder"
                 className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
               >
                 <Youtube className="w-4 h-4" />
@@ -127,7 +120,7 @@ export const Footer: React.FC = () => {
               ))}
               <li>
                 <a href="#feeding-highlight" className="text-brand-700 font-semibold hover:underline block py-0.5">
-                  Feeding Innovations
+                  Feeding Features
                 </a>
               </li>
             </ul>
@@ -136,52 +129,35 @@ export const Footer: React.FC = () => {
           {/* Column 4: Customer Care & Policies */}
           <div>
             <h4 className="font-serif text-sm font-bold text-ink-primary uppercase tracking-wider mb-4">
-              Help & Support
+              Customer Support
             </h4>
             <ul className="space-y-2 text-xs text-ink-secondary">
               <li className="flex items-center gap-1.5 text-ink-primary font-medium">
                 <Phone className="w-3.5 h-3.5 text-brand-700" />
-                <span>+91 98765 43210</span>
+                <span>Contact support details to be announced</span>
               </li>
               <li className="flex items-center gap-1.5 text-ink-muted">
                 <MapPin className="w-3.5 h-3.5 text-brand-700" />
-                <span>Hyderabad, India</span>
+                <span>India</span>
               </li>
-              <li>
-                <a href="#shipping-policy" className="hover:text-brand-700 transition-colors">
-                  Shipping & Delivery
-                </a>
-              </li>
-              <li>
-                <a href="#returns-policy" className="hover:text-brand-700 transition-colors">
-                  Returns & Exchanges
-                </a>
-              </li>
-              <li>
-                <a href="#size-guide" className="hover:text-brand-700 transition-colors">
-                  Feeding Size Guide
-                </a>
-              </li>
-              <li>
-                <a href="#privacy" className="hover:text-brand-700 transition-colors">
-                  Privacy Policy
-                </a>
+              <li className="pt-1 text-[11px] text-ink-muted leading-snug">
+                Official shipping, returns, and terms will follow client brand policies upon launch.
               </li>
             </ul>
           </div>
 
         </div>
 
-        {/* Bottom Bar: Copyright & Payment Badges */}
+        {/* Bottom Bar */}
         <div className="pt-8 mt-8 border-t border-ivory-300 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-ink-muted">
           <div>
-            © {new Date().getFullYear()} <strong>SONY FEEDING KURTIS</strong>. All rights reserved. Handcrafted with love in India.
+            © {new Date().getFullYear()} <strong>SONY FEEDING KURTIS</strong>. All rights reserved.
           </div>
           
-          {/* Payment Badges Indicator */}
-          <div className="flex items-center gap-2">
+          {/* Payment Badges */}
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-1.5 sm:gap-2">
             <span className="text-[10px] uppercase font-semibold text-ink-secondary mr-1">
-              Secure Payments by
+              Planned Payments:
             </span>
             <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-blue-800">
               Razorpay
@@ -189,11 +165,11 @@ export const Footer: React.FC = () => {
             <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-indigo-700">
               UPI
             </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-amber-700">
+            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-gray-700">
               Cards
             </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-emerald-800">
-              NetBanking
+            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-medium text-amber-800">
+              COD (Provisional)
             </span>
           </div>
         </div>

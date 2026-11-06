@@ -44,21 +44,21 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
   });
 
   return (
-    <section id="bestsellers" className="py-14 sm:py-20 bg-ivory-50/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="bestsellers" className="py-14 sm:py-20 bg-ivory-50/50 w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-2 border border-brand-200">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-              <span>Customer Favourites</span>
+              <span>Curated Selection</span>
             </div>
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary tracking-tight">
               Featured Ethnic Styles
             </h2>
             <p className="text-xs sm:text-sm text-ink-secondary mt-1">
-              Handpicked designs blending effortless feeding access with royal Indian craftsmanship.
+              Handcrafted designs combining practical feeding options with traditional silhouettes.
             </p>
           </div>
 
@@ -81,7 +81,7 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
         </div>
 
         {/* Collection Tabs */}
-        <div className="flex items-center space-x-2 sm:space-x-4 border-b border-ivory-300 mb-8 overflow-x-auto no-scrollbar">
+        <div className="w-full flex items-center space-x-2 sm:space-x-4 border-b border-ivory-300 mb-8 overflow-x-auto no-scrollbar">
           {[
             { id: 'bestsellers', label: 'Bestselling Styles' },
             { id: 'feeding', label: 'Feeding Favourites' },

@@ -38,7 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           onClick={() => onViewDetails && onViewDetails(product)}
         />
 
-        {/* Top Badges */}
+        {/* Top Badges (Only legitimate category/catalog tags) */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start z-10">
           {product.badge && (
             <span
@@ -47,16 +47,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   ? 'bg-brand-700 text-white'
                   : product.badge === 'Feeding Essential'
                   ? 'bg-emerald-700 text-white'
-                  : 'bg-amber-600 text-white'
+                  : 'bg-amber-700 text-white'
               }`}
             >
               {product.badge}
-            </span>
-          )}
-
-          {product.discountPercentage && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
-              {product.discountPercentage}% OFF
             </span>
           )}
         </div>
@@ -77,7 +71,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
         </button>
 
-        {/* Feeding Feature Micro-Pill based on FeedingConfiguration */}
+        {/* Feeding Feature Badge based on FeedingConfiguration */}
         {product.feedingConfig === 'both' && (
           <div className="absolute bottom-2.5 left-2.5 z-10">
             <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-brand-800 text-[10px] font-bold px-2 py-0.5 rounded-md border border-brand-200 shadow-xs">
@@ -91,7 +85,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <div className="absolute bottom-2.5 left-2.5 z-10">
             <span className="inline-flex items-center gap-1 bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
               <Sparkles className="w-2.5 h-2.5 text-emerald-200" />
-              <span>Feeding Only</span>
+              <span>Feeding Friendly</span>
             </span>
           </div>
         )}
@@ -114,13 +108,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Content Area */}
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
         <div>
-          {/* Category Tag & Rating */}
+          {/* Category Tag */}
           <div className="flex items-center justify-between text-[11px] text-ink-muted mb-1">
             <span className="uppercase tracking-wider font-semibold text-brand-accent">
               {product.categoryName}
             </span>
-            <span className="flex items-center gap-1 text-ink-primary font-medium">
-              ★ {product.rating} ({product.reviewCount})
+            <span className="text-[10px] text-ink-secondary bg-ivory-100 px-1.5 py-0.5 rounded">
+              {product.fabric}
             </span>
           </div>
 
@@ -133,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {product.title}
           </h3>
 
-          {/* Price & MRP */}
+          {/* Transparent Honest Price */}
           <div className="flex items-baseline gap-2 mt-2">
             <span className="text-base sm:text-lg font-bold text-ink-primary">
               ₹{product.price}
@@ -185,7 +179,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           className="w-full mt-3 flex sm:hidden items-center justify-center gap-1.5 bg-brand-700 text-white py-2 rounded-xl text-xs font-semibold shadow-xs"
         >
           <ShoppingBag className="w-3.5 h-3.5" />
-          <span>Quick Add</span>
+          <span>Select Options</span>
         </button>
 
       </div>

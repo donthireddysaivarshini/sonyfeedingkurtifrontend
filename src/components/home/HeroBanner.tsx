@@ -24,7 +24,7 @@ export const HeroBanner: React.FC = () => {
     >
       <div className="relative min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] flex items-center">
         
-        {/* Background Image with Gradient Overlay */}
+        {/* Background Image with Enhanced Contrast Overlays */}
         <div className="absolute inset-0 z-0">
           <picture>
             <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
@@ -34,22 +34,23 @@ export const HeroBanner: React.FC = () => {
               className="w-full h-full object-cover object-top sm:object-center transition-opacity duration-700 ease-in-out"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-r from-ivory-50/95 via-ivory-50/80 to-transparent sm:w-2/3 lg:w-1/2" />
-          <div className="absolute inset-0 bg-black/10" />
+          {/* Enhanced mobile & desktop readability gradients */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ivory-50/95 via-ivory-50/85 to-transparent sm:w-2/3 lg:w-1/2" />
+          <div className="absolute inset-0 bg-black/15 sm:bg-black/5" />
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="max-w-xl space-y-4 sm:space-y-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+          <div className="max-w-xl space-y-3.5 sm:space-y-6 bg-ivory-50/70 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none p-4 sm:p-0 rounded-2xl border border-ivory-200/50 sm:border-0 shadow-xs sm:shadow-none">
             
             {/* Tag Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-700/90 text-ivory-50 text-[11px] font-semibold tracking-wider uppercase backdrop-blur-xs shadow-xs animate-fade-in">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-700/90 text-ivory-50 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase backdrop-blur-xs shadow-xs animate-fade-in">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
               <span>{slide.badge}</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-ink-primary leading-[1.15] tracking-tight">
+            <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-ink-primary leading-[1.2] tracking-tight">
               {slide.title}{' '}
               <span className="text-brand-700 block italic font-normal sm:inline">
                 {slide.highlightText}
@@ -57,15 +58,15 @@ export const HeroBanner: React.FC = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base text-ink-secondary leading-relaxed max-w-lg">
+            <p className="text-xs sm:text-sm md:text-base text-ink-primary sm:text-ink-secondary leading-relaxed max-w-lg font-medium sm:font-normal">
               {slide.subtitle}
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
               <a
                 href={slide.ctaLink}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-md hover:bg-brand-800 transition-all hover:gap-3 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-md hover:bg-brand-800 transition-all hover:gap-3 hover:shadow-lg"
               >
                 <span>{slide.ctaText}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -74,15 +75,15 @@ export const HeroBanner: React.FC = () => {
               {slide.secondaryCtaText && (
                 <a
                   href={slide.secondaryCtaLink || '#categories'}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/90 text-ink-primary font-semibold text-xs sm:text-sm border border-ivory-300 hover:bg-white hover:text-brand-700 transition-all shadow-xs"
+                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/90 text-ink-primary font-semibold text-xs sm:text-sm border border-ivory-300 hover:bg-white hover:text-brand-700 transition-all shadow-xs"
                 >
                   <span>{slide.secondaryCtaText}</span>
                 </a>
               )}
             </div>
 
-            {/* Micro Feature Callout */}
-            <div className="flex items-center gap-2 text-[11px] text-ink-muted pt-2 font-medium">
+            {/* Feature Callout */}
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-ink-secondary pt-1 font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
               <span>{slide.tag}</span>
             </div>
@@ -125,4 +126,3 @@ export const HeroBanner: React.FC = () => {
     </section>
   );
 };
-

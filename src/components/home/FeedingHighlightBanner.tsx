@@ -14,14 +14,14 @@ export const FeedingHighlightBanner: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-800/80 text-brand-gold text-xs font-semibold uppercase tracking-widest mb-3 border border-brand-700">
             <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-            <span>Patented Feeding Innovation</span>
+            <span>Design Details</span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-            Designed for Motherhood,{' '}
-            <span className="italic font-normal text-brand-200">Crafted with Grace</span>
+            Thoughtfully Designed Feeding Access,{' '}
+            <span className="italic font-normal text-brand-200">Crafted with Care</span>
           </h2>
           <p className="text-xs sm:text-sm text-ivory-200/80 mt-3 leading-relaxed">
-            Every garment in our feeding collection features intelligent engineering that allows you to nurse your baby comfortably, privately, and with total peace of mind.
+            Our feeding-friendly ethnic styles integrate discreet side zippers to support nursing convenience while maintaining the drape and elegance of traditional clothing.
           </p>
         </div>
 
@@ -34,10 +34,10 @@ export const FeedingHighlightBanner: React.FC = () => {
               <EyeOff className="w-6 h-6" />
             </div>
             <h3 className="font-serif text-lg font-bold text-white mb-2">
-              100% Invisible Zips
+              Concealed Side Zippers
             </h3>
             <p className="text-xs text-ivory-200/80 leading-relaxed">
-              12-inch twin zippers nested along the side seams, completely hidden under festive borders and pleats.
+              Discreet vertical zippers integrated along the side seams, hidden beneath pleats and natural fabric folds.
             </p>
           </div>
 
@@ -47,10 +47,10 @@ export const FeedingHighlightBanner: React.FC = () => {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="font-serif text-lg font-bold text-white mb-2">
-              Soft Skin-Guard Placket
+              Protective Inner Lining
             </h3>
             <p className="text-xs text-ivory-200/80 leading-relaxed">
-              Gentle fabric flap separates the zipper teeth from your skin and prevents baby cheek chafing during feeds.
+              Soft fabric placket designed to separate zipper teeth from sensitive skin for greater wearing comfort.
             </p>
           </div>
 
@@ -60,10 +60,10 @@ export const FeedingHighlightBanner: React.FC = () => {
               <HeartHandshake className="w-6 h-6" />
             </div>
             <h3 className="font-serif text-lg font-bold text-white mb-2">
-              Pre & Postpartum Fit
+              Comfort Silhouette
             </h3>
             <p className="text-xs text-ivory-200/80 leading-relaxed">
-              Specialized flared silhouettes and relaxed gathers that accommodate pregnancy bumps and flatter postpartum curves.
+              Flared cuts and relaxed gathering designed to drape comfortably and provide ease during different stages.
             </p>
           </div>
 
@@ -73,10 +73,10 @@ export const FeedingHighlightBanner: React.FC = () => {
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <h3 className="font-serif text-lg font-bold text-white mb-2">
-              Pure Natural Cottons
+              Selected Fabrics
             </h3>
             <p className="text-xs text-ivory-200/80 leading-relaxed">
-              Breathable Mulmul, airy Chanderi, and soft georgettes woven to keep mom and newborn cool across all Indian seasons.
+              Lightweight cottons, soft chanderi, and flowing georgette blends chosen for breathability and drape.
             </p>
           </div>
 
@@ -86,4 +86,3 @@ export const FeedingHighlightBanner: React.FC = () => {
     </section>
   );
 };
-

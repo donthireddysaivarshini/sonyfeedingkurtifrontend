@@ -50,7 +50,7 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-ivory">
+    <div className="min-h-screen flex flex-col bg-ivory w-full overflow-x-hidden">
       {/* 1. Announcement Bar */}
       <AnnouncementBar />
 
@@ -62,7 +62,7 @@ export const HomePage: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1">
+      <main className="flex-1 w-full overflow-x-hidden">
         {/* 3. Hero Banner Slider */}
         <HeroBanner />
 

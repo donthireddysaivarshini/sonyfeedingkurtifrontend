@@ -9,7 +9,7 @@ export const AnnouncementBar: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % ANNOUNCEMENT_MESSAGES.length);
-    }, 4500);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -24,25 +24,25 @@ export const AnnouncementBar: React.FC = () => {
   };
 
   return (
-    <div className="bg-brand-700 text-ivory-50 text-xs sm:text-sm font-medium tracking-wide py-2 px-4 relative z-40 transition-all duration-300">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Left Arrow */}
+    <div className="bg-brand-700 text-ivory-50 text-xs sm:text-sm font-medium tracking-wide py-2 px-3 sm:px-4 relative z-40 transition-all duration-300 overflow-hidden">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+        {/* Left Arrow (Desktop only) */}
         <button
           onClick={prevMessage}
           aria-label="Previous announcement"
-          className="p-1 hover:text-brand-accent transition-colors hidden sm:block opacity-80 hover:opacity-100"
+          className="p-1 hover:text-brand-accent transition-colors hidden sm:block opacity-80 hover:opacity-100 shrink-0"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
 
-        {/* Message Content */}
-        <div className="flex-1 text-center truncate px-2 flex items-center justify-center gap-2">
+        {/* Message Content (with min-w-0 and truncate so it never expands beyond viewport) */}
+        <div className="flex-1 min-w-0 text-center px-1 flex items-center justify-center gap-1.5 overflow-hidden">
           <Sparkles className="w-3.5 h-3.5 text-brand-gold animate-pulse shrink-0" />
-          <span className="truncate">{ANNOUNCEMENT_MESSAGES[currentIndex]}</span>
+          <span className="truncate text-[11px] sm:text-xs md:text-sm">{ANNOUNCEMENT_MESSAGES[currentIndex]}</span>
         </div>
 
         {/* Right Arrow & Dismiss */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={nextMessage}
             aria-label="Next announcement"
@@ -62,4 +62,3 @@ export const AnnouncementBar: React.FC = () => {
     </div>
   );
 };
-

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, CheckCircle2, ArrowRight, CreditCard, Banknote, AlertCircle } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, Banknote, AlertCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
 import { PaymentMethod, PAYMENT_METHODS } from '../../types/order';
 
 interface CheckoutPreviewModalProps {
@@ -14,7 +13,6 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
   onClose,
 }) => {
   const { items, subtotal, shippingFee, total } = useCart();
-  const { user } = useAuth();
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('razorpay');
 
   if (!isOpen) return null;
@@ -34,10 +32,10 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
         <div className="p-4 border-b border-ivory-300 flex items-center justify-between bg-ivory-50">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-brand-700">
-              Checkout & Payment Journey
+              Checkout & Payment Preview
             </span>
             <h3 className="font-serif text-base sm:text-lg font-bold text-ink-primary">
-              Order Summary & Payment Method
+              Order Summary & Payment Methods
             </h3>
           </div>
           <button
@@ -50,46 +48,25 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
 
         {/* Body */}
         <div className="p-5 overflow-y-auto space-y-5 flex-1">
-          {/* Customer Authenticated Pill */}
-          {user && (
-            <div className="p-3 bg-brand-50 border border-brand-200 rounded-xl flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2.5">
-                <img
-                  src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
-                  alt={user.name}
-                  className="w-8 h-8 rounded-full object-cover border border-brand-300"
-                />
-                <div>
-                  <p className="font-bold text-ink-primary">
-                    Signed in as {user.name}
-                  </p>
-                  <p className="text-[11px] text-ink-secondary">{user.email}</p>
-                </div>
-              </div>
-              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-full flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                Verified Customer
-              </span>
-            </div>
-          )}
-
-          {/* Restored Cart Items with Variant Detail */}
+          {/* Restored Cart Items with Full Variant Detail */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-ink-primary mb-2">
-              Items in Order ({items.length})
+              Cart Items Restored ({items.length})
             </h4>
-            <div className="space-y-2 border border-ivory-200 rounded-xl p-3 bg-ivory-50/50 max-h-44 overflow-y-auto">
+            <div className="space-y-2 border border-ivory-200 rounded-xl p-3 bg-ivory-50/50 max-h-48 overflow-y-auto">
               {items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between text-xs py-1 border-b border-ivory-200 last:border-b-0">
-                  <div className="flex items-center gap-2 min-w-0 pr-2">
-                    <img src={item.productImage} alt={item.productTitle} className="w-10 h-12 object-cover rounded" />
+                <div key={item.id} className="flex items-center justify-between text-xs py-1.5 border-b border-ivory-200 last:border-b-0">
+                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <img src={item.productImage} alt={item.productTitle} className="w-10 h-12 object-cover rounded border border-ivory-200" />
                     <div className="min-w-0">
                       <p className="font-semibold text-ink-primary truncate">{item.productTitle}</p>
-                      <div className="flex items-center gap-1.5 text-[10px] text-ink-secondary">
-                        {item.clothingType && (
-                          <span className={`font-bold ${item.clothingType === 'Feeding' ? 'text-emerald-800' : 'text-ink-secondary'}`}>
+                      <div className="flex items-center gap-1.5 text-[10px] text-ink-secondary mt-0.5">
+                        {item.clothingType ? (
+                          <span className={`font-bold px-1.5 py-0.2 rounded ${item.clothingType === 'Feeding' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700'}`}>
                             {item.clothingType}
                           </span>
+                        ) : (
+                          <span className="bg-gray-100 text-gray-700 px-1.5 py-0.2 rounded">Standard</span>
                         )}
                         <span>• {item.selectedColor.name}</span>
                         <span>• Size: {item.selectedSize}</span>
@@ -106,8 +83,8 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
           {/* Payment Method Selection (Extensible for Razorpay & COD) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-ink-primary flex items-center gap-1.5">
-                <span>Select Payment Method:</span>
+              <label className="text-xs font-bold uppercase tracking-wider text-ink-primary">
+                Planned Payment Methods:
               </label>
               <span className="text-[11px] text-ink-muted">Extensible Architecture</span>
             </div>
@@ -162,11 +139,11 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
             </div>
           </div>
 
-          {/* Backend Connection Notice */}
+          {/* Honest Stage 5 Notification — No fake payment confirmation */}
           <div className="p-3 bg-amber-50/80 border border-amber-200 rounded-xl flex items-start gap-2 text-xs text-amber-900">
             <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <div>
-              <strong>Phase 1 Architecture Status:</strong> Real Razorpay checkout and Django order persistence will be connected in Phase 5. The frontend payment architecture is fully prepared to pass the selected payment method and variant combination to the backend API.
+              <strong>Phase 1 Architecture Status:</strong> Real Razorpay online transactions and provisional Cash on Delivery order creation will be connected with the Django backend in Stage 5. No transaction has been processed in this preview.
             </div>
           </div>
 
@@ -177,13 +154,13 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
               <span className="font-semibold text-ink-primary">₹{subtotal}</span>
             </div>
             <div className="flex justify-between">
-              <span>Estimated Shipping</span>
-              <span className="font-semibold text-emerald-800">
+              <span>Delivery Fee</span>
+              <span className="font-semibold text-ink-primary">
                 {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
               </span>
             </div>
             <div className="flex justify-between text-sm font-bold text-ink-primary pt-1.5 border-t border-ivory-200">
-              <span>Total Payable</span>
+              <span>Estimated Total</span>
               <span className="text-brand-700 text-base">₹{total}</span>
             </div>
           </div>
@@ -193,19 +170,13 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
         <div className="p-4 border-t border-ivory-300 bg-ivory-50 flex items-center justify-between gap-3">
           <div className="flex items-center gap-1.5 text-[11px] text-ink-muted">
             <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
-            <span>SSL Secured Checkout</span>
+            <span>Phase 1 Architecture Preview</span>
           </div>
           <button
-            onClick={() => {
-              alert(
-                `Payment method "${selectedPayment === 'razorpay' ? 'Online Razorpay' : 'Cash on Delivery'}" selected for ₹${total}. Live transaction processing will be active after backend integration in Phase 5.`
-              );
-              onClose();
-            }}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs sm:text-sm shadow-md transition-all"
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs sm:text-sm shadow-sm transition-all"
           >
-            <span>Confirm & Continue</span>
-            <ArrowRight className="w-4 h-4" />
+            Close Preview
           </button>
         </div>
       </div>

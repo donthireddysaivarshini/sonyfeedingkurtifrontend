@@ -139,19 +139,14 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
             </a>
           </div>
 
-          <a
-            href="https://wa.me/919876543210"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 text-xs text-ink-secondary hover:text-emerald-700 py-1.5 font-medium"
-          >
-            <Phone className="w-3.5 h-3.5 text-emerald-600" />
-            <span>WhatsApp Support: +91 98765 43210</span>
-          </a>
+          <div className="flex items-center justify-center gap-2 text-xs text-ink-secondary py-1.5 font-medium">
+            <Phone className="w-3.5 h-3.5 text-brand-700" />
+            <span>Support details to be announced</span>
+          </div>
 
           <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-muted pt-1">
             <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
-            <span>Free Shipping Across India Above ₹999</span>
+            <span>Pan-India Courier Delivery Service</span>
           </div>
         </div>
 

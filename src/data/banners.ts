@@ -16,43 +16,43 @@ export interface HeroSlide {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
-    badge: 'NEW MATERNITY & ETHNIC COLLECTION 2026',
+    badge: 'ETHNIC & MATERNITY COLLECTION',
     title: 'Celebrate Motherhood in',
-    highlightText: 'Pure Ethnic Grace',
-    subtitle: 'Designer Feeding Kurtis, Co-ord Sets & Festive Maxis with discreet concealed nursing zippers crafted for effortless elegance.',
+    highlightText: 'Ethnic Grace',
+    subtitle: 'Designer Feeding Kurtis, Co-ord Sets & Festive Maxis with discreet concealed nursing zippers crafted for comfort and style.',
     ctaText: 'Shop Feeding Kurtis',
     ctaLink: '#bestsellers',
     secondaryCtaText: 'Explore All Categories',
     secondaryCtaLink: '#categories',
     desktopImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-    tag: 'Feeding & Non-Feeding Available'
+    tag: 'Feeding & Non-Feeding Options Available'
   },
   {
     id: 'slide-2',
-    badge: 'FESTIVE EDIT',
-    title: 'Grand Occasions,',
-    highlightText: 'Comfort Guaranteed',
-    subtitle: 'Step into weddings and poojas confidently with our 3-Piece Anarkali suits & Lehengas featuring invisible feeding access.',
+    badge: 'FESTIVE COLLECTION',
+    title: 'Traditional Occasions,',
+    highlightText: 'Tailored Comfort',
+    subtitle: 'Step into family gatherings with 3-Piece Anarkali sets and Lehengas designed with optional feeding access.',
     ctaText: 'Shop Partywear & Sets',
     ctaLink: '#categories',
-    secondaryCtaText: 'View Bestsellers',
+    secondaryCtaText: 'View Collections',
     secondaryCtaLink: '#bestsellers',
     desktopImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
-    tag: 'Pure Cotton & Soft Silks'
+    tag: 'Cotton & Silk Blends'
   },
   {
     id: 'slide-3',
-    badge: 'MOM & BABY SPECIAL',
-    title: 'Twinning Moments &',
+    badge: 'FAMILY & KIDS EDIT',
+    title: 'Coordinated Moments &',
     highlightText: 'Everyday Ease',
-    subtitle: 'Breezy cotton frocks and matching mom-kid collections designed for sensitive postpartum skin and happy memories.',
-    ctaText: 'Explore Kids & Twinning',
+    subtitle: 'Breezy cotton frocks and matching mom-child outfits crafted with gentle fabrics for sensitive skin.',
+    ctaText: 'Explore Kids Collections',
     ctaLink: '#categories',
     desktopImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
-    tag: '100% Breathable Organic Cottons'
+    tag: 'Breathable Natural Fabrics'
   }
 ];
 
@@ -65,30 +65,29 @@ export interface ValueProp {
 export const VALUE_PROPOSITIONS: ValueProp[] = [
   {
     icon: 'ShieldCheck',
-    title: 'Dual Invisible Feeding Zips',
-    description: 'Smooth, covered 12-inch nursing zips on both sides with zero skin contact.'
+    title: 'Concealed Feeding Access',
+    description: 'Discreet twin side zippers integrated along side seams on select feeding styles.'
   },
   {
     icon: 'Sparkles',
-    title: '100% Breathable Fabrics',
-    description: 'Mulmul cotton, breathable chanderi, and soft georgettes safe for newborn skin.'
+    title: 'Comfortable Fabrics',
+    description: 'Soft mulmul cotton, chanderi, and lightweight festive blends selected for all-day wear.'
   },
   {
     icon: 'Truck',
-    title: 'Free Express Pan-India Shipping',
-    description: 'Fast, trackable delivery to your doorstep on all orders above ₹999.'
+    title: 'Pan-India Shipping',
+    description: 'Courier delivery service available across Indian postal codes.'
   },
   {
     icon: 'RotateCcw',
-    title: 'Easy Exchanges & Support',
-    description: 'Hassle-free 7-day size exchange with dedicated WhatsApp care team.'
+    title: 'Customer Care & Sizing',
+    description: 'Personalized size assistance and customer support for all order inquiries.'
   }
 ];
 
 export const ANNOUNCEMENT_MESSAGES = [
-  '🌸 Special Offer: Flat 35% Off Across All Feeding Collections | Use Code: MOTHERHOOD',
-  '✨ Free Express Pan-India Shipping on Orders Above ₹999',
-  '🤱 Discreet Feeding & Non-Feeding Options Available in Every Design',
-  '💫 SONY FEEDING KURTIS — Premium Handcrafted Ethnic Boutique'
+  'Welcome to Sony Feeding Kurtis • Thoughtfully Designed Ethnic & Maternity Wear',
+  'Concealed Feeding & Regular Ethnic Options Available on Selected Styles',
+  'Explore Our Curated Collections of Frocks, Sarees, Sets & Kurtis',
+  'Pan-India Delivery Service • Standard Courier Shipping'
 ];
-

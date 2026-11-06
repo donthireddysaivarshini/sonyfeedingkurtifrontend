@@ -17,13 +17,13 @@ export const WhyChooseUs: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <span className="text-xs font-bold uppercase tracking-widest text-brand-700 mb-1 block">
-            The Sony Promise
+            Brand Principles
           </span>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary">
-            Why Mothers Love Sony Feeding Kurtis
+            Our Commitment to Quality & Comfort
           </h2>
           <p className="text-xs sm:text-sm text-ink-secondary mt-2">
-            Every stitch, zip, and fold is designed to prioritize your peace of mind and newborn safety.
+            Designed to bring together graceful Indian ethnic styles with practical everyday wearing comfort.
           </p>
         </div>
 
@@ -51,4 +51,3 @@ export const WhyChooseUs: React.FC = () => {
     </section>
   );
 };
-

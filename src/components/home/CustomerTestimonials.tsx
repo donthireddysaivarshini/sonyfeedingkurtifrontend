@@ -1,6 +1,5 @@
 import React from 'react';
-import { Star, ShieldCheck, Sparkles } from 'lucide-react';
-import { CUSTOMER_REVIEWS } from '../../data/reviews';
+import { Sparkles, HelpCircle, Ruler, Shirt, MessageSquare } from 'lucide-react';
 
 export const CustomerTestimonials: React.FC = () => {
   return (
@@ -11,58 +10,91 @@ export const CustomerTestimonials: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-2 border border-brand-200">
             <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-            <span>Real Stories</span>
+            <span>Customer Assistance</span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary">
-            Loved by 10,000+ Indian Mothers
+            Fit, Sizing & Design Transparency
           </h2>
           <p className="text-xs sm:text-sm text-ink-secondary mt-2">
-            Read heartfelt experiences from mothers who found dignity, ease, and ethnic elegance in our collections.
+            Clear guidelines on choosing the right size, care instructions, and feeding features.
           </p>
         </div>
 
-        {/* Testimonials Grid */}
+        {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {CUSTOMER_REVIEWS.map((rev) => (
-            <div
-              key={rev.id}
-              className="bg-white p-6 rounded-2xl border border-ivory-300 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between"
-            >
-              <div>
-                {/* Star Rating */}
-                <div className="flex items-center gap-1 text-amber-500 mb-3">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-
-                {/* Review Text */}
-                <p className="text-xs text-ink-primary leading-relaxed italic mb-4">
-                  "{rev.review}"
-                </p>
+          
+          {/* Card 1: Sizing */}
+          <div className="bg-white p-6 rounded-2xl border border-ivory-300 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
+                <Ruler className="w-5 h-5" />
               </div>
-
-              {/* Bottom Customer Info */}
-              <div className="pt-3 border-t border-ivory-200">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-ink-primary">{rev.customerName}</h4>
-                  {rev.verified && (
-                    <span className="inline-flex items-center gap-0.5 text-[10px] text-emerald-800 font-medium">
-                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                      Verified
-                    </span>
-                  )}
-                </div>
-                <p className="text-[10px] text-ink-muted mt-0.5">{rev.location}</p>
-                <div className="mt-2 flex items-center justify-between text-[10px] text-brand-700 font-medium">
-                  <span className="truncate pr-1">{rev.productName}</span>
-                  <span className="bg-brand-50 px-1.5 py-0.2 rounded shrink-0">
-                    {rev.clothingType}
-                  </span>
-                </div>
-              </div>
+              <h3 className="font-serif text-sm font-bold text-ink-primary mb-2">
+                Maternity & Relaxed Sizing
+              </h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Our silhouettes incorporate relaxed chest and waist ease to accommodate changes before and after pregnancy comfortably.
+              </p>
             </div>
-          ))}
+            <div className="pt-3 mt-4 border-t border-ivory-200 text-[11px] text-brand-700 font-semibold">
+              Standard Indian Sizing (S to XXL)
+            </div>
+          </div>
+
+          {/* Card 2: Feeding selection */}
+          <div className="bg-white p-6 rounded-2xl border border-ivory-300 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
+                <Shirt className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-sm font-bold text-ink-primary mb-2">
+                Feeding vs Regular Fits
+              </h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Styles with feeding options feature concealed side zips. If you prefer regular festive wear, choose the Non-Feeding option.
+              </p>
+            </div>
+            <div className="pt-3 mt-4 border-t border-ivory-200 text-[11px] text-brand-700 font-semibold">
+              Option Available on Select Styles
+            </div>
+          </div>
+
+          {/* Card 3: Fabric Care */}
+          <div className="bg-white p-6 rounded-2xl border border-ivory-300 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
+                <HelpCircle className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-sm font-bold text-ink-primary mb-2">
+                Fabric Care & Handling
+              </h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Mulmul cotton frocks can be hand-washed cold. We recommend dry cleaning for embroidered and chanderi silk festive sets.
+              </p>
+            </div>
+            <div className="pt-3 mt-4 border-t border-ivory-200 text-[11px] text-brand-700 font-semibold">
+              Care Instructions on Each Product
+            </div>
+          </div>
+
+          {/* Card 4: Verified Reviews Placeholder */}
+          <div className="bg-white p-6 rounded-2xl border border-ivory-300 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-700 mb-3">
+                <MessageSquare className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-sm font-bold text-ink-primary mb-2">
+                Verified Customer Reviews
+              </h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                Customer ratings and genuine reviews will be published here directly as customers receive and review their orders.
+              </p>
+            </div>
+            <div className="pt-3 mt-4 border-t border-ivory-200 text-[11px] text-ink-muted font-medium">
+              Authentic Feedback • Post-Launch
+            </div>
+          </div>
+
         </div>
 
       </div>

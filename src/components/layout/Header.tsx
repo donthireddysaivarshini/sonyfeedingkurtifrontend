@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Heart, Menu, ChevronDown, User, Sparkles, LogOut } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, ChevronDown, User, Sparkles } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -20,11 +20,10 @@ export const Header: React.FC<HeaderProps> = ({
   const { totalItemsCount } = useCart();
   const { wishlistCount } = useWishlist();
   const { theme } = useTheme();
-  const { user, isAuthenticated, logout, openAuthModal } = useAuth();
+  const { openAuthModal } = useAuth();
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,44 +36,44 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       className={`sticky top-0 z-30 transition-all duration-300 bg-ivory-50/95 backdrop-blur-md border-b border-ivory-300/60 ${
-        isScrolled ? 'shadow-soft py-2.5' : 'py-3.5 sm:py-4'
+        isScrolled ? 'shadow-soft py-2 sm:py-2.5' : 'py-2.5 sm:py-3.5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-1 sm:gap-4">
           
-          {/* Mobile Menu Button & Search Shortcut */}
-          <div className="flex items-center gap-2 lg:hidden">
+          {/* Mobile Left: Menu Button & Search Shortcut */}
+          <div className="flex items-center gap-0.5 lg:hidden shrink-0">
             <button
               onClick={onOpenMobileMenu}
               aria-label="Open mobile menu"
-              className="p-2 -ml-2 text-ink-primary hover:text-brand-700 transition-colors rounded-lg hover:bg-ivory-200"
+              className="p-1 sm:p-1.5 text-ink-primary hover:text-brand-700 transition-colors rounded-lg hover:bg-ivory-200"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button
               onClick={onOpenSearch}
               aria-label="Search products"
-              className="p-2 text-ink-primary hover:text-brand-700 transition-colors rounded-lg hover:bg-ivory-200"
+              className="p-1 sm:p-1.5 text-ink-primary hover:text-brand-700 transition-colors rounded-lg hover:bg-ivory-200"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
-          {/* Brand Logo Placeholder */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+          {/* Brand Logo Placeholder (Responsive & Fits Mobile Viewport) */}
+          <div className="flex-1 min-w-0 text-center lg:text-left px-1">
             <a href="#" className="group inline-block focus:outline-none">
-              <span className="font-serif text-xl sm:text-2xl lg:text-[26px] font-bold tracking-[0.12em] text-brand-700 block transition-colors group-hover:text-brand-900 uppercase">
+              <span className="font-serif text-xs sm:text-lg lg:text-[24px] font-bold tracking-wide sm:tracking-wider text-brand-700 block transition-colors group-hover:text-brand-900 uppercase truncate">
                 {theme.brandName}
               </span>
-              <span className="text-[10px] sm:text-[11px] tracking-[0.25em] text-ink-secondary block uppercase font-medium -mt-0.5">
+              <span className="hidden sm:block text-[9px] sm:text-[11px] tracking-widest text-ink-secondary uppercase font-medium -mt-0.5">
                 {theme.brandTagline}
               </span>
             </a>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium text-ink-primary">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-7 text-sm font-medium text-ink-primary">
             <a
               href="#"
               className="hover:text-brand-700 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-700 hover:after:w-full after:transition-all"
@@ -154,8 +153,8 @@ export const Header: React.FC<HeaderProps> = ({
             </a>
           </nav>
 
-          {/* Desktop Right Action Icons */}
-          <div className="flex items-center space-x-1 sm:space-x-3 text-ink-primary">
+          {/* Right Action Icons (Always Visible & Never Overflowing) */}
+          <div className="flex items-center space-x-1 sm:space-x-2 text-ink-primary shrink-0">
             {/* Desktop Search */}
             <button
               onClick={onOpenSearch}
@@ -163,84 +162,45 @@ export const Header: React.FC<HeaderProps> = ({
               className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-ivory-200/80 hover:bg-ivory-200 text-ink-secondary hover:text-ink-primary transition-colors text-xs border border-ivory-300"
             >
               <Search className="w-3.5 h-3.5" />
-              <span className="pr-2">Search feeding kurtis, frocks...</span>
+              <span className="pr-2">Search styles...</span>
             </button>
 
             {/* Wishlist */}
             <a
               href="#wishlist"
               aria-label="Wishlist"
-              className="p-2 hover:text-brand-700 transition-colors relative rounded-full hover:bg-ivory-200"
+              className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors relative rounded-full hover:bg-ivory-200"
               title="Saved Wishlist"
             >
-              <Heart className="w-5 h-5" />
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
               {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-brand-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-brand-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   {wishlistCount}
                 </span>
               )}
             </a>
 
-            {/* Account / User with Google Auth Status */}
-            <div className="relative">
-              {isAuthenticated && user ? (
-                <div
-                  className="flex items-center gap-1.5 cursor-pointer p-1 rounded-full hover:bg-ivory-200"
-                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
-                >
-                  <img
-                    src={user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
-                    alt={user.name}
-                    className="w-7 h-7 rounded-full object-cover border border-brand-700"
-                    title={user.name}
-                  />
-                  <ChevronDown className="w-3.5 h-3.5 text-ink-secondary hidden sm:block" />
-                </div>
-              ) : (
-                <button
-                  aria-label="Sign in"
-                  onClick={() => openAuthModal()}
-                  className="p-2 hover:text-brand-700 transition-colors rounded-full hover:bg-ivory-200 hidden sm:block"
-                  title="Sign In with Google"
-                >
-                  <User className="w-5 h-5" />
-                </button>
-              )}
-
-              {/* User Dropdown */}
-              {isUserMenuOpen && isAuthenticated && user && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-ivory-300 rounded-xl shadow-dropdown py-2 z-50 animate-slide-down">
-                  <div className="px-3 py-1.5 border-b border-ivory-200">
-                    <p className="text-xs font-bold text-ink-primary truncate">{user.name}</p>
-                    <p className="text-[10px] text-ink-muted truncate">{user.email}</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsUserMenuOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 text-xs text-rose-700 hover:bg-rose-50 flex items-center gap-2"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              )}
-            </div>
+            {/* Account / Sign-In Button */}
+            <button
+              aria-label="Sign In"
+              onClick={() => openAuthModal()}
+              className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors rounded-full hover:bg-ivory-200 hidden sm:block"
+              title="Google Sign In (Stage 5 Integration)"
+            >
+              <User className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
 
             {/* Cart Icon & Counter */}
             <button
               onClick={onOpenCart}
               aria-label="Open Cart"
-              className="p-2 hover:text-brand-700 transition-colors relative rounded-full hover:bg-ivory-200 flex items-center gap-1 group"
+              className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors relative rounded-full hover:bg-ivory-200 flex items-center gap-1 group"
             >
-              <ShoppingBag className="w-5 h-5 group-hover:scale-105 transition-transform" />
-              {totalItemsCount > 0 ? (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 bg-brand-700 text-white text-[11px] font-bold rounded-full flex items-center justify-center animate-fade-in shadow-sm">
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-105 transition-transform text-brand-700" />
+              {totalItemsCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-brand-700 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-fade-in shadow-sm">
                   {totalItemsCount}
                 </span>
-              ) : (
-                <span className="hidden sm:inline text-xs font-medium text-ink-secondary">₹0</span>
               )}
             </button>
           </div>

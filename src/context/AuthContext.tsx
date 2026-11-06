@@ -1,10 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 export interface UserProfile {
   id: string;
   name: string;
   email: string;
-  avatar?: string;
 }
 
 interface AuthContextType {
@@ -13,34 +12,16 @@ interface AuthContextType {
   isAuthModalOpen: boolean;
   openAuthModal: (callback?: () => void) => void;
   closeAuthModal: () => void;
-  loginWithGoogle: () => Promise<void>;
-  logout: () => void;
+  proceedToReviewCheckout: () => void;
 }
-
-const AUTH_STORAGE_KEY = 'sony_feeding_kurtis_user';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    try {
-      const saved = localStorage.getItem(AUTH_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
-
+  // Pure unauthenticated state by default — no fake Google credentials
+  const [user] = useState<UserProfile | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [postAuthCallback, setPostAuthCallback] = useState<(() => void) | null>(null);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-    }
-  }, [user]);
 
   const openAuthModal = (callback?: () => void) => {
     if (callback) {
@@ -56,41 +37,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setPostAuthCallback(null);
   };
 
-  const loginWithGoogle = async () => {
-    // Phase 1 / Phase 2 authenticated simulation matching future Google OAuth token flow
-    // In Phase 5, this will trigger Google OAuth (@react-oauth/google) and exchange auth_code with Django /auth/google/
-    const simulatedUser: UserProfile = {
-      id: 'usr_g_10293847',
-      name: 'Varshini D',
-      email: 'varshini@example.com',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop',
-    };
-
-    setUser(simulatedUser);
+  // Phase 1 testing action: explicitly labeled as Review Mode so testing can proceed without claiming real OAuth
+  const proceedToReviewCheckout = () => {
     setIsAuthModalOpen(false);
-
     if (postAuthCallback) {
       setTimeout(() => {
         postAuthCallback();
         setPostAuthCallback(null);
-      }, 300);
+      }, 200);
     }
-  };
-
-  const logout = () => {
-    setUser(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        isAuthenticated: Boolean(user),
+        isAuthenticated: false, // Honestly unauthenticated in Phase 1
         isAuthModalOpen,
         openAuthModal,
         closeAuthModal,
-        loginWithGoogle,
-        logout,
+        proceedToReviewCheckout,
       }}
     >
       {children}

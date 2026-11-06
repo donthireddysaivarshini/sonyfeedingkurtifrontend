@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, ShieldCheck, Sparkles, LogIn } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, ShieldCheck, LogIn } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -16,7 +16,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
     updateQuantity,
     subtotal,
     shippingFee,
-    freeShippingThreshold,
     total,
     totalItemsCount,
   } = useCart();
@@ -24,9 +23,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
   const { isAuthenticated, openAuthModal } = useAuth();
 
   if (!isCartOpen) return null;
-
-  const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
 
   const handleCheckoutClick = () => {
     closeCart();
@@ -69,27 +65,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
           </button>
         </div>
 
-        {/* Free Shipping Progress Bar */}
-        <div className="px-4 py-3 bg-brand-50/60 border-b border-brand-100">
-          <div className="flex items-center justify-between text-xs font-medium text-ink-secondary mb-1.5">
-            {remainingForFreeShipping > 0 ? (
-              <span>
-                Add <strong className="text-brand-700">₹{remainingForFreeShipping}</strong> more for <strong>FREE Delivery</strong>!
-              </span>
-            ) : (
-              <span className="text-emerald-800 font-semibold flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                Congratulations! You unlocked FREE Delivery
-              </span>
-            )}
-            <span className="text-[11px] font-bold text-brand-700">{progressPercent}%</span>
-          </div>
-          <div className="w-full bg-brand-100 h-2 rounded-full overflow-hidden">
-            <div
-              className="bg-brand-700 h-full rounded-full transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
+        {/* Informative Shipping Notice (No unconfirmed promises) */}
+        <div className="px-4 py-2.5 bg-ivory-100 border-b border-ivory-200 text-xs text-ink-secondary flex items-center justify-between">
+          <span>Pan-India Courier Delivery</span>
+          <span className="text-[11px] font-semibold text-brand-700">Calculated at Checkout</span>
         </div>
 
         {/* Cart Items List */}
@@ -102,7 +81,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
               <div>
                 <h4 className="font-serif text-lg font-bold text-ink-primary">Your bag is empty</h4>
                 <p className="text-xs text-ink-secondary mt-1 max-w-xs">
-                  Discover our bestselling ethnic feeding kurtis, frocks, and coordinated sets.
+                  Browse our collections of frocks, co-ords, sarees, and feeding-friendly kurtis.
                 </p>
               </div>
               <button
@@ -198,11 +177,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                       <span className="text-sm font-bold text-ink-primary">
                         ₹{item.price * item.quantity}
                       </span>
-                      {item.originalPrice && (
-                        <span className="block text-[11px] text-ink-muted line-through">
-                          ₹{item.originalPrice * item.quantity}
-                        </span>
-                      )}
                     </div>
                   </div>
 
@@ -221,17 +195,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                 <span className="font-semibold text-ink-primary">₹{subtotal}</span>
               </div>
               <div className="flex justify-between">
-                <span>Estimated Shipping</span>
-                <span className="font-semibold">
-                  {shippingFee === 0 ? (
-                    <span className="text-emerald-700 font-bold">FREE</span>
-                  ) : (
-                    `₹${shippingFee}`
-                  )}
+                <span>Estimated Delivery</span>
+                <span className="font-semibold text-ink-primary">
+                  {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
                 </span>
               </div>
               <div className="flex justify-between text-sm font-bold text-ink-primary pt-1.5 border-t border-ivory-200">
-                <span>Total Amount</span>
+                <span>Estimated Total</span>
                 <span className="text-brand-700 text-base">₹{total}</span>
               </div>
             </div>
@@ -248,14 +218,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
               ) : (
                 <>
                   <LogIn className="w-4 h-4" />
-                  <span>Sign In with Google to Checkout</span>
+                  <span>Google Sign In to Checkout</span>
                 </>
               )}
             </button>
 
             <div className="flex items-center justify-center gap-2 text-[10px] text-ink-muted">
               <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
-              <span>Razorpay & Cash on Delivery Supported</span>
+              <span>Razorpay & Cash on Delivery (Provisional)</span>
             </div>
           </div>
         )}
