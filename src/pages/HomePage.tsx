@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnnouncementBar } from '../components/layout/AnnouncementBar';
 import { Header } from '../components/layout/Header';
 import { HeroBanner } from '../components/home/HeroBanner';
@@ -21,6 +22,7 @@ import { useCart } from '../context/CartContext';
 import { X, Sparkles } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const { openCart } = useCart();
 
   // Dialog and drawer visibility states
@@ -35,14 +37,7 @@ export const HomePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
 
   const handleSelectCategory = (category: Category) => {
-    if (activeCategory?.id === category.id) {
-      setActiveCategory(null); // Toggle off if already selected
-    } else {
-      setActiveCategory(category);
-      // Smooth scroll to the products section
-      const target = document.getElementById('bestsellers');
-      target?.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate(`/category/${category.slug}`);
   };
 
   const handleQuickSelect = (product: Product) => {
@@ -126,7 +121,10 @@ export const HomePage: React.FC = () => {
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
-        onSelectProduct={(product) => setSelectedProductForModal(product)}
+        onSelectProduct={(product) => {
+          setIsSearchOpen(false);
+          navigate(`/product/${product.slug}`);
+        }}
       />
 
       <MobileDrawer

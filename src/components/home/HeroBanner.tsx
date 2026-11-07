@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
 import { HERO_SLIDES } from '../../data/banners';
 
@@ -64,21 +65,21 @@ export const HeroBanner: React.FC = () => {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
-              <a
-                href={slide.ctaLink}
+              <Link
+                to={slide.ctaLink}
                 className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-md hover:bg-brand-800 transition-all hover:gap-3 hover:shadow-lg"
               >
                 <span>{slide.ctaText}</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
 
               {slide.secondaryCtaText && (
-                <a
-                  href={slide.secondaryCtaLink || '#categories'}
+                <Link
+                  to={slide.secondaryCtaLink || '/shop'}
                   className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/90 text-ink-primary font-semibold text-xs sm:text-sm border border-ivory-300 hover:bg-white hover:text-brand-700 transition-all shadow-xs"
                 >
                   <span>{slide.secondaryCtaText}</span>
-                </a>
+                </Link>
               )}
             </div>
 

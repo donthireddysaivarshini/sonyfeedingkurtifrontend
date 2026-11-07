@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ShoppingBag, Heart, Menu, ChevronDown, User, Sparkles } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -62,24 +63,31 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Brand Logo Placeholder (Responsive & Fits Mobile Viewport) */}
           <div className="flex-1 min-w-0 text-center lg:text-left px-1">
-            <a href="#" className="group inline-block focus:outline-none">
+            <Link to="/" className="group inline-block focus:outline-none">
               <span className="font-serif text-xs sm:text-lg lg:text-[24px] font-bold tracking-wide sm:tracking-wider text-brand-700 block transition-colors group-hover:text-brand-900 uppercase truncate">
                 {theme.brandName}
               </span>
               <span className="hidden sm:block text-[9px] sm:text-[11px] tracking-widest text-ink-secondary uppercase font-medium -mt-0.5">
                 {theme.brandTagline}
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-7 text-sm font-medium text-ink-primary">
-            <a
-              href="#"
+          <nav className="hidden lg:flex items-center space-x-5 xl:space-x-6 text-sm font-medium text-ink-primary">
+            <Link
+              to="/"
               className="hover:text-brand-700 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-700 hover:after:w-full after:transition-all"
             >
               Home
-            </a>
+            </Link>
+
+            <Link
+              to="/shop"
+              className="hover:text-brand-700 transition-colors py-1 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-700 hover:after:w-full after:transition-all"
+            >
+              Shop All
+            </Link>
 
             {/* Shop by Category Mega Dropdown */}
             <div
@@ -91,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="flex items-center gap-1 hover:text-brand-700 transition-colors py-1 focus:outline-none"
                 onClick={() => setIsCategoryDropdownOpen((prev) => !prev)}
               >
-                <span>Shop by Category</span>
+                <span>Categories</span>
                 <ChevronDown
                   className={`w-4 h-4 transition-transform duration-200 ${
                     isCategoryDropdownOpen ? 'rotate-180 text-brand-700' : ''
@@ -101,16 +109,16 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Category Dropdown Menu */}
               {isCategoryDropdownOpen && (
-                <div className="absolute top-full left-0 w-80 bg-white border border-ivory-300 rounded-xl shadow-dropdown py-3 px-2 mt-1 animate-slide-down">
+                <div className="absolute top-full left-0 w-80 bg-white border border-ivory-300 rounded-xl shadow-dropdown py-3 px-2 mt-1 animate-slide-down z-50">
                   <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-ink-muted border-b border-ivory-200 mb-2 flex items-center justify-between">
                     <span>All 8 Collections</span>
                     <span className="text-brand-700 font-medium">Feeding Available</span>
                   </div>
                   <div className="grid grid-cols-1 gap-1">
                     {CATEGORIES.map((category) => (
-                      <a
+                      <Link
                         key={category.id}
-                        href={`#category-${category.slug}`}
+                        to={`/category/${category.slug}`}
                         onClick={() => setIsCategoryDropdownOpen(false)}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-ivory-100 transition-colors group"
                       >
@@ -125,32 +133,28 @@ export const Header: React.FC<HeaderProps> = ({
                           </p>
                           <p className="text-[11px] text-ink-muted truncate">{category.itemCount}</p>
                         </div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
               )}
             </div>
 
-            <a
-              href="#feeding-highlight"
+            <Link
+              to="/shop?clothingType=Feeding"
               className="hover:text-brand-700 transition-colors py-1 flex items-center gap-1.5 font-semibold text-brand-700"
             >
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
               <span>Feeding Friendly</span>
-            </a>
+            </Link>
 
-            <a href="#bestsellers" className="hover:text-brand-700 transition-colors py-1">
+            <Link to="/shop?sort=featured" className="hover:text-brand-700 transition-colors py-1">
               Bestsellers
-            </a>
+            </Link>
 
-            <a href="#new-arrivals" className="hover:text-brand-700 transition-colors py-1">
+            <Link to="/shop?sort=newest" className="hover:text-brand-700 transition-colors py-1">
               New Arrivals
-            </a>
-
-            <a href="#about-us" className="hover:text-brand-700 transition-colors py-1">
-              About
-            </a>
+            </Link>
           </nav>
 
           {/* Right Action Icons (Always Visible & Never Overflowing) */}

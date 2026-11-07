@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Sparkles, ShoppingBag } from 'lucide-react';
 import { Product, ProductColor } from '../../types/product';
 import { useWishlist } from '../../context/WishlistContext';
@@ -14,6 +15,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onQuickSelect,
   onViewDetails,
 }) => {
+  const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [selectedColor, setSelectedColor] = useState<ProductColor>(product.availableColors[0]);
   const [isHovered, setIsHovered] = useState(false);
@@ -21,6 +23,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isFavorited = isInWishlist(product.id);
   const hasMultipleImages = product.images.length > 1;
   const currentImage = isHovered && hasMultipleImages ? product.images[1] : product.images[0];
+
+  const handleDetailsClick = () => {
+    if (onViewDetails) {
+      onViewDetails(product);
+    } else {
+      navigate(`/product/${product.slug}`);
+    }
+  };
 
   return (
     <div
@@ -35,7 +45,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           alt={product.title}
           className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
           loading="lazy"
-          onClick={() => onViewDetails && onViewDetails(product)}
+          onClick={handleDetailsClick}
         />
 
         {/* Top Badges (Only legitimate category/catalog tags) */}
@@ -120,7 +130,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Product Title */}
           <h3
-            onClick={() => onViewDetails && onViewDetails(product)}
+            onClick={handleDetailsClick}
             className="font-serif text-sm sm:text-base font-semibold text-ink-primary group-hover:text-brand-700 transition-colors line-clamp-2 cursor-pointer leading-snug"
             title={product.title}
           >

@@ -1,5 +1,6 @@
 import React from 'react';
-import { X, Sparkles, ChevronRight, Phone, Heart, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
@@ -30,14 +31,14 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
         
         {/* Drawer Header */}
         <div className="p-4 border-b border-ivory-300 flex items-center justify-between bg-white">
-          <div>
+          <Link to="/" onClick={onClose} className="block">
             <span className="font-serif text-lg font-bold tracking-wider text-brand-700 block">
               SONY FEEDING KURTIS
             </span>
             <span className="text-[10px] tracking-widest text-ink-muted uppercase">
               Maternity & Ethnic Boutique
             </span>
-          </div>
+          </Link>
           <button
             onClick={onClose}
             aria-label="Close menu"
@@ -47,10 +48,25 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
           </button>
         </div>
 
+        {/* Shop All Highlight */}
+        <div className="p-3 bg-white border-b border-ivory-300">
+          <Link
+            to="/shop"
+            onClick={onClose}
+            className="flex items-center justify-between p-2.5 rounded-xl bg-brand-700 text-white font-semibold text-xs shadow-xs hover:bg-brand-800 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Grid className="w-4 h-4 text-brand-gold" />
+              <span>Browse All Collections</span>
+            </div>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
         {/* Feeding Friendly Highlight Box */}
         <div className="p-3 bg-brand-50 border-b border-brand-100">
-          <a
-            href="#feeding-highlight"
+          <Link
+            to="/shop?clothingType=Feeding"
             onClick={onClose}
             className="flex items-center gap-2.5 text-xs font-semibold text-brand-800 hover:text-brand-900"
           >
@@ -62,7 +78,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               <p className="text-[10px] text-ink-secondary font-normal">Dual invisible concealed zips on both sides</p>
             </div>
             <ChevronRight className="w-4 h-4 text-brand-700" />
-          </a>
+          </Link>
         </div>
 
         {/* Categories Section */}
@@ -72,9 +88,9 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
           </p>
           <div className="space-y-1">
             {CATEGORIES.map((cat) => (
-              <a
+              <Link
                 key={cat.id}
-                href={`#category-${cat.slug}`}
+                to={`/category/${cat.slug}`}
                 onClick={onClose}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-ivory-200 transition-colors group"
               >
@@ -90,13 +106,13 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
                   <p className="text-[10px] text-ink-muted">{cat.itemCount}</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-ink-light group-hover:text-brand-700" />
-              </a>
+              </Link>
             ))}
           </div>
 
           <div className="my-4 border-t border-ivory-300 pt-3 space-y-1">
-            <a
-              href="#bestsellers"
+            <Link
+              to="/shop?sort=featured"
               onClick={onClose}
               className="flex items-center justify-between p-2 text-sm font-medium text-ink-primary hover:bg-ivory-200 rounded-lg"
             >
@@ -104,15 +120,15 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               <span className="text-xs bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full font-semibold">
                 Popular
               </span>
-            </a>
-            <a
-              href="#new-arrivals"
+            </Link>
+            <Link
+              to="/shop?sort=newest"
               onClick={onClose}
               className="flex items-center justify-between p-2 text-sm font-medium text-ink-primary hover:bg-ivory-200 rounded-lg"
             >
               <span>New Arrivals 2026</span>
               <span className="text-xs text-brand-accent font-semibold">New</span>
-            </a>
+            </Link>
           </div>
         </div>
 

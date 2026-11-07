@@ -23,7 +23,7 @@ function generateVariants(
       sizes.forEach((size) => {
         const typeCode = type === 'Feeding' ? 'FD' : type === 'Non-Feeding' ? 'NF' : 'STD';
         const key = `${typeCode}-${color.id}-${size}`;
-        // Support simulated stock levels (e.g. some size/color combinations out of stock)
+        // Support simulated stock levels
         const stock = stockOverrides && stockOverrides[key] !== undefined ? stockOverrides[key] : 10;
         
         variants.push({
@@ -47,7 +47,7 @@ function generateVariants(
 const COMMON_SIZES: ProductSize[] = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export const PRODUCTS: Product[] = [
-  // 1. CONFIGURATION: 'both' (Customer selects Feeding or Non-Feeding -> Colour -> Size)
+  // 1. KURTI + DUPATTA (Configuration: 'both')
   {
     id: 'prod-1',
     title: 'Nayantara Rose Flared Maxi Dupatta Set',
@@ -60,6 +60,7 @@ export const PRODUCTS: Product[] = [
     images: [
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -97,7 +98,7 @@ export const PRODUCTS: Product[] = [
     isFeatured: true,
   },
 
-  // 2. CONFIGURATION: 'feeding-only' (Dedicated Nursing Wear - Inherently Feeding with built-in zips)
+  // 2. FROCKS (Configuration: 'feeding-only')
   {
     id: 'prod-2',
     title: 'Kalyani Tiered Gathered Pure Mulmul Feeding Frock',
@@ -110,6 +111,7 @@ export const PRODUCTS: Product[] = [
     images: [
       'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
@@ -128,7 +130,10 @@ export const PRODUCTS: Product[] = [
         { id: 'blush', name: 'Dusty Blush', hex: '#DDB3B3' },
         { id: 'navy', name: 'Midnight Navy', hex: '#1F2937' },
       ],
-      COMMON_SIZES
+      COMMON_SIZES,
+      {
+        'FD-blush-S': 0, // Out of stock size for test
+      }
     ),
     description: 'Tiered gathered frock designed with ample ease across the waist and hidden side nursing zippers. Dedicated feeding design.',
     fabric: 'Mulmul Cotton',
@@ -141,7 +146,7 @@ export const PRODUCTS: Product[] = [
     isBestseller: true,
   },
 
-  // 3. CONFIGURATION: 'none' (Standard Ethnic Wear - No Feeding Selection Needed)
+  // 3. CO-ORD SETS (Configuration: 'none')
   {
     id: 'prod-3',
     title: 'Ira Indigo Hand-Block Chanderi Co-ord Set',
@@ -178,7 +183,7 @@ export const PRODUCTS: Product[] = [
     isNewArrival: true,
   },
 
-  // 4. CONFIGURATION: 'both'
+  // 4. 3-PIECE DRESSES (Configuration: 'both')
   {
     id: 'prod-4',
     title: 'Madhavi Heritage 3-Piece Anarkali Festive Set',
@@ -223,7 +228,7 @@ export const PRODUCTS: Product[] = [
     isFeatured: true,
   },
 
-  // 5. CONFIGURATION: 'both'
+  // 5. PARTYWEAR DRESSES (Configuration: 'both')
   {
     id: 'prod-5',
     title: 'Aadhya Georgette Festive Partywear Gown',
@@ -265,7 +270,7 @@ export const PRODUCTS: Product[] = [
     isFeatured: true,
   },
 
-  // 6. CONFIGURATION: 'none' (Standard Traditional Saree - Verified 200 URL)
+  // 6. SAREES (Configuration: 'none')
   {
     id: 'prod-6',
     title: 'Kanchivaram Touch Traditional Silk Saree',
@@ -301,7 +306,7 @@ export const PRODUCTS: Product[] = [
     careInstructions: ['Dry clean recommended', 'Iron on reverse on silk setting'],
   },
 
-  // 7. CONFIGURATION: 'both'
+  // 7. LEHENGAS (Configuration: 'both')
   {
     id: 'prod-7',
     title: 'Jiyo Flared Festive Lehenga Set',
@@ -343,7 +348,7 @@ export const PRODUCTS: Product[] = [
     isFeatured: true,
   },
 
-  // 8. CONFIGURATION: 'feeding-only'
+  // 8. KIDS COLLECTIONS (Configuration: 'feeding-only')
   {
     id: 'prod-8',
     title: 'Avani Mom & Child Cotton Twinning Frock',
@@ -383,5 +388,329 @@ export const PRODUCTS: Product[] = [
       description: 'Lined with soft inner fabric flap.'
     },
     isNewArrival: true,
+  },
+
+  // 9. FROCKS (Configuration: 'both')
+  {
+    id: 'prod-9',
+    title: 'Ananya Block-Print Tiered Maxi Frock',
+    slug: 'ananya-block-print-tiered-maxi-frock',
+    skuPrefix: 'SFK-FRK-09',
+    category: 'frocks',
+    categoryName: 'Frocks',
+    price: 1299,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'terracotta', name: 'Terracotta Rust', hex: '#C05A3E' },
+      { id: 'olive', name: 'Earthy Olive', hex: '#556B2F' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-FRK-09',
+      1299,
+      'both',
+      [
+        { id: 'terracotta', name: 'Terracotta Rust', hex: '#C05A3E' },
+        { id: 'olive', name: 'Earthy Olive', hex: '#556B2F' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Tiered silhouette with handcrafted block print motifs and an elasticated waist. Choose feeding-friendly or regular festive fit.',
+    fabric: 'Mulmul Cotton',
+    careInstructions: ['Hand wash cold separately', 'Dry in shade', 'Warm iron'],
+    feedingDetails: {
+      zipType: 'Dual invisible side zippers (12-inch vertical access)',
+      zipPlacement: 'Both left and right chest seams',
+      description: 'Covered with soft inner flap for baby comfort.'
+    },
+    isNewArrival: true,
+  },
+
+  // 10. CO-ORD SETS (Configuration: 'both')
+  {
+    id: 'prod-10',
+    title: 'Vaidehi Linen Tunic & Pant Co-ord Set',
+    slug: 'vaidehi-linen-tunic-pant-co-ord-set',
+    skuPrefix: 'SFK-CRD-10',
+    category: 'co-ord-sets',
+    categoryName: 'Co-ord Sets',
+    price: 1599,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'beige', name: 'Natural Sand Beige', hex: '#D2B48C' },
+      { id: 'slate', name: 'Slate Teal', hex: '#3E6B75' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-CRD-10',
+      1599,
+      'both',
+      [
+        { id: 'beige', name: 'Natural Sand Beige', hex: '#D2B48C' },
+        { id: 'slate', name: 'Slate Teal', hex: '#3E6B75' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Contemporary coordinated tunic and cropped trouser pair tailored in breathable linen-cotton blend.',
+    fabric: 'Linen Cotton Blend',
+    careInstructions: ['Gentle cycle wash', 'Do not bleach', 'Warm iron when slightly damp'],
+    feedingDetails: {
+      zipType: 'Hidden vertical zippers under side placket',
+      zipPlacement: 'Concealed side chest seams',
+      description: 'Seamless integration into tunic styling.'
+    },
+    isFeatured: true,
+  },
+
+  // 11. KURTI + DUPATTA (Configuration: 'feeding-only')
+  {
+    id: 'prod-11',
+    title: 'Gayathri Rayon Slub Anarkali Kurti & Dupatta',
+    slug: 'gayathri-rayon-slub-anarkali-kurti-dupatta',
+    skuPrefix: 'SFK-KRT-11',
+    category: 'kurti-dupatta',
+    categoryName: 'Kurti + Dupatta',
+    price: 1249,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'feeding-only',
+    supportedClothingTypes: ['Feeding'],
+    availableColors: [
+      { id: 'coral', name: 'Festive Coral', hex: '#E06D53' },
+      { id: 'forest', name: 'Deep Forest Green', hex: '#1C3B2B' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-KRT-11',
+      1249,
+      'feeding-only',
+      [
+        { id: 'coral', name: 'Festive Coral', hex: '#E06D53' },
+        { id: 'forest', name: 'Deep Forest Green', hex: '#1C3B2B' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Flared anarkali kurti featuring floral boota prints and paired with a crinkled mulmul dupatta. Dedicated feeding construction.',
+    fabric: 'Cotton Slub with Organza Dupatta',
+    careInstructions: ['Gentle cold wash', 'Medium iron'],
+    feedingDetails: {
+      zipType: 'Concealed dual-side nursing zips',
+      zipPlacement: 'Left and right chest vertical seams',
+      description: 'Generous 12-inch nursing opening.'
+    },
+    isBestseller: true,
+  },
+
+  // 12. 3-PIECE DRESSES (Configuration: 'both')
+  {
+    id: 'prod-12',
+    title: 'Sharanya Silk Chanderi 3-Piece Festive Ensemble',
+    slug: 'sharanya-silk-chanderi-3-piece-ensemble',
+    skuPrefix: 'SFK-3PC-12',
+    category: '3-piece-dresses',
+    categoryName: '3-Piece Dresses',
+    price: 2199,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1617059063772-34532796cdb5?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'maroon', name: 'Royal Maroon', hex: '#63141F' },
+      { id: 'bottle-green', name: 'Bottle Green', hex: '#0B3B24' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-3PC-12',
+      2199,
+      'both',
+      [
+        { id: 'maroon', name: 'Royal Maroon', hex: '#63141F' },
+        { id: 'bottle-green', name: 'Bottle Green', hex: '#0B3B24' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Regal Chanderi three-piece dress ensemble with zari embroidery, matching straight trousers, and banarasi weave border dupatta.',
+    fabric: 'Printed Chanderi Cotton Blend',
+    careInstructions: ['Dry clean only'],
+    feedingDetails: {
+      zipType: 'Concealed dual-side zippers',
+      zipPlacement: 'Discreetly along chest lines',
+      description: 'Zippers hidden behind zari border detailing.'
+    },
+    isFeatured: true,
+  },
+
+  // 13. PARTYWEAR DRESSES (Configuration: 'both')
+  {
+    id: 'prod-13',
+    title: 'Tarini Embroidered Tissue Festive Maxi Gown',
+    slug: 'tarini-embroidered-tissue-festive-maxi-gown',
+    skuPrefix: 'SFK-PTY-13',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 2499,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1617059063772-34532796cdb5?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'copper', name: 'Antique Copper', hex: '#9C5134' },
+      { id: 'ivory-gold', name: 'Ivory Gold', hex: '#D6C7A1' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-13',
+      2499,
+      'both',
+      [
+        { id: 'copper', name: 'Antique Copper', hex: '#9C5134' },
+        { id: 'ivory-gold', name: 'Ivory Gold', hex: '#D6C7A1' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Floor-sweeping partywear gown crafted in shimmering tissue georgette, accented with thread work and santoon inner lining.',
+    fabric: 'Georgette with Inner Lining',
+    careInstructions: ['Dry clean only'],
+    feedingDetails: {
+      zipType: 'Twin invisible vertical zippers',
+      zipPlacement: 'Built along princess seams',
+      description: 'Discreet side access for nursing mothers.'
+    },
+    isNewArrival: true,
+  },
+
+  // 14. SAREES (Configuration: 'none')
+  {
+    id: 'prod-14',
+    title: 'Vasundhara Handloom Linen Zari Border Saree',
+    slug: 'vasundhara-handloom-linen-zari-border-saree',
+    skuPrefix: 'SFK-SAR-14',
+    category: 'sarees',
+    categoryName: 'Sarees',
+    price: 1899,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'mustard', name: 'Earthy Mustard', hex: '#D49B28' },
+      { id: 'olive-silver', name: 'Olive with Silver Zari', hex: '#5E6646' },
+    ],
+    availableSizes: ['Free Size'],
+    variants: generateVariants(
+      'SFK-SAR-14',
+      1899,
+      'none',
+      [
+        { id: 'mustard', name: 'Earthy Mustard', hex: '#D49B28' },
+        { id: 'olive-silver', name: 'Olive with Silver Zari', hex: '#5E6646' },
+      ],
+      ['Free Size']
+    ),
+    description: 'Handcrafted pure linen saree highlighted by silver and gold zari borders. Includes running unstitched blouse fabric.',
+    fabric: 'Linen Cotton Blend',
+    careInstructions: ['Dry clean for initial washes', 'Gentle cold hand wash'],
+  },
+
+  // 15. LEHENGAS (Configuration: 'both')
+  {
+    id: 'prod-15',
+    title: 'Meera Chanderi Semi-Stitched Festive Lehenga',
+    slug: 'meera-chanderi-semi-stitched-festive-lehenga',
+    skuPrefix: 'SFK-LHG-15',
+    category: 'lehengas',
+    categoryName: 'Lehengas',
+    price: 2699,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'peacock-blue', name: 'Peacock Blue', hex: '#114B5F' },
+      { id: 'crimson', name: 'Deep Crimson', hex: '#7A131A' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-LHG-15',
+      2699,
+      'both',
+      [
+        { id: 'peacock-blue', name: 'Peacock Blue', hex: '#114B5F' },
+        { id: 'crimson', name: 'Deep Crimson', hex: '#7A131A' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Festive twirl lehenga set adorned with gota patti detailing and net dupatta. Blouse features feeding-friendly option.',
+    fabric: 'Silk Blend with Inner Lining',
+    careInstructions: ['Dry clean only'],
+    feedingDetails: {
+      zipType: 'Dual invisible side zips in blouse',
+      zipPlacement: 'Subtly along princess seams of blouse',
+      description: 'Enables comfortable nursing during celebrations.'
+    },
+    isNewArrival: true,
+  },
+
+  // 16. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-16',
+    title: 'Aarohi Pure Cotton Festive Toddler Frock',
+    slug: 'aarohi-pure-cotton-festive-toddler-frock',
+    skuPrefix: 'SFK-KID-16',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 849,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'rani-pink', name: 'Rani Pink', hex: '#D63384' },
+      { id: 'mint', name: 'Mint Green', hex: '#6EE7B7' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-16',
+      849,
+      'none',
+      [
+        { id: 'rani-pink', name: 'Rani Pink', hex: '#D63384' },
+        { id: 'mint', name: 'Mint Green', hex: '#6EE7B7' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Gentle, breathable cotton frock designed for little ones with soft lining and back zipper closure. Standard kids ethnic wear.',
+    fabric: 'Soft Cambric Cotton',
+    careInstructions: ['Machine wash gentle in cold water', 'Warm iron'],
   }
 ];

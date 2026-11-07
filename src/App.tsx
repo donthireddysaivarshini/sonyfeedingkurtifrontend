@@ -5,6 +5,10 @@ import { AuthProvider } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
 import { HomePage } from './pages/HomePage';
+import { ShopPage } from './pages/ShopPage';
+import { CategoryPage } from './pages/CategoryPage';
+import { ProductDetailPage } from './pages/ProductDetailPage';
+import { ScrollToTop } from './components/common/ScrollToTop';
 
 export const App: React.FC = () => {
   return (
@@ -13,8 +17,12 @@ export const App: React.FC = () => {
         <WishlistProvider>
           <CartProvider>
             <Router>
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/category/:slug" element={<CategoryPage />} />
+                <Route path="/product/:slug" element={<ProductDetailPage />} />
                 <Route path="*" element={<HomePage />} />
               </Routes>
             </Router>

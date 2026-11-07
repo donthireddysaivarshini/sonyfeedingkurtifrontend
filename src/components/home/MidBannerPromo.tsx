@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const MidBannerPromo: React.FC = () => {
@@ -33,13 +34,13 @@ export const MidBannerPromo: React.FC = () => {
 
             {/* Action CTA */}
             <div className="shrink-0">
-              <a
-                href="#categories"
+              <Link
+                to="/shop"
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-white text-brand-800 font-bold text-xs sm:text-sm hover:bg-ivory-50 transition-all shadow-md hover:shadow-lg"
               >
                 <span>Browse All Collections</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
 
           </div>

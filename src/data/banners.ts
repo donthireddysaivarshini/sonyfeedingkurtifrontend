@@ -21,9 +21,9 @@ export const HERO_SLIDES: HeroSlide[] = [
     highlightText: 'Ethnic Grace',
     subtitle: 'Designer Feeding Kurtis, Co-ord Sets & Festive Maxis with discreet concealed nursing zippers crafted for comfort and style.',
     ctaText: 'Shop Feeding Kurtis',
-    ctaLink: '#bestsellers',
+    ctaLink: '/shop?clothingType=Feeding',
     secondaryCtaText: 'Explore All Categories',
-    secondaryCtaLink: '#categories',
+    secondaryCtaLink: '/shop',
     desktopImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     tag: 'Feeding & Non-Feeding Options Available'
@@ -35,9 +35,9 @@ export const HERO_SLIDES: HeroSlide[] = [
     highlightText: 'Tailored Comfort',
     subtitle: 'Step into family gatherings with 3-Piece Anarkali sets and Lehengas designed with optional feeding access.',
     ctaText: 'Shop Partywear & Sets',
-    ctaLink: '#categories',
+    ctaLink: '/category/partywear-dresses',
     secondaryCtaText: 'View Collections',
-    secondaryCtaLink: '#bestsellers',
+    secondaryCtaLink: '/shop',
     desktopImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
     tag: 'Cotton & Silk Blends'
@@ -49,7 +49,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     highlightText: 'Everyday Ease',
     subtitle: 'Breezy cotton frocks and matching mom-child outfits crafted with gentle fabrics for sensitive skin.',
     ctaText: 'Explore Kids Collections',
-    ctaLink: '#categories',
+    ctaLink: '/category/kids-collections',
     desktopImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
     tag: 'Breathable Natural Fabrics'

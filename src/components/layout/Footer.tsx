@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 
@@ -52,9 +53,9 @@ export const Footer: React.FC = () => {
           
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-brand-700 block uppercase">
+            <Link to="/" className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-brand-700 block uppercase hover:text-brand-900 transition-colors">
               SONY FEEDING KURTIS
-            </span>
+            </Link>
             <p className="text-xs text-ink-secondary leading-relaxed max-w-sm">
               Indian women's ethnic wear boutique specializing in frocks, co-ord sets, sarees, and maternity-friendly feeding kurtis designed for traditional grace and everyday ease.
             </p>
@@ -91,12 +92,12 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs text-ink-secondary">
               {CATEGORIES.slice(0, 4).map((cat) => (
                 <li key={cat.id}>
-                  <a
-                    href={`#category-${cat.slug}`}
+                  <Link
+                    to={`/category/${cat.slug}`}
                     className="hover:text-brand-700 transition-colors block py-0.5"
                   >
                     {cat.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -110,12 +111,12 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs text-ink-secondary">
               {CATEGORIES.slice(4).map((cat) => (
                 <li key={cat.id}>
-                  <a
-                    href={`#category-${cat.slug}`}
+                  <Link
+                    to={`/category/${cat.slug}`}
                     className="hover:text-brand-700 transition-colors block py-0.5"
                   >
                     {cat.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
               <li>

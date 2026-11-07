@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../../data/products';
 import { ProductCard } from '../products/ProductCard';
@@ -132,13 +133,13 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
 
         {/* Bottom View All Link */}
         <div className="mt-12 text-center">
-          <a
-            href="#categories"
+          <Link
+            to="/shop"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border-2 border-brand-700 text-brand-700 font-semibold text-xs sm:text-sm hover:bg-brand-700 hover:text-white transition-all shadow-xs hover:shadow-md"
           >
-            <span>Explore All 8 Categories</span>
+            <span>Explore All Collections & Styles in Shop</span>
             <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
       </div>
