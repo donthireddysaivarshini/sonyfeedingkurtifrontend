@@ -91,6 +91,11 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
           </>
         )}
 
+        {/* Sample Demonstration Imagery Notice */}
+        <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-white/90 text-ink-muted text-[10px] font-medium backdrop-blur-xs border border-ivory-300">
+          Sample Preview Imagery
+        </div>
+
         {/* Image index pill */}
         {images.length > 1 && (
           <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium backdrop-blur-xs">
@@ -145,3 +150,4 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
     </div>
   );
 };
+

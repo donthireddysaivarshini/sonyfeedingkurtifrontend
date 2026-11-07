@@ -53,11 +53,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.badge && (
             <span
               className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs ${
-                product.badge === 'Bestseller'
-                  ? 'bg-brand-700 text-white'
-                  : product.badge === 'Feeding Essential'
+                product.badge === 'Feeding Essential'
                   ? 'bg-emerald-700 text-white'
-                  : 'bg-amber-700 text-white'
+                  : 'bg-brand-700 text-white'
               }`}
             >
               {product.badge}

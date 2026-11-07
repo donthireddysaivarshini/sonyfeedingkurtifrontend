@@ -339,6 +339,14 @@ export const ProductDetailPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-ink-secondary mt-3 leading-relaxed">
                 {product.description}
               </p>
+
+              {/* Demonstration Data Disclaimer */}
+              <div className="mt-3.5 p-2.5 rounded-xl bg-ivory-100/90 border border-ivory-300 flex items-start gap-2 text-[11px] text-ink-muted">
+                <AlertCircle className="w-3.5 h-3.5 text-brand-700 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Demonstration Preview:</strong> Photography, sample pricing, and indicative specifications shown are for interface review. Official Sony Feeding Kurtis brand assets will be provided upon launch.
+                </span>
+              </div>
             </div>
 
             {/* SELECTION ORDER STEP 1: Feeding / Non-Feeding Configuration */}
@@ -503,7 +511,7 @@ export const ProductDetailPage: React.FC = () => {
                 {isCurrentVariantInStock ? (
                   <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                    <span>In Stock • Ready to dispatch</span>
+                    <span>Sample Inventory • In Stock</span>
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-rose-600 font-medium">
@@ -740,9 +748,9 @@ export const ProductDetailPage: React.FC = () => {
                 </button>
                 {openSections.delivery && (
                   <div className="p-4 pt-0 text-xs text-ink-secondary leading-relaxed space-y-1.5 border-t border-ivory-200 bg-ivory-50/40 text-[11px]">
-                    <p>• Standard dispatch occurs within 24 to 48 working hours from our boutique.</p>
-                    <p>• All orders are packed carefully in hygienic polybags to prevent transit creases.</p>
-                    <p>• Official client shipping, tracking and exchange terms apply upon launch.</p>
+                    <p>• Official dispatch timelines and courier partners will be announced upon catalog launch.</p>
+                    <p>• Sample packaging specifications and tracking updates will follow client policies.</p>
+                    <p>• Returns and exchange terms will adhere to confirmed boutique guidelines.</p>
                   </div>
                 )}
               </div>

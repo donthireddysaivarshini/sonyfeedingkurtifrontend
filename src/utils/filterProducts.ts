@@ -82,8 +82,8 @@ export function filterAndSortProducts(
       }
       case 'featured':
       default: {
-        const aScore = (a.isFeatured ? 2 : 0) + (a.isBestseller ? 1 : 0);
-        const bScore = (b.isFeatured ? 2 : 0) + (b.isBestseller ? 1 : 0);
+        const aScore = (a.isFeatured ? 2 : 0) + (a.isNewArrival ? 1 : 0);
+        const bScore = (b.isFeatured ? 2 : 0) + (b.isNewArrival ? 1 : 0);
         return bScore - aScore;
       }
     }
@@ -91,3 +91,4 @@ export function filterAndSortProducts(
 
   return sorted;
 }
+

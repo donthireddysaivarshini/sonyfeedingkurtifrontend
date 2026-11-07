@@ -1,3 +1,14 @@
+/**
+ * SONY FEEDING KURTIS - Mock Catalog Data (Demonstration Preview)
+ * 
+ * NOTICE:
+ * 1. Imagery: Sample photography sourced from Unsplash for layout and responsive demonstration.
+ *    These do NOT represent official Sony Feeding Kurtis product photos.
+ * 2. Pricing & Sizing: Sample price figures and standard sizing are placeholders for interface validation.
+ * 3. Construction details: Zipper placements and silhouettes are illustrative models reflecting the
+ *    required feeding configurations (both, feeding-only, none) pending final client manufacturing specifications.
+ */
+
 import { Product, ProductVariant, ClothingType, FeedingConfiguration, ProductColor, ProductSize } from '../types/product';
 
 // Helper to generate variants reflecting the optional feeding configuration
@@ -90,11 +101,10 @@ export const PRODUCTS: Product[] = [
     fabric: 'Cotton Slub with Organza Dupatta',
     careInstructions: ['Dry clean first wash recommended', 'Gentle cold hand wash thereafter', 'Medium warm iron'],
     feedingDetails: {
-      zipType: 'Dual invisible side zippers (12-inch vertical access)',
-      zipPlacement: 'Both left and right chest seams for nursing access',
-      description: 'Zippers are positioned under fabric plackets.'
+      zipType: 'Concealed dual-side nursing access',
+      zipPlacement: 'Discreet side openings',
+      description: 'Concealed vertical openings designed for practical nursing access.'
     },
-    isBestseller: true,
     isFeatured: true,
   },
 
@@ -139,11 +149,10 @@ export const PRODUCTS: Product[] = [
     fabric: 'Mulmul Cotton',
     careInstructions: ['Machine wash gentle cycle', 'Dry in shade', 'Warm iron'],
     feedingDetails: {
-      zipType: 'Concealed two-way nursing zippers',
-      zipPlacement: 'Subtly nested along princess seams',
-      description: 'Covered with soft inner lining.'
+      zipType: 'Concealed dual nursing zippers',
+      zipPlacement: 'Discreet side torso openings',
+      description: 'Dedicated nursing access integrated cleanly into the gathered frock design.'
     },
-    isBestseller: true,
   },
 
   // 3. CO-ORD SETS (Configuration: 'none')
@@ -224,7 +233,6 @@ export const PRODUCTS: Product[] = [
       zipPlacement: 'Integrated along side seams',
       description: 'Allows feeding without disrupting the silhouette.'
     },
-    isBestseller: true,
     isFeatured: true,
   },
 
@@ -239,8 +247,8 @@ export const PRODUCTS: Product[] = [
     price: 1699,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1617059063772-34532796cdb5?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -263,9 +271,9 @@ export const PRODUCTS: Product[] = [
     fabric: 'Georgette with Inner Lining',
     careInstructions: ['Specialist dry clean only'],
     feedingDetails: {
-      zipType: 'Invisible dual side zippers',
-      zipPlacement: 'Built along side princess seams',
-      description: 'Concealed under side seam folds.'
+      zipType: 'Concealed dual-side zippers',
+      zipPlacement: 'Integrated discreetly into side seams',
+      description: 'Hidden nursing openings tailored into festive partywear gown.'
     },
     isFeatured: true,
   },
@@ -342,7 +350,7 @@ export const PRODUCTS: Product[] = [
     careInstructions: ['Dry clean only'],
     feedingDetails: {
       zipType: 'Side concealed zippers in blouse',
-      zipPlacement: 'Integrated along side seams of blouse',
+      zipPlacement: 'Side seams of blouse',
       description: 'Allows nursing access while wearing festive attire.'
     },
     isFeatured: true,
@@ -383,9 +391,9 @@ export const PRODUCTS: Product[] = [
     fabric: 'Soft Cambric Cotton',
     careInstructions: ['Machine wash gentle', 'Warm iron'],
     feedingDetails: {
-      zipType: 'Soft nylon feeding zippers',
-      zipPlacement: 'Dual side seam concealed openings',
-      description: 'Lined with soft inner fabric flap.'
+      zipType: 'Concealed nursing zippers',
+      zipPlacement: 'Dual side seam openings',
+      description: 'Mother outfit includes discreet side nursing access.'
     },
     isNewArrival: true,
   },
@@ -425,9 +433,9 @@ export const PRODUCTS: Product[] = [
     fabric: 'Mulmul Cotton',
     careInstructions: ['Hand wash cold separately', 'Dry in shade', 'Warm iron'],
     feedingDetails: {
-      zipType: 'Dual invisible side zippers (12-inch vertical access)',
-      zipPlacement: 'Both left and right chest seams',
-      description: 'Covered with soft inner flap for baby comfort.'
+      zipType: 'Concealed dual-side nursing access',
+      zipPlacement: 'Left and right side openings',
+      description: 'Discreet feeding feature designed for nursing access.'
     },
     isNewArrival: true,
   },
@@ -467,8 +475,8 @@ export const PRODUCTS: Product[] = [
     fabric: 'Linen Cotton Blend',
     careInstructions: ['Gentle cycle wash', 'Do not bleach', 'Warm iron when slightly damp'],
     feedingDetails: {
-      zipType: 'Hidden vertical zippers under side placket',
-      zipPlacement: 'Concealed side chest seams',
+      zipType: 'Concealed vertical side zippers',
+      zipPlacement: 'Integrated into side seams',
       description: 'Seamless integration into tunic styling.'
     },
     isFeatured: true,
@@ -510,10 +518,9 @@ export const PRODUCTS: Product[] = [
     careInstructions: ['Gentle cold wash', 'Medium iron'],
     feedingDetails: {
       zipType: 'Concealed dual-side nursing zips',
-      zipPlacement: 'Left and right chest vertical seams',
-      description: 'Generous 12-inch nursing opening.'
+      zipPlacement: 'Left and right vertical side seams',
+      description: 'Dedicated nursing access integrated into anarkali silhouette.'
     },
-    isBestseller: true,
   },
 
   // 12. 3-PIECE DRESSES (Configuration: 'both')
@@ -552,8 +559,8 @@ export const PRODUCTS: Product[] = [
     careInstructions: ['Dry clean only'],
     feedingDetails: {
       zipType: 'Concealed dual-side zippers',
-      zipPlacement: 'Discreetly along chest lines',
-      description: 'Zippers hidden behind zari border detailing.'
+      zipPlacement: 'Discreet side placement',
+      description: 'Discreet vertical nursing access designed for festive ensemble.'
     },
     isFeatured: true,
   },
@@ -569,8 +576,8 @@ export const PRODUCTS: Product[] = [
     price: 2499,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1617059063772-34532796cdb5?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -593,8 +600,8 @@ export const PRODUCTS: Product[] = [
     fabric: 'Georgette with Inner Lining',
     careInstructions: ['Dry clean only'],
     feedingDetails: {
-      zipType: 'Twin invisible vertical zippers',
-      zipPlacement: 'Built along princess seams',
+      zipType: 'Concealed dual-side vertical zippers',
+      zipPlacement: 'Integrated into side seams',
       description: 'Discreet side access for nursing mothers.'
     },
     isNewArrival: true,
@@ -671,8 +678,8 @@ export const PRODUCTS: Product[] = [
     fabric: 'Silk Blend with Inner Lining',
     careInstructions: ['Dry clean only'],
     feedingDetails: {
-      zipType: 'Dual invisible side zips in blouse',
-      zipPlacement: 'Subtly along princess seams of blouse',
+      zipType: 'Concealed dual-side zips in blouse',
+      zipPlacement: 'Discreet side placement in blouse',
       description: 'Enables comfortable nursing during celebrations.'
     },
     isNewArrival: true,

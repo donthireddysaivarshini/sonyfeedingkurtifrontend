@@ -16,7 +16,7 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
   onViewDetails,
   selectedCategorySlug,
 }) => {
-  const [activeTab, setActiveTab] = useState<'all' | 'feeding' | 'bestsellers' | 'new-arrivals'>('bestsellers');
+  const [activeTab, setActiveTab] = useState<'all' | 'feeding' | 'featured' | 'new-arrivals'>('featured');
   const [clothingFilter, setClothingFilter] = useState<'All' | ClothingType>('All');
 
   // Filter products based on tab, category, and clothing type
@@ -35,8 +35,8 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
     if (activeTab === 'feeding') {
       return product.supportedClothingTypes.includes('Feeding');
     }
-    if (activeTab === 'bestsellers') {
-      return product.isBestseller || product.badge === 'Bestseller' || product.badge === 'Feeding Essential';
+    if (activeTab === 'featured') {
+      return product.isFeatured || product.feedingConfig === 'both' || product.feedingConfig === 'feeding-only';
     }
     if (activeTab === 'new-arrivals') {
       return product.isNewArrival || product.badge === 'New Arrival';
@@ -45,7 +45,7 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
   });
 
   return (
-    <section id="bestsellers" className="py-14 sm:py-20 bg-ivory-50/50 w-full overflow-hidden">
+    <section id="featured-collections" className="py-14 sm:py-20 bg-ivory-50/50 w-full overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         
         {/* Section Header */}
@@ -84,9 +84,9 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
         {/* Collection Tabs */}
         <div className="w-full flex items-center space-x-2 sm:space-x-4 border-b border-ivory-300 mb-8 overflow-x-auto no-scrollbar">
           {[
-            { id: 'bestsellers', label: 'Bestselling Styles' },
-            { id: 'feeding', label: 'Feeding Favourites' },
-            { id: 'new-arrivals', label: 'New Arrivals 2026' },
+            { id: 'featured', label: 'Featured Styles' },
+            { id: 'feeding', label: 'Feeding Friendly' },
+            { id: 'new-arrivals', label: 'New Arrivals' },
             { id: 'all', label: 'All Collections' },
           ].map((tab) => (
             <button

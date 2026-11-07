@@ -16,8 +16,45 @@ import { SortDropdown } from '../components/shop/SortDropdown';
 import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
 import { PRODUCTS } from '../data/products';
-import { Product } from '../types/product';
+import { Product, ProductSize } from '../types/product';
 import { useCart } from '../context/CartContext';
+
+function parseFiltersFromParams(params: URLSearchParams): FilterState {
+  const category = params.get('category') || null;
+  const feedingParam = params.get('clothingType') || params.get('feeding');
+  const feedingType: FilterState['feedingType'] =
+    feedingParam === 'Feeding'
+      ? 'Feeding'
+      : feedingParam === 'Non-Feeding'
+      ? 'Non-Feeding'
+      : 'All';
+
+  const sortParam = params.get('sort');
+  const sortBy: FilterState['sortBy'] =
+    sortParam === 'price-low'
+      ? 'price-low'
+      : sortParam === 'price-high'
+      ? 'price-high'
+      : sortParam === 'newest'
+      ? 'newest'
+      : 'featured';
+
+  const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
+  const colors = params.get('colors')?.split(',').filter(Boolean) || [];
+  const fabrics = params.get('fabrics')?.split(',').filter(Boolean) || [];
+  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 800;
+  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 3000;
+
+  return {
+    category,
+    feedingType,
+    sizes,
+    colors,
+    fabrics,
+    priceRange: [isNaN(minPrice) ? 800 : minPrice, isNaN(maxPrice) ? 3000 : maxPrice],
+    sortBy,
+  };
+}
 
 export const ShopPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,58 +69,11 @@ export const ShopPage: React.FC = () => {
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
   // Initialize filter state from URL query parameters
-  const [filters, setFilters] = useState<FilterState>(() => {
-    const initialCategory = searchParams.get('category') || null;
-    const initialClothingTypeParam = searchParams.get('clothingType') || searchParams.get('feeding');
-    const initialClothingType: FilterState['feedingType'] =
-      initialClothingTypeParam === 'Feeding'
-        ? 'Feeding'
-        : initialClothingTypeParam === 'Non-Feeding'
-        ? 'Non-Feeding'
-        : 'All';
+  const [filters, setFilters] = useState<FilterState>(() => parseFiltersFromParams(searchParams));
 
-    const sortParam = searchParams.get('sort');
-    const initialSort: FilterState['sortBy'] =
-      sortParam === 'price-low'
-        ? 'price-low'
-        : sortParam === 'price-high'
-        ? 'price-high'
-        : sortParam === 'newest'
-        ? 'newest'
-        : 'featured';
-
-    return {
-      ...INITIAL_FILTERS,
-      category: initialCategory,
-      feedingType: initialClothingType,
-      sortBy: initialSort,
-    };
-  });
-
-  // Sync state if URL query params change externally
+  // Sync state if URL query params change externally (e.g. back/forward navigation)
   useEffect(() => {
-    const cat = searchParams.get('category') || null;
-    const feeding = searchParams.get('clothingType') || searchParams.get('feeding');
-    const sort = searchParams.get('sort');
-
-    setFilters((prev) => ({
-      ...prev,
-      category: cat !== prev.category ? cat : prev.category,
-      feedingType:
-        feeding === 'Feeding'
-          ? 'Feeding'
-          : feeding === 'Non-Feeding'
-          ? 'Non-Feeding'
-          : prev.feedingType,
-      sortBy:
-        sort === 'price-low'
-          ? 'price-low'
-          : sort === 'price-high'
-          ? 'price-high'
-          : sort === 'newest'
-          ? 'newest'
-          : prev.sortBy,
-    }));
+    setFilters(parseFiltersFromParams(searchParams));
   }, [searchParams]);
 
   // Compute filtered and sorted products
@@ -98,11 +88,15 @@ export const ShopPage: React.FC = () => {
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
-    // Update category query param if changed
-    const newParams: Record<string, string> = {};
-    if (newFilters.category) newParams.category = newFilters.category;
-    if (newFilters.feedingType !== 'All') newParams.clothingType = newFilters.feedingType;
-    if (newFilters.sortBy !== 'featured') newParams.sort = newFilters.sortBy;
+    const newParams = new URLSearchParams();
+    if (newFilters.category) newParams.set('category', newFilters.category);
+    if (newFilters.feedingType !== 'All') newParams.set('clothingType', newFilters.feedingType);
+    if (newFilters.sizes.length > 0) newParams.set('sizes', newFilters.sizes.join(','));
+    if (newFilters.colors.length > 0) newParams.set('colors', newFilters.colors.join(','));
+    if (newFilters.fabrics.length > 0) newParams.set('fabrics', newFilters.fabrics.join(','));
+    if (newFilters.priceRange[0] > 800) newParams.set('minPrice', String(newFilters.priceRange[0]));
+    if (newFilters.priceRange[1] < 3000) newParams.set('maxPrice', String(newFilters.priceRange[1]));
+    if (newFilters.sortBy !== 'featured') newParams.set('sort', newFilters.sortBy);
     setSearchParams(newParams);
   };
 
@@ -133,16 +127,26 @@ export const ShopPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-ink-secondary mt-1.5 max-w-2xl">
             Browse our complete selection of ethnic wear, frocks, lehengas, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.
           </p>
+          <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-ivory-100 border border-ivory-300 text-[11px] text-ink-muted">
+            <AlertCircle className="w-3.5 h-3.5 text-brand-700 shrink-0" />
+            <span>Preview Catalog • Photography, sample pricing, and variant specs are indicative demonstration data.</span>
+          </div>
         </div>
 
         {/* Toolbar: Filter Toggle on Mobile, Count & Sort */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-ivory-200">
           
-          {/* Mobile Filter Button & Count */}
-          <div className="flex items-center justify-between sm:justify-start gap-3">
+          {/* Status count */}
+          <div className="text-xs text-ink-muted">
+            Showing <strong className="text-ink-primary font-bold">{matchingProducts.length}</strong> of{' '}
+            {PRODUCTS.length} styles
+          </div>
+
+          {/* Controls: Mobile Filter Drawer Button & Sort */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-ivory-300 text-ink-primary font-semibold text-xs shadow-xs hover:border-brand-700 transition-colors"
+              className="lg:hidden flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white border border-ivory-300 text-ink-primary font-semibold text-xs shadow-xs hover:border-brand-700 transition-colors"
             >
               <SlidersHorizontal className="w-3.5 h-3.5 text-brand-700" />
               <span>Filters</span>
@@ -151,18 +155,12 @@ export const ShopPage: React.FC = () => {
               </span>
             </button>
 
-            <span className="text-xs text-ink-muted">
-              Showing <strong className="text-ink-primary font-bold">{matchingProducts.length}</strong> of{' '}
-              {PRODUCTS.length} styles
-            </span>
-          </div>
-
-          {/* Sorting Dropdown */}
-          <div className="flex items-center justify-end">
-            <SortDropdown
-              value={filters.sortBy}
-              onChange={(newSort) => handleFilterChange({ ...filters, sortBy: newSort })}
-            />
+            <div className="flex-1 sm:flex-none">
+              <SortDropdown
+                value={filters.sortBy}
+                onChange={(newSort) => handleFilterChange({ ...filters, sortBy: newSort })}
+              />
+            </div>
           </div>
 
         </div>

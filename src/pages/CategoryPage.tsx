@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, Sparkles, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
@@ -17,11 +17,48 @@ import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
 import { PRODUCTS } from '../data/products';
 import { CATEGORIES } from '../data/categories';
-import { Product } from '../types/product';
+import { Product, ProductSize } from '../types/product';
 import { useCart } from '../context/CartContext';
+
+function parseCategoryFilters(slug: string | undefined, params: URLSearchParams): FilterState {
+  const feedingParam = params.get('clothingType') || params.get('feeding');
+  const feedingType: FilterState['feedingType'] =
+    feedingParam === 'Feeding'
+      ? 'Feeding'
+      : feedingParam === 'Non-Feeding'
+      ? 'Non-Feeding'
+      : 'All';
+
+  const sortParam = params.get('sort');
+  const sortBy: FilterState['sortBy'] =
+    sortParam === 'price-low'
+      ? 'price-low'
+      : sortParam === 'price-high'
+      ? 'price-high'
+      : sortParam === 'newest'
+      ? 'newest'
+      : 'featured';
+
+  const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
+  const colors = params.get('colors')?.split(',').filter(Boolean) || [];
+  const fabrics = params.get('fabrics')?.split(',').filter(Boolean) || [];
+  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 800;
+  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 3000;
+
+  return {
+    category: slug || null,
+    feedingType,
+    sizes,
+    colors,
+    fabrics,
+    priceRange: [isNaN(minPrice) ? 800 : minPrice, isNaN(maxPrice) ? 3000 : maxPrice],
+    sortBy,
+  };
+}
 
 export const CategoryPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { openCart } = useCart();
 
@@ -41,20 +78,12 @@ export const CategoryPage: React.FC = () => {
   }, [slug]);
 
   // Filters state (with category locked to current slug)
-  const [filters, setFilters] = useState<FilterState>(() => ({
-    ...INITIAL_FILTERS,
-    category: slug || null,
-  }));
+  const [filters, setFilters] = useState<FilterState>(() => parseCategoryFilters(slug, searchParams));
 
-  // Re-sync filters if slug changes
+  // Re-sync filters if slug or searchParams changes (e.g. browser back/forward navigation)
   useEffect(() => {
-    if (slug) {
-      setFilters((prev) => ({
-        ...prev,
-        category: slug,
-      }));
-    }
-  }, [slug]);
+    setFilters(parseCategoryFilters(slug, searchParams));
+  }, [slug, searchParams]);
 
   // Matching filtered and sorted products
   const matchingProducts = useMemo(() => {
@@ -66,6 +95,21 @@ export const CategoryPage: React.FC = () => {
       ...INITIAL_FILTERS,
       category: slug || null,
     });
+    setSearchParams({});
+  };
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    const updated = { ...newFilters, category: slug || null };
+    setFilters(updated);
+    const newParams = new URLSearchParams();
+    if (updated.feedingType !== 'All') newParams.set('clothingType', updated.feedingType);
+    if (updated.sizes.length > 0) newParams.set('sizes', updated.sizes.join(','));
+    if (updated.colors.length > 0) newParams.set('colors', updated.colors.join(','));
+    if (updated.fabrics.length > 0) newParams.set('fabrics', updated.fabrics.join(','));
+    if (updated.priceRange[0] > 800) newParams.set('minPrice', String(updated.priceRange[0]));
+    if (updated.priceRange[1] < 3000) newParams.set('maxPrice', String(updated.priceRange[1]));
+    if (updated.sortBy !== 'featured') newParams.set('sort', updated.sortBy);
+    setSearchParams(newParams);
   };
 
   if (!category) {
@@ -131,9 +175,14 @@ export const CategoryPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed max-w-lg">
                 {category.description}
               </p>
-              <div className="pt-2 flex items-center gap-3 text-xs text-brand-800 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                <span>{categoryProducts.length} Signature Styles Available</span>
+              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-brand-800 font-semibold">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                  <span>{categoryProducts.length} Signature Styles</span>
+                </span>
+                <span className="text-[11px] text-ink-muted font-normal bg-white/70 px-2 py-0.5 rounded border border-ivory-300">
+                  Preview Catalog • Sample Data
+                </span>
               </div>
             </div>
 
@@ -152,10 +201,17 @@ export const CategoryPage: React.FC = () => {
         {/* Toolbar: Filter Toggle on Mobile, Count & Sort */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-ivory-200">
           
-          <div className="flex items-center justify-between sm:justify-start gap-3">
+          {/* Status count */}
+          <div className="text-xs text-ink-muted">
+            Showing <strong className="text-ink-primary font-bold">{matchingProducts.length}</strong> of{' '}
+            {categoryProducts.length} {category.name}
+          </div>
+
+          {/* Controls: Mobile Filter Drawer Button & Sort */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-ivory-300 text-ink-primary font-semibold text-xs shadow-xs hover:border-brand-700 transition-colors"
+              className="lg:hidden flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white border border-ivory-300 text-ink-primary font-semibold text-xs shadow-xs hover:border-brand-700 transition-colors"
             >
               <SlidersHorizontal className="w-3.5 h-3.5 text-brand-700" />
               <span>Filters</span>
@@ -164,17 +220,12 @@ export const CategoryPage: React.FC = () => {
               </span>
             </button>
 
-            <span className="text-xs text-ink-muted">
-              Showing <strong className="text-ink-primary font-bold">{matchingProducts.length}</strong> of{' '}
-              {categoryProducts.length} {category.name}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-end">
-            <SortDropdown
-              value={filters.sortBy}
-              onChange={(newSort) => setFilters({ ...filters, sortBy: newSort })}
-            />
+            <div className="flex-1 sm:flex-none">
+              <SortDropdown
+                value={filters.sortBy}
+                onChange={(newSort) => handleFilterChange({ ...filters, sortBy: newSort })}
+              />
+            </div>
           </div>
 
         </div>
@@ -182,7 +233,7 @@ export const CategoryPage: React.FC = () => {
         {/* Active Filters Badges */}
         <ActiveFilterPills
           filters={filters}
-          onFilterChange={setFilters}
+          onFilterChange={handleFilterChange}
           onReset={handleResetFilters}
           lockCategory={true}
           availableProducts={categoryProducts}
@@ -195,7 +246,7 @@ export const CategoryPage: React.FC = () => {
           <aside className="hidden lg:block lg:col-span-1 bg-white p-6 rounded-2xl border border-ivory-300 shadow-card h-fit sticky top-24">
             <FilterSidebar
               filters={filters}
-              onFilterChange={setFilters}
+              onFilterChange={handleFilterChange}
               onReset={handleResetFilters}
               availableProducts={categoryProducts}
               lockCategory={true}
@@ -280,7 +331,7 @@ export const CategoryPage: React.FC = () => {
         isOpen={isMobileFilterOpen}
         onClose={() => setIsMobileFilterOpen(false)}
         filters={filters}
-        onFilterChange={setFilters}
+        onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
         availableProducts={categoryProducts}
         lockCategory={true}
@@ -324,3 +375,4 @@ export const CategoryPage: React.FC = () => {
     </div>
   );
 };
+

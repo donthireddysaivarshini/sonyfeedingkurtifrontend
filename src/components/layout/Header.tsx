@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
 
             <Link to="/shop?sort=featured" className="hover:text-brand-700 transition-colors py-1">
-              Bestsellers
+              Featured Styles
             </Link>
 
             <Link to="/shop?sort=newest" className="hover:text-brand-700 transition-colors py-1">

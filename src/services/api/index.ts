@@ -66,7 +66,7 @@ export const storeApi = {
           break;
         case 'popular':
         default:
-          result.sort((a, b) => (b.isBestseller ? 1 : 0) - (a.isBestseller ? 1 : 0));
+          result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
           break;
       }
     }
@@ -80,7 +80,7 @@ export const storeApi = {
   },
 
   async getBestsellers(): Promise<Product[]> {
-    return PRODUCTS.filter((p) => p.isBestseller || p.badge === 'Bestseller');
+    return PRODUCTS.filter((p) => p.isFeatured);
   },
 
   async getNewArrivals(): Promise<Product[]> {

@@ -116,9 +116,9 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               onClick={onClose}
               className="flex items-center justify-between p-2 text-sm font-medium text-ink-primary hover:bg-ivory-200 rounded-lg"
             >
-              <span>Bestselling Kurtis & Sets</span>
+              <span>Featured Ethnic Wear</span>
               <span className="text-xs bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full font-semibold">
-                Popular
+                Curated
               </span>
             </Link>
             <Link
@@ -126,7 +126,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               onClick={onClose}
               className="flex items-center justify-between p-2 text-sm font-medium text-ink-primary hover:bg-ivory-200 rounded-lg"
             >
-              <span>New Arrivals 2026</span>
+              <span>New Arrivals</span>
               <span className="text-xs text-brand-accent font-semibold">New</span>
             </Link>
           </div>

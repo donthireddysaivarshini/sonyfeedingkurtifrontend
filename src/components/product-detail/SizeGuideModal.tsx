@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Ruler, CheckCircle2 } from 'lucide-react';
+import { X, Ruler, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface SizeGuideModalProps {
   isOpen: boolean;
@@ -31,7 +31,7 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
                 Ethnic & Maternity Size Guide
               </h3>
               <p className="text-[11px] text-ink-muted">
-                Standard Indian garment measurements (in inches)
+                Indicative Generic Measurements (in inches) • Sample Reference Data
               </p>
             </div>
           </div>
@@ -46,12 +46,20 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
         </div>
 
         {/* Content Body */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-6">
-          {/* Relaxed Ease Note */}
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
+          {/* Sample Sizing Reference Notice */}
+          <div className="p-3.5 bg-amber-50/80 border border-amber-300 rounded-xl text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+            <div>
+              <strong>Sample Sizing Reference:</strong> The measurements displayed below represent standard generic Indian sizing benchmarks for interface demonstration. Official garment dimensions and silhouette charts will be replaced with client-confirmed production specs.
+            </div>
+          </div>
+
+          {/* Indicative Ease Note */}
           <div className="p-3.5 bg-brand-50/70 border border-brand-200 rounded-xl text-xs text-brand-900 leading-relaxed flex items-start gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-brand-700 shrink-0 mt-0.5" />
             <div>
-              <strong>Maternity Sizing Note:</strong> Our feeding silhouettes incorporate 2 to 3 inches of relaxed chest and waist ease to comfortably accommodate natural body changes. You can generally select your pre-pregnancy standard size.
+              <strong>Indicative Maternity Note:</strong> Generic feeding silhouettes typically allow relaxed ease across bust and waist. Official garment ease guidelines and tailored charts will be confirmed upon brand launch.
             </div>
           </div>
 
@@ -137,3 +145,4 @@ export const SizeGuideModal: React.FC<SizeGuideModalProps> = ({ isOpen, onClose 
     </div>
   );
 };
+
