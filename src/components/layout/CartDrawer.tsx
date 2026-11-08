@@ -1,13 +1,15 @@
 import React from 'react';
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, ShieldCheck, LogIn } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, ShieldCheck, LogIn, ExternalLink } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
 interface CartDrawerProps {
-  onProceedToCheckout: () => void;
+  onProceedToCheckout?: () => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) => {
+  const navigate = useNavigate();
   const {
     isCartOpen,
     closeCart,
@@ -27,12 +29,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
   const handleCheckoutClick = () => {
     closeCart();
     if (!isAuthenticated) {
-      // Mandatory Google login before checkout. After auth, restore cart and open checkout!
+      // Mandatory Google login before checkout. After auth, navigate to checkout!
       openAuthModal(() => {
-        onProceedToCheckout();
-      });
+        navigate('/checkout');
+      }, '/checkout');
     } else {
-      onProceedToCheckout();
+      if (onProceedToCheckout) {
+        onProceedToCheckout();
+      } else {
+        navigate('/checkout');
+      }
     }
   };
 
@@ -84,12 +90,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                   Browse our collections of frocks, co-ords, sarees, and feeding-friendly kurtis.
                 </p>
               </div>
-              <button
+              <Link
+                to="/shop"
                 onClick={closeCart}
-                className="px-6 py-2.5 bg-brand-700 text-white rounded-xl text-xs font-semibold hover:bg-brand-800 transition-colors shadow-sm"
+                className="px-6 py-2.5 bg-brand-700 text-white rounded-xl text-xs font-semibold hover:bg-brand-800 transition-colors shadow-sm inline-block"
               >
                 Browse Collections
-              </button>
+              </Link>
             </div>
           ) : (
             items.map((item) => (
@@ -222,6 +229,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                 </>
               )}
             </button>
+
+            <Link
+              to="/cart"
+              onClick={closeCart}
+              className="w-full flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold text-brand-700 hover:text-brand-900 border border-brand-200 hover:bg-brand-50 rounded-xl transition-colors"
+            >
+              <span>View & Edit Full Bag</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
 
             <div className="flex items-center justify-center gap-2 text-[10px] text-ink-muted">
               <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Heart, Menu, ChevronDown, User, Sparkles } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -10,7 +10,7 @@ import { CATEGORIES } from '../../data/categories';
 interface HeaderProps {
   onOpenSearch: () => void;
   onOpenMobileMenu: () => void;
-  onOpenCart: () => void;
+  onOpenCart?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,13 +18,22 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenMobileMenu,
   onOpenCart,
 }) => {
+  const navigate = useNavigate();
   const { totalItemsCount } = useCart();
   const { wishlistCount } = useWishlist();
   const { theme } = useTheme();
-  const { openAuthModal } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+
+  const handleCartClick = () => {
+    if (onOpenCart) {
+      onOpenCart();
+    } else {
+      navigate('/cart');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -184,19 +193,22 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </a>
 
-            {/* Account / Sign-In Button */}
-            <button
-              aria-label="Sign In"
-              onClick={() => openAuthModal()}
-              className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors rounded-full hover:bg-ivory-200 hidden sm:block"
-              title="Google Sign In (Stage 5 Integration)"
+            {/* Account Link / Sign-In */}
+            <Link
+              to="/account"
+              aria-label="My Account"
+              className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors rounded-full hover:bg-ivory-200 hidden sm:block relative"
+              title={isAuthenticated ? `Account (${user?.name})` : "My Account / Sign In"}
             >
               <User className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+              {isAuthenticated && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-emerald-600 rounded-full ring-2 ring-white" />
+              )}
+            </Link>
 
             {/* Cart Icon & Counter */}
             <button
-              onClick={onOpenCart}
+              onClick={handleCartClick}
               aria-label="Open Cart"
               className="p-1.5 sm:p-2 hover:text-brand-700 transition-colors relative rounded-full hover:bg-ivory-200 flex items-center gap-1 group"
             >

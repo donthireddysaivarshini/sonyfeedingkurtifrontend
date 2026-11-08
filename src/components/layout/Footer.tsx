@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, ShieldCheck, Heart, Sparkles } from 'lucide-react';
+import { Mail, Instagram, Facebook, Youtube, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 
 export const Footer: React.FC = () => {
@@ -130,19 +130,31 @@ export const Footer: React.FC = () => {
           {/* Column 4: Customer Care & Policies */}
           <div>
             <h4 className="font-serif text-sm font-bold text-ink-primary uppercase tracking-wider mb-4">
-              Customer Support
+              Customer Account
             </h4>
             <ul className="space-y-2 text-xs text-ink-secondary">
-              <li className="flex items-center gap-1.5 text-ink-primary font-medium">
-                <Phone className="w-3.5 h-3.5 text-brand-700" />
-                <span>Contact support details to be announced</span>
+              <li>
+                <Link to="/account" className="hover:text-brand-700 transition-colors block py-0.5">
+                  My Account
+                </Link>
               </li>
-              <li className="flex items-center gap-1.5 text-ink-muted">
-                <MapPin className="w-3.5 h-3.5 text-brand-700" />
-                <span>India</span>
+              <li>
+                <Link to="/account/orders" className="hover:text-brand-700 transition-colors block py-0.5">
+                  Track Orders
+                </Link>
               </li>
-              <li className="pt-1 text-[11px] text-ink-muted leading-snug">
-                Official shipping, returns, and terms will follow client brand policies upon launch.
+              <li>
+                <Link to="/cart" className="hover:text-brand-700 transition-colors block py-0.5">
+                  Shopping Bag
+                </Link>
+              </li>
+              <li>
+                <Link to="/account/addresses" className="hover:text-brand-700 transition-colors block py-0.5">
+                  Delivery Addresses
+                </Link>
+              </li>
+              <li className="pt-2 text-[11px] text-ink-muted leading-snug">
+                Official support contact and policies will follow client approval upon launch.
               </li>
             </ul>
           </div>

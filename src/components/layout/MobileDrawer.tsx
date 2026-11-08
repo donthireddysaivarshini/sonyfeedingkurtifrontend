@@ -1,21 +1,34 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck, User, Search } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenCart: () => void;
+  onOpenCart?: () => void;
+  onOpenSearch?: () => void;
 }
 
-export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onOpenCart }) => {
+export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onOpenCart, onOpenSearch }) => {
+  const navigate = useNavigate();
   const { wishlistCount } = useWishlist();
   const { totalItemsCount } = useCart();
+  const { isAuthenticated, user } = useAuth();
 
   if (!isOpen) return null;
+
+  const handleCartClick = () => {
+    onClose();
+    if (onOpenCart) {
+      onOpenCart();
+    } else {
+      navigate('/cart');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex lg:hidden">
@@ -48,8 +61,24 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
           </button>
         </div>
 
-        {/* Shop All Highlight */}
-        <div className="p-3 bg-white border-b border-ivory-300">
+        {/* Search & Shop All Highlight */}
+        <div className="p-3 bg-white border-b border-ivory-300 space-y-2">
+          {onOpenSearch && (
+            <button
+              onClick={() => {
+                onClose();
+                onOpenSearch();
+              }}
+              className="w-full flex items-center justify-between p-2.5 rounded-xl border border-ivory-300 bg-ivory-50 hover:bg-ivory-100 transition-colors text-xs font-semibold text-ink-primary"
+            >
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-brand-700" />
+                <span>Search Kurtis & Collections</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-ink-muted" />
+            </button>
+          )}
+
           <Link
             to="/shop"
             onClick={onClose}
@@ -134,12 +163,22 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
 
         {/* Drawer Bottom Actions */}
         <div className="p-4 border-t border-ivory-300 bg-white space-y-2">
+          {/* Account Shortcut */}
+          <Link
+            to="/account"
+            onClick={onClose}
+            className="flex items-center justify-between p-2.5 rounded-xl border border-ivory-300 bg-ivory-50 hover:bg-ivory-100 transition-colors text-xs font-semibold text-ink-primary"
+          >
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-brand-700" />
+              <span>{isAuthenticated ? `My Account (${user?.name?.split(' ')[0]})` : 'My Account / Sign In'}</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-ink-muted" />
+          </Link>
+
           <div className="flex items-center gap-2">
             <button
-              onClick={() => {
-                onClose();
-                onOpenCart();
-              }}
+              onClick={handleCartClick}
               className="flex-1 flex items-center justify-center gap-2 bg-brand-700 text-white py-2.5 rounded-xl text-xs font-semibold hover:bg-brand-800 transition-colors shadow-sm"
             >
               <ShoppingBag className="w-4 h-4" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, X, Sparkles, ChevronRight, Tag } from 'lucide-react';
 import { PRODUCTS } from '../../data/products';
 import { CATEGORIES } from '../../data/categories';
@@ -7,7 +8,7 @@ import { Product } from '../../types/product';
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectProduct: (product: Product) => void;
+  onSelectProduct?: (product: Product) => void;
 }
 
 export const SearchModal: React.FC<SearchModalProps> = ({
@@ -15,6 +16,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
   onSelectProduct,
 }) => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'Feeding' | 'Non-Feeding'>('All');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -156,7 +158,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 <div
                   key={product.id}
                   onClick={() => {
-                    onSelectProduct(product);
+                    if (onSelectProduct) {
+                      onSelectProduct(product);
+                    } else {
+                      navigate(`/product/${product.slug}`);
+                    }
                     onClose();
                   }}
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-ivory-100 border border-transparent hover:border-ivory-300 transition-all cursor-pointer group"
