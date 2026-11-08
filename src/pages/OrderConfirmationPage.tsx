@@ -225,7 +225,7 @@ export const OrderConfirmationPage: React.FC = () => {
             <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 sm:p-5 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
               <div className="text-xs sm:text-sm font-sans text-amber-900 leading-relaxed">
-                <span className="font-semibold text-amber-950">Development & Architecture Verification:</span> This page displays an order confirmation summary. In Stage 5, real orders are created directly by the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) after Razorpay payment verification or boutique COD confirmation.
+                <span className="font-semibold text-amber-950">Development & Architecture Verification:</span> This page displays an order confirmation summary. In Stage 5, real orders and official order IDs are created directly by the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) upon receiving the order request; payment verification via Razorpay or boutique COD approval follows.
               </div>
             </div>
 
@@ -357,7 +357,7 @@ export const OrderConfirmationPage: React.FC = () => {
                       <span>Standard Shipping</span>
                       <span>
                         {order.shippingFee === 0 ? (
-                          <span className="text-neutral-charcoal font-medium">Included / Calculated</span>
+                          <span className="text-neutral-charcoal font-medium">Awaiting Confirmation</span>
                         ) : (
                           <span className="text-neutral-charcoal font-medium">₹{order.shippingFee}</span>
                         )}

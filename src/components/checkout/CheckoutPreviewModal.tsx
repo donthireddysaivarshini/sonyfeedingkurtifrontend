@@ -12,7 +12,7 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { items, subtotal, shippingFee, total } = useCart();
+  const { items, subtotal, total } = useCart();
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('razorpay');
 
   if (!isOpen) return null;
@@ -155,8 +155,8 @@ export const CheckoutPreviewModal: React.FC<CheckoutPreviewModalProps> = ({
             </div>
             <div className="flex justify-between">
               <span>Delivery Fee</span>
-              <span className="font-semibold text-ink-primary">
-                {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
+              <span className="font-semibold text-ink-secondary text-[11px]">
+                Awaiting Confirmation
               </span>
             </div>
             <div className="flex justify-between text-sm font-bold text-ink-primary pt-1.5 border-t border-ivory-200">

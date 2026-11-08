@@ -53,3 +53,4 @@ export const INDIAN_STATES_AND_UTS: RegionOption[] = [
 ];
 
 export const ALL_INDIAN_REGIONS: string[] = INDIAN_STATES_AND_UTS.map((r) => r.name);
+

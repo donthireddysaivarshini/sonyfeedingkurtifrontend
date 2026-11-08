@@ -17,7 +17,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
     removeFromCart,
     updateQuantity,
     subtotal,
-    shippingFee,
     total,
     totalItemsCount,
   } = useCart();
@@ -74,7 +73,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
         {/* Informative Shipping Notice (No unconfirmed promises) */}
         <div className="px-4 py-2.5 bg-ivory-100 border-b border-ivory-200 text-xs text-ink-secondary flex items-center justify-between">
           <span>Pan-India Courier Delivery</span>
-          <span className="text-[11px] font-semibold text-brand-700">Calculated at Checkout</span>
+          <span className="text-[11px] font-semibold text-brand-700">Awaiting Confirmation</span>
         </div>
 
         {/* Cart Items List */}
@@ -202,9 +201,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
                 <span className="font-semibold text-ink-primary">₹{subtotal}</span>
               </div>
               <div className="flex justify-between">
-                <span>Estimated Delivery</span>
-                <span className="font-semibold text-ink-primary">
-                  {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
+                <span>Shipping Policy</span>
+                <span className="font-semibold text-ink-secondary text-[11px]">
+                  Awaiting Confirmation
                 </span>
               </div>
               <div className="flex justify-between text-sm font-bold text-ink-primary pt-1.5 border-t border-ivory-200">

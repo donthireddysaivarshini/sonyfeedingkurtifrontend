@@ -726,9 +726,9 @@ export const CheckoutPage: React.FC = () => {
                   </div>
 
                   <div className="flex justify-between">
-                    <span>Estimated Shipping</span>
+                    <span>Shipping Charges</span>
                     <span className="font-semibold text-ink-secondary text-[11px]">
-                      Pending client courier rates
+                      Awaiting Confirmation
                     </span>
                   </div>
 
@@ -826,7 +826,7 @@ export const CheckoutPage: React.FC = () => {
               <div className="space-y-1">
                 <p className="font-bold text-amber-950">Architectural Safety & Verification Note:</p>
                 <p className="text-[11px] text-amber-900/90 leading-normal">
-                  In accordance with strict safety rules, frontend-only fake order generation and fake cart clearing are disabled. When the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) and Razorpay gateway are connected in Stage 5, this payload will submit directly to generate the verified order ID and process payment. Your shopping bag remains safe and intact.
+                  In accordance with strict safety rules, frontend-only fake order generation and fake cart clearing are disabled. When the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) is connected in Stage 5, this payload will submit directly to create the order and generate the official order ID. Payment processing (via Razorpay or COD) and verification then take place against that created order. Your shopping bag remains safe and intact.
                 </p>
               </div>
             </div>
