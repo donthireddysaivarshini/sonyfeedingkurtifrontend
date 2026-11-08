@@ -97,8 +97,7 @@ export const storeApi = {
 
   async getSiteConfig() {
     return {
-      shipping_fee: 79,
-      free_shipping_threshold: 999,
+      shipping_policy: 'Official shipping rates to be confirmed by client upon launch',
       tax_percentage: 0,
       currency: 'INR',
       currencySymbol: '₹',

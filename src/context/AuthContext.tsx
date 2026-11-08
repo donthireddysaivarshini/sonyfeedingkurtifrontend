@@ -84,6 +84,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    * can test the checkout, address forms, and account dashboards without fake OAuth.
    */
   const devLogin = (customProfile?: Partial<UserProfile>) => {
+    // Restricted strictly to development builds only
+    if (!import.meta.env.DEV) {
+      console.warn('devLogin is restricted to development builds only.');
+      return;
+    }
+
     const sampleUser: UserProfile = {
       id: 'cust-demo-01',
       name: customProfile?.name || 'Pooja Sharma',

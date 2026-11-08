@@ -34,7 +34,6 @@ export interface DjangoProductResponse {
 }
 
 export interface DjangoSiteConfig {
-  shipping_fee: number;
-  free_shipping_threshold: number;
+  shipping_policy_status: 'pending_client_confirmation';
   tax_percentage: number;
 }

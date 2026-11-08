@@ -29,7 +29,7 @@ export const PAYMENT_METHODS: PaymentOption[] = [
     id: 'cod',
     name: 'Cash on Delivery (COD)',
     badge: 'Provisional',
-    description: 'Pay cash upon delivery. (Pending final operational approval; subject to boutique verification).',
+    description: 'Pay cash upon delivery. (Provisional payment mode pending final client approval).',
     isAvailable: true,
     isProvisional: true,
   },

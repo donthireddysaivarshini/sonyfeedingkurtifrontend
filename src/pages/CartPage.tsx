@@ -29,7 +29,6 @@ export const CartPage: React.FC = () => {
   const {
     items,
     subtotal,
-    shippingFee,
     total,
     totalItemsCount,
     updateQuantity,
@@ -293,15 +292,15 @@ export const CartPage: React.FC = () => {
 
                   <div className="flex justify-between">
                     <span>Estimated Shipping</span>
-                    <span className="font-semibold text-ink-primary">
-                      {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
+                    <span className="font-semibold text-ink-secondary text-[11px]">
+                      Calculated at Checkout
                     </span>
                   </div>
 
-                  {/* Demonstration Shipping Note */}
+                  {/* Neutral Shipping Policy Note */}
                   <div className="text-[10px] text-ink-muted bg-ivory-100 p-2 rounded-lg border border-ivory-200 flex items-start gap-1.5 leading-tight">
                     <Info className="w-3 h-3 text-brand-gold shrink-0 mt-0.5" />
-                    <span>Demo Shipping Policy: Orders over ₹999 qualify for complimentary delivery during preview mode.</span>
+                    <span>Courier shipping rates and delivery policies will be confirmed by Sony Feeding Kurtis upon official launch.</span>
                   </div>
 
                   <div className="flex justify-between text-base font-bold text-ink-primary pt-3 border-t border-ivory-200">

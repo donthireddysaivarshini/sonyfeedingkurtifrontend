@@ -121,20 +121,25 @@ export const AuthModal: React.FC = () => {
               </div>
             )}
 
-            {/* Development Mode Review Session Sign-In */}
-            <div className="pt-2">
-              <button
-                onClick={() => devLogin()}
-                className="w-full flex items-center justify-center gap-2 bg-brand-700 hover:bg-brand-800 text-white py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm shadow-sm transition-all hover:shadow-md"
-              >
-                <span>Continue with Test Session (Review Mode)</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <p className="text-[10px] text-ink-muted mt-1.5 flex items-center justify-center gap-1">
-                <Info className="w-3 h-3 text-brand-gold shrink-0" />
-                <span>Simulates authenticated customer session for interface evaluation.</span>
-              </p>
-            </div>
+            {/* Development Mode Review Session Sign-In (DEV BUILDS ONLY) */}
+            {import.meta.env.DEV && (
+              <div className="pt-2 border-t border-ivory-200 mt-2">
+                <span className="inline-block text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2 py-0.5 rounded mb-2">
+                  Dev Build Only
+                </span>
+                <button
+                  onClick={() => devLogin()}
+                  className="w-full flex items-center justify-center gap-2 bg-brand-700 hover:bg-brand-800 text-white py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm shadow-sm transition-all hover:shadow-md"
+                >
+                  <span>Continue with Test Session (Dev Only)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <p className="text-[10px] text-ink-muted mt-1.5 flex items-center justify-center gap-1">
+                  <Info className="w-3 h-3 text-brand-gold shrink-0" />
+                  <span>Restricted to development builds. Never exposed in production.</span>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Privacy Note */}

@@ -16,8 +16,6 @@ interface CartContextType extends CartState {
 }
 
 const CART_STORAGE_KEY = 'sony_feeding_kurtis_cart';
-const FREE_SHIPPING_THRESHOLD = 999;
-const STANDARD_SHIPPING_FEE = 79;
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -46,7 +44,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('demo') === '1' && items.length === 0) {
+      if (import.meta.env.DEV && params.get('demo') === '1' && items.length === 0) {
         const sampleItems: CartItem[] = [
           {
             id: 'nayantara-rose-flared-maxi-dupatta-set_Feeding_clr-maroon_L',
@@ -179,8 +177,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
-  const total = subtotal + shippingFee;
+  // Unapproved ₹999 threshold and ₹79 fee removed; client courier rates pending launch confirmation
+  const shippingFee = 0;
+  const total = subtotal;
 
   return (
     <CartContext.Provider
@@ -188,7 +187,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         items,
         subtotal,
         shippingFee,
-        freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
+        shippingNote: 'Official delivery rates to be confirmed upon launch',
         total,
         totalItemsCount,
         isCartOpen,

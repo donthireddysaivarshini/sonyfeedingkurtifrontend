@@ -28,28 +28,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { Order, DeliveryAddress } from '../types/order';
-
-const INDIAN_STATES = [
-  'Andhra Pradesh',
-  'Telangana',
-  'Karnataka',
-  'Tamil Nadu',
-  'Kerala',
-  'Maharashtra',
-  'Gujarat',
-  'Rajasthan',
-  'Delhi',
-  'Uttar Pradesh',
-  'West Bengal',
-  'Madhya Pradesh',
-  'Punjab',
-  'Haryana',
-  'Bihar',
-  'Odisha',
-  'Assam',
-  'Goa',
-  'Other State / UT'
-];
+import { ALL_INDIAN_REGIONS } from '../data/regions';
 
 type AccountTab = 'overview' | 'orders' | 'addresses' | 'profile';
 
@@ -94,7 +73,7 @@ export const AccountPage: React.FC = () => {
         setOrders(JSON.parse(stored));
       } else {
         const params = new URLSearchParams(window.location.search);
-        if (params.get('demo') === '1') {
+        if (import.meta.env.DEV && params.get('demo') === '1') {
           if (!isAuthenticated) devLogin();
           const demoOrder: Order = {
             id: 'ord_demo_101',
@@ -182,7 +161,7 @@ export const AccountPage: React.FC = () => {
         setAddressForm(parsed);
       } else {
         const params = new URLSearchParams(window.location.search);
-        if (params.get('demo') === '1') {
+        if (import.meta.env.DEV && params.get('demo') === '1') {
           const demoAddress: DeliveryAddress = {
             fullName: 'Pooja Sharma',
             phone: '9876543210',
@@ -727,7 +706,7 @@ export const AccountPage: React.FC = () => {
                         <div>
                           <h2 className="font-serif font-bold text-xl text-neutral-charcoal">Saved Delivery Addresses</h2>
                           <p className="text-xs font-sans text-neutral-charcoal/65 mt-0.5">
-                            Manage where your orders get delivered across India.
+                            Manage where your orders get delivered across all 28 States and 8 Union Territories of India.
                           </p>
                         </div>
                         {!isEditingAddress && (
@@ -742,6 +721,17 @@ export const AccountPage: React.FC = () => {
                             {savedAddress ? 'Update Address' : 'Add New Address'}
                           </button>
                         )}
+                      </div>
+
+                      {/* Temporary Storage Transparency Notice */}
+                      <div className="mb-6 p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-amber-900 text-xs font-sans flex items-start gap-2.5">
+                        <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-semibold text-amber-950">Notice: Temporary Browser Session Storage</p>
+                          <p className="mt-0.5 leading-relaxed text-amber-900/90">
+                            Addresses saved in this phase are stored locally in your browser session for checkout testing. In Stage 5, your verified delivery addresses will be securely synchronized with the Django backend database (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">/api/customer/addresses/</code>).
+                          </p>
+                        </div>
                       </div>
 
                       {addressSuccessMsg && (
@@ -857,7 +847,7 @@ export const AccountPage: React.FC = () => {
                                 onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
                                 className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-stone/60 font-sans text-sm focus:outline-hidden focus:border-brand-maroon bg-white"
                               >
-                                {INDIAN_STATES.map((st) => (
+                                {ALL_INDIAN_REGIONS.map((st) => (
                                   <option key={st} value={st}>{st}</option>
                                 ))}
                               </select>
@@ -923,9 +913,14 @@ export const AccountPage: React.FC = () => {
                         /* Saved Address Card */
                         <div className="max-w-md p-5 rounded-2xl border border-brand-maroon/30 bg-ivory/50 relative shadow-2xs">
                           <div className="flex items-center justify-between mb-3">
-                            <span className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold px-2 py-0.5 rounded-full bg-brand-gold/20 text-brand-maroon border border-brand-gold/30">
-                              Default Shipping Address
-                            </span>
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold px-2 py-0.5 rounded-full bg-brand-gold/20 text-brand-maroon border border-brand-gold/30">
+                                Default Shipping Address
+                              </span>
+                              <span className="inline-flex items-center text-[10px] font-sans font-medium px-2 py-0.5 rounded-full bg-neutral-stone/30 text-neutral-charcoal/70">
+                                Temporary Browser Storage
+                              </span>
+                            </div>
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() => setIsEditingAddress(true)}

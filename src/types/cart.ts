@@ -25,8 +25,8 @@ export interface CartItem {
 export interface CartState {
   items: CartItem[];
   subtotal: number;
-  shippingFee: number;
-  freeShippingThreshold: number;
+  shippingFee: number; // Official courier rates pending client policy confirmation upon launch
+  shippingNote?: string;
   total: number;
   totalItemsCount: number;
 }

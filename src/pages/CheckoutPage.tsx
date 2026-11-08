@@ -21,33 +21,12 @@ import { AuthModal } from '../components/auth/AuthModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { PaymentMethod, DeliveryAddress, Order } from '../types/order';
-
-const INDIAN_STATES = [
-  'Andhra Pradesh',
-  'Telangana',
-  'Karnataka',
-  'Tamil Nadu',
-  'Kerala',
-  'Maharashtra',
-  'Gujarat',
-  'Rajasthan',
-  'Delhi',
-  'Uttar Pradesh',
-  'West Bengal',
-  'Madhya Pradesh',
-  'Punjab',
-  'Haryana',
-  'Bihar',
-  'Odisha',
-  'Assam',
-  'Goa',
-  'Other State / UT'
-];
+import { PaymentMethod, DeliveryAddress } from '../types/order';
+import { ALL_INDIAN_REGIONS } from '../data/regions';
 
 export const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
-  const { items, subtotal, shippingFee, total, clearCart } = useCart();
+  const { items, subtotal, total } = useCart();
   const { user, isAuthenticated, openAuthModal, devLogin } = useAuth();
 
   // Navigation state
@@ -71,9 +50,19 @@ export const CheckoutPage: React.FC = () => {
   // Payment Selection
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('razorpay');
 
-  // Validation Errors
+  // Validation Errors & Submission State
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
+  const [validatedPayload, setValidatedPayload] = useState<{
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string;
+    shippingAddress: DeliveryAddress;
+    total: number;
+    paymentMethod: PaymentMethod;
+    itemsCount: number;
+  } | null>(null);
 
   // Keep contact info in sync with authenticated user profile
   useEffect(() => {
@@ -98,7 +87,7 @@ export const CheckoutPage: React.FC = () => {
           if (addr.state) setState(addr.state);
           if (!pincode && addr.pincode) setPincode(addr.pincode);
         }
-      } else {
+      } else if (import.meta.env.DEV) {
         const params = new URLSearchParams(window.location.search);
         if (params.get('demo') === '1') {
           if (!isAuthenticated) devLogin();
@@ -189,50 +178,31 @@ export const CheckoutPage: React.FC = () => {
       isDefault: saveAddress,
     };
 
-    const orderPayload: Order = {
-      id: `ord_${Date.now()}`,
-      orderNumber: `SFK-${Math.floor(100000 + Math.random() * 900000)}`,
-      date: new Date().toLocaleDateString('en-IN', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
+    // Requirement 5: Save address if requested with explicit temporary browser storage marking
+    if (saveAddress) {
+      try {
+        sessionStorage.setItem('sony_feeding_kurtis_saved_address', JSON.stringify({
+          ...shippingAddress,
+          isTemporaryStorage: true,
+        }));
+      } catch {
+        // Storage unavailable
+      }
+    }
+
+    // Requirement 2: Prevent frontend-only fake order generation, fake order numbers, and fake cart clearing
+    setValidatedPayload({
       customerName: fullName.trim(),
       customerEmail: email.trim(),
       customerPhone: phone.trim(),
       shippingAddress,
-      items: items.map((i) => ({ ...i, lineTotal: i.price * i.quantity })),
-      subtotal,
-      shippingFee,
+      itemsCount: items.reduce((acc, i) => acc + i.quantity, 0),
       total,
       paymentMethod,
-      paymentStatus: paymentMethod === 'cod' ? 'cod_pending' : 'pending',
-      orderStatus: 'placed',
-    };
+    });
 
-    // Store in session storage for Order Confirmation and Account screens
-    try {
-      sessionStorage.setItem('sony_feeding_kurtis_last_order', JSON.stringify(orderPayload));
-
-      // Append to orders array in storage
-      const existingOrdersRaw = sessionStorage.getItem('sony_feeding_kurtis_orders');
-      const existingOrders: Order[] = existingOrdersRaw ? JSON.parse(existingOrdersRaw) : [];
-      existingOrders.unshift(orderPayload);
-      sessionStorage.setItem('sony_feeding_kurtis_orders', JSON.stringify(existingOrders));
-
-      // Save address if requested
-      if (saveAddress) {
-        sessionStorage.setItem('sony_feeding_kurtis_saved_address', JSON.stringify(shippingAddress));
-      }
-    } catch {
-      // Storage unavailable
-    }
-
-    // Clear cart after successful checkout simulation
-    clearCart();
-
-    // Redirect to confirmation screen
-    navigate('/order-confirmation');
+    setIsSubmitting(false);
+    setIsReadinessModalOpen(true);
   };
 
   return (
@@ -548,7 +518,7 @@ export const CheckoutPage: React.FC = () => {
                         onChange={(e) => setState(e.target.value)}
                         className="w-full text-xs p-2.5 rounded-xl border border-ivory-300 bg-white focus:outline-none focus:ring-1 focus:ring-brand-700"
                       >
-                        {INDIAN_STATES.map((s) => (
+                        {ALL_INDIAN_REGIONS.map((s) => (
                           <option key={s} value={s}>
                             {s}
                           </option>
@@ -577,21 +547,30 @@ export const CheckoutPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Country & Save Address Checkbox */}
-                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-ivory-200">
-                    <label className="flex items-center gap-2 text-xs text-ink-secondary cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={saveAddress}
-                        onChange={(e) => setSaveAddress(e.target.checked)}
-                        className="rounded border-ivory-300 text-brand-700 focus:ring-brand-700 w-4 h-4"
-                      />
-                      <span>Save this address to my profile for future orders</span>
-                    </label>
+                  {/* Country & Save Address Checkbox with Temporary Storage Label */}
+                  <div className="pt-3 border-t border-ivory-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-ink-muted">
+                        Country: <strong>India 🇮🇳</strong> (Pan-India delivery across all 28 states & 8 UTs)
+                      </span>
+                    </div>
 
-                    <span className="text-[11px] text-ink-muted">
-                      Country: <strong>India 🇮🇳</strong>
-                    </span>
+                    <div className="p-3 bg-ivory-100/70 border border-ivory-200 rounded-xl space-y-1">
+                      <label className="flex items-start gap-2.5 text-xs text-ink-primary cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={saveAddress}
+                          onChange={(e) => setSaveAddress(e.target.checked)}
+                          className="mt-0.5 rounded border-ivory-300 text-brand-700 focus:ring-brand-700 w-4 h-4"
+                        />
+                        <span className="font-medium">
+                          Save this delivery address in temporary browser storage (Temporary local browser session for testing)
+                        </span>
+                      </label>
+                      <p className="text-[10px] text-ink-muted pl-6 leading-relaxed">
+                        <strong>Temporary Local Storage Notice:</strong> Address data saved here is stored only in your local browser session for testing. Permanent address sync will occur via your authenticated account once the Django backend is live in Stage 5.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -675,7 +654,7 @@ export const CheckoutPage: React.FC = () => {
                           </span>
                         </div>
                         <p className="text-[11px] text-ink-secondary mt-1">
-                          Pay cash upon courier delivery. Subject to phone verification and serviceable PIN code.
+                          Pay cash upon courier delivery. Provisional payment mode pending final client approval.
                         </p>
                       </div>
                     </div>
@@ -748,8 +727,8 @@ export const CheckoutPage: React.FC = () => {
 
                   <div className="flex justify-between">
                     <span>Estimated Shipping</span>
-                    <span className="font-semibold text-ink-primary">
-                      {shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}
+                    <span className="font-semibold text-ink-secondary text-[11px]">
+                      Pending client courier rates
                     </span>
                   </div>
 
@@ -792,6 +771,89 @@ export const CheckoutPage: React.FC = () => {
           </form>
         )}
       </main>
+
+      {/* Order Submission Readiness Modal (Safety Architecture Requirement) */}
+      {isReadinessModalOpen && validatedPayload && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-primary/70 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-ivory-300 space-y-5 animate-scale-up">
+            <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-200">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+
+            <div className="text-center space-y-1">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                Checkout Validation Passed
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink-primary">
+                Order Payload Verified
+              </h3>
+              <p className="text-xs text-ink-secondary leading-relaxed">
+                All contact, address, and payment selections have passed client-side validation.
+              </p>
+            </div>
+
+            {/* Verified Details Card */}
+            <div className="p-4 rounded-xl bg-ivory-50 border border-ivory-300 text-xs text-ink-primary space-y-2.5">
+              <div className="flex justify-between border-b border-ivory-200 pb-2">
+                <span className="text-ink-muted">Customer:</span>
+                <span className="font-bold">{validatedPayload.customerName} (+91 {validatedPayload.customerPhone})</span>
+              </div>
+              <div className="flex justify-between border-b border-ivory-200 pb-2">
+                <span className="text-ink-muted">Delivery Address:</span>
+                <span className="font-medium text-right max-w-[240px]">
+                  {validatedPayload.shippingAddress.houseFlat}, {validatedPayload.shippingAddress.streetArea}, {validatedPayload.shippingAddress.city}, {validatedPayload.shippingAddress.state} - {validatedPayload.shippingAddress.pincode}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-ivory-200 pb-2">
+                <span className="text-ink-muted">Items in Bag:</span>
+                <span className="font-bold">{validatedPayload.itemsCount} garments (Cart intact)</span>
+              </div>
+              <div className="flex justify-between border-b border-ivory-200 pb-2">
+                <span className="text-ink-muted">Selected Payment:</span>
+                <span className="font-bold capitalize">
+                  {validatedPayload.paymentMethod === 'razorpay' ? 'Online Payment (Razorpay)' : 'Cash on Delivery (Provisional)'}
+                </span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="text-ink-primary font-bold">Total Payable:</span>
+                <span className="font-serif text-base font-bold text-brand-900">₹{validatedPayload.total}</span>
+              </div>
+            </div>
+
+            {/* Architectural Safety Notice */}
+            <div className="p-3.5 bg-amber-50/80 border border-amber-300/80 rounded-xl text-left text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-bold text-amber-950">Architectural Safety & Verification Note:</p>
+                <p className="text-[11px] text-amber-900/90 leading-normal">
+                  In accordance with strict safety rules, frontend-only fake order generation and fake cart clearing are disabled. When the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) and Razorpay gateway are connected in Stage 5, this payload will submit directly to generate the verified order ID and process payment. Your shopping bag remains safe and intact.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsReadinessModalOpen(false);
+                  navigate('/shop');
+                }}
+                className="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs py-2.5 px-4 rounded-xl transition-all shadow-sm"
+              >
+                Keep Shopping (Cart Preserved)
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsReadinessModalOpen(false)}
+                className="border border-ivory-300 hover:bg-ivory-100 text-ink-primary font-medium text-xs py-2.5 px-4 rounded-xl transition-colors"
+              >
+                Close Notice
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <Footer />

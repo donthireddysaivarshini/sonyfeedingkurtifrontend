@@ -36,7 +36,7 @@ export const OrderConfirmationPage: React.FC = () => {
         setOrder(JSON.parse(stored));
       } else {
         const params = new URLSearchParams(window.location.search);
-        if (params.get('demo') === '1') {
+        if (import.meta.env.DEV && params.get('demo') === '1') {
           const demoOrder: Order = {
             id: 'ord_demo_101',
             orderNumber: 'SFK-842915',
@@ -225,7 +225,7 @@ export const OrderConfirmationPage: React.FC = () => {
             <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 sm:p-5 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
               <div className="text-xs sm:text-sm font-sans text-amber-900 leading-relaxed">
-                <span className="font-semibold text-amber-950">Development & Architecture Verification:</span> This order was generated in Phase 3 frontend demo mode. In Stage 5, this will be created via Django REST Framework (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) and verified via Razorpay webhook or verified boutique COD order desk.
+                <span className="font-semibold text-amber-950">Development & Architecture Verification:</span> This page displays an order confirmation summary. In Stage 5, real orders are created directly by the Django backend API (<code className="font-mono bg-amber-100 px-1 py-0.5 rounded">POST /api/orders/</code>) after Razorpay payment verification or boutique COD confirmation.
               </div>
             </div>
 
@@ -357,7 +357,7 @@ export const OrderConfirmationPage: React.FC = () => {
                       <span>Standard Shipping</span>
                       <span>
                         {order.shippingFee === 0 ? (
-                          <span className="text-emerald-700 font-medium">FREE</span>
+                          <span className="text-neutral-charcoal font-medium">Included / Calculated</span>
                         ) : (
                           <span className="text-neutral-charcoal font-medium">₹{order.shippingFee}</span>
                         )}
@@ -366,8 +366,8 @@ export const OrderConfirmationPage: React.FC = () => {
 
                     {order.paymentMethod === 'cod' && (
                       <div className="flex justify-between text-xs text-neutral-charcoal/70 pt-1">
-                        <span>COD Handling</span>
-                        <span className="text-emerald-700 font-medium">No Extra Fee</span>
+                        <span>COD Service</span>
+                        <span className="text-neutral-charcoal/80 font-medium">Provisional Pending Approval</span>
                       </div>
                     )}
                   </div>
@@ -396,7 +396,7 @@ export const OrderConfirmationPage: React.FC = () => {
                     <p className="text-xs font-sans text-neutral-charcoal/70 leading-relaxed">
                       {order.paymentMethod === 'razorpay'
                         ? 'Simulated successful checkout. In production, Razorpay provides live UPI, Debit/Credit Card, and NetBanking gateways.'
-                        : 'Provisional COD order recorded. Our boutique team verifies delivery details prior to dispatch.'}
+                        : 'Provisional Cash on Delivery (COD) order. Cash on delivery availability is subject to final boutique confirmation.'}
                     </p>
                   </div>
 
