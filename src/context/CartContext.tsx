@@ -49,9 +49,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           {
             id: 'nayantara-rose-flared-maxi-dupatta-set_Feeding_clr-maroon_L',
             productId: 'sfk-01',
-            productTitle: 'Nayantara Rose Flared Maxi Kurti & Dupatta Set',
+            productTitle: 'Nayantara Magenta & Ombre Dupatta Kurti Set',
             productSlug: 'nayantara-rose-flared-maxi-dupatta-set',
-            productImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
+            productImage: '/images/kurti-dupatta/magenta-ombre-kurti-dupatta.jpg',
             category: 'Kurti + Dupatta',
             variantId: 'var-nayantara-feeding-maroon-l',
             sku: 'SFK-NAY-F-MRN-L',
@@ -66,9 +66,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           {
             id: 'kalyani-tiered-gathered-feeding-frock_Feeding_clr-mustard_M',
             productId: 'sfk-02',
-            productTitle: 'Kalyani Tiered Gathered Feeding Frock',
+            productTitle: 'Kalyani Peacock-Teal Zari-Border Tiered Feeding Frock',
             productSlug: 'kalyani-tiered-gathered-feeding-frock',
-            productImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80',
+            productImage: '/images/frocks/teal-zari-tiered-frock.jpg',
             category: 'Frocks',
             variantId: 'var-kalyani-feeding-mustard-m',
             sku: 'SFK-KAL-F-MUS-M',

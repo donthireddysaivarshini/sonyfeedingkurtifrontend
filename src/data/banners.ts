@@ -21,11 +21,11 @@ export const HERO_SLIDES: HeroSlide[] = [
     highlightText: 'Ethnic Grace',
     subtitle: 'Designer Flared Dresses, Frocks & Festive Kurti Sets crafted for timeless grace, comfort, and style.',
     ctaText: 'Shop Dresses & Frocks',
-    ctaLink: '/category/frocks',
+    ctaLink: '/category/partywear-dresses',
     secondaryCtaText: 'Explore All Collections',
     secondaryCtaLink: '/shop',
-    desktopImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1600&auto=format&fit=crop',
-    mobileImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+    desktopImage: '/images/dresses/mauve-anarkali.jpg',
+    mobileImage: '/images/dresses/mauve-anarkali.jpg',
     tag: 'Dresses, Kids Wear & Sarees'
   },
   {
@@ -38,8 +38,8 @@ export const HERO_SLIDES: HeroSlide[] = [
     ctaLink: '/category/sarees',
     secondaryCtaText: 'View Collections',
     secondaryCtaLink: '/shop',
-    desktopImage: 'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=1600&auto=format&fit=crop',
-    mobileImage: 'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=800&auto=format&fit=crop',
+    desktopImage: '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
+    mobileImage: '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
     tag: 'Handloom & Pure Silk Weaves'
   },
   {
@@ -50,8 +50,8 @@ export const HERO_SLIDES: HeroSlide[] = [
     subtitle: 'Breezy cotton frocks, matching mom-child twinning, and traditional kids wear crafted in gentle breathable fabrics.',
     ctaText: 'Explore Kids Wear',
     ctaLink: '/category/kids-collections',
-    desktopImage: 'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=1600&auto=format&fit=crop',
-    mobileImage: 'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
+    desktopImage: '/images/kidswear/maroon-pattu-frock.jpg',
+    mobileImage: '/images/kidswear/maroon-pattu-frock.jpg',
     tag: 'Breathable Natural Fabrics'
   }
 ];

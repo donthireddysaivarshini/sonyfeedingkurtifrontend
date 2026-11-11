@@ -42,14 +42,15 @@ export const HomePage: React.FC = () => {
     setSelectedProductForModal(product);
   };
 
-  // 1. Dresses: Flared frocks, partywear gowns, 3-piece sets & anarkali dresses
+  // 1. Dresses: Flared dresses, anarkali gowns & maxis (showcasing all 7 exclusive dress styles)
   const dressProducts = React.useMemo(() => {
-    return PRODUCTS.filter((p) =>
-      p.category === 'frocks' ||
-      p.category === 'partywear-dresses' ||
-      p.category === '3-piece-dresses' ||
-      p.category === 'kurti-dupatta'
-    );
+    const filtered = PRODUCTS.filter((p) => p.category === 'partywear-dresses');
+    const preferredOrder = ['prod-26', 'prod-29', 'prod-27', 'prod-5', 'prod-30', 'prod-13', 'prod-28'];
+    return [...filtered].sort((a, b) => {
+      const idxA = preferredOrder.indexOf(a.id);
+      const idxB = preferredOrder.indexOf(b.id);
+      return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+    });
   }, []);
 
   // 2. Kids Wear: Toddler frocks, mom-child twinning, pattu pavadai & kids kurta sets
@@ -57,9 +58,12 @@ export const HomePage: React.FC = () => {
     return PRODUCTS.filter((p) => p.category === 'kids-collections');
   }, []);
 
-  // 3. Sarees: Traditional Kanchivaram silk, handloom linen zari & Banarasi sarees
+  // 3. Sarees: Traditional Kanchivaram silk, handloom cotton-silk, Paithani & Banarasi sarees
   const sareeProducts = React.useMemo(() => {
-    return PRODUCTS.filter((p) => p.category === 'sarees');
+    const order = ['prod-6', 'prod-24', 'prod-25', 'prod-17', 'prod-14', 'prod-18'];
+    return PRODUCTS.filter((p) => p.category === 'sarees').sort(
+      (a, b) => order.indexOf(a.id) - order.indexOf(b.id)
+    );
   }, []);
 
   // 4. New Arrivals: Fresh festive and seasonal launches
@@ -99,7 +103,7 @@ export const HomePage: React.FC = () => {
         <ProductSliderSection
           id="dresses"
           title="Dresses"
-          viewAllLink="/category/frocks"
+          viewAllLink="/category/partywear-dresses"
           products={dressProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Trending"

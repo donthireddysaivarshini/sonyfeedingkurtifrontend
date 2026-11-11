@@ -5,7 +5,7 @@ export const CATEGORIES: Category[] = [
     id: 'frocks',
     name: 'Frocks',
     slug: 'frocks',
-    image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=600&auto=format&fit=crop',
+    image: '/images/frocks/teal-zari-tiered-frock.jpg',
     itemCount: 'Tiered & Flared',
     description: 'Flared tiered frocks designed for ease of movement and everyday comfort.',
     tagline: 'Effortless Flow & Comfort'
@@ -14,7 +14,7 @@ export const CATEGORIES: Category[] = [
     id: 'co-ord-sets',
     name: 'Co-ord Sets',
     slug: 'co-ord-sets',
-    image: 'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=600&auto=format&fit=crop',
+    image: '/images/co-ords/crimson-botanical-coord.jpg',
     itemCount: 'Matching Sets',
     description: 'Matching ethnic top and trouser pairs tailored for contemporary wear.',
     tagline: 'Modern Coordinated Style'
@@ -23,7 +23,7 @@ export const CATEGORIES: Category[] = [
     id: 'kurti-dupatta',
     name: 'Kurti + Dupatta',
     slug: 'kurti-dupatta',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600&auto=format&fit=crop',
+    image: '/images/kurti-dupatta/magenta-ombre-kurti-dupatta.jpg',
     itemCount: 'Kurti Sets',
     description: 'Straight-cut and anarkali kurtis paired with matching lightweight dupattas.',
     tagline: 'Timeless Everyday Grace'
@@ -32,7 +32,7 @@ export const CATEGORIES: Category[] = [
     id: '3-piece-dresses',
     name: '3-Piece Dresses',
     slug: '3-piece-dresses',
-    image: 'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=600&auto=format&fit=crop',
+    image: '/images/3pc-sets/indigo-blockprint-3pc-set.jpg',
     itemCount: 'Complete Sets',
     description: 'Coordinated three-piece ethnic ensembles including kurti, bottoms, and dupatta.',
     tagline: 'Curated 3-Piece Ensembles'
@@ -41,7 +41,7 @@ export const CATEGORIES: Category[] = [
     id: 'partywear-dresses',
     name: 'Partywear Dresses',
     slug: 'partywear-dresses',
-    image: 'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=600&auto=format&fit=crop',
+    image: '/images/dresses/crimson-floral-maxi.jpg',
     itemCount: 'Gowns & Maxis',
     description: 'Floor-length maxis and flared gowns crafted for festive and celebration wear.',
     tagline: 'Celebration Ready Silhouettes'
@@ -50,7 +50,7 @@ export const CATEGORIES: Category[] = [
     id: 'sarees',
     name: 'Sarees',
     slug: 'sarees',
-    image: 'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=600&auto=format&fit=crop',
+    image: '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
     itemCount: 'Traditional Weaves',
     description: 'Soft silk, linen, and handloom sarees suited for traditional occasions.',
     tagline: 'Draped in Traditional Heritage'
@@ -68,9 +68,24 @@ export const CATEGORIES: Category[] = [
     id: 'kids-collections',
     name: 'Kids Collections',
     slug: 'kids-collections',
-    image: 'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=600&auto=format&fit=crop',
+    image: '/images/kidswear/maroon-pattu-frock.jpg',
     itemCount: 'Kids & Twinning',
     description: 'Comfortable ethnic dresses for little ones and matching mom-child pairs.',
     tagline: 'Cherished Family Moments'
   }
 ];
+
+export const CATEGORY_SLUG_ALIASES: Record<string, string> = {
+  dresses: 'partywear-dresses',
+  'kids-wear': 'kids-collections',
+  kidswear: 'kids-collections',
+  'co-ords': 'co-ord-sets',
+  '3pc-sets': '3-piece-dresses',
+};
+
+/** Resolves friendly route/section slugs (e.g. "dresses", "kids-wear") to canonical category slugs. */
+export function resolveCategorySlug(slug?: string | null): string | null {
+  if (!slug) return null;
+  const normalized = slug.trim().toLowerCase();
+  return CATEGORY_SLUG_ALIASES[normalized] || normalized;
+}

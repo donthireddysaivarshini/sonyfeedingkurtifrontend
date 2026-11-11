@@ -11,7 +11,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
 
   const images = product.images.length > 0 ? product.images : [
-    'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop'
+    '/images/dresses/mauve-anarkali.jpg'
   ];
 
   const handleNext = () => {
@@ -90,11 +90,6 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
             </button>
           </>
         )}
-
-        {/* Sample Demonstration Imagery Notice */}
-        <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-full bg-white/90 text-ink-muted text-[10px] font-medium backdrop-blur-xs border border-ivory-300">
-          Sample Preview Imagery
-        </div>
 
         {/* Image index pill */}
         {images.length > 1 && (

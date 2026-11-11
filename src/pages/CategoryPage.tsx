@@ -16,11 +16,11 @@ import { SortDropdown } from '../components/shop/SortDropdown';
 import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
 import { PRODUCTS } from '../data/products';
-import { CATEGORIES } from '../data/categories';
+import { CATEGORIES, resolveCategorySlug } from '../data/categories';
 import { Product, ProductSize } from '../types/product';
 import { useCart } from '../context/CartContext';
 
-function parseCategoryFilters(slug: string | undefined, params: URLSearchParams): FilterState {
+function parseCategoryFilters(categorySlug: string | null, params: URLSearchParams): FilterState {
   const feedingParam = params.get('clothingType') || params.get('feeding');
   const feedingType: FilterState['feedingType'] =
     feedingParam === 'Feeding'
@@ -46,7 +46,7 @@ function parseCategoryFilters(slug: string | undefined, params: URLSearchParams)
   const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 3000;
 
   return {
-    category: slug || null,
+    category: categorySlug,
     feedingType,
     sizes,
     colors,
@@ -58,6 +58,7 @@ function parseCategoryFilters(slug: string | undefined, params: URLSearchParams)
 
 export const CategoryPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const resolvedSlug = resolveCategorySlug(slug);
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { openCart } = useCart();
@@ -70,20 +71,20 @@ export const CategoryPage: React.FC = () => {
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
   // Find category metadata
-  const category = CATEGORIES.find((c) => c.slug === slug);
+  const category = CATEGORIES.find((c) => c.slug === resolvedSlug);
 
   // Products belonging to this category
   const categoryProducts = useMemo(() => {
-    return PRODUCTS.filter((p) => p.category === slug);
-  }, [slug]);
+    return PRODUCTS.filter((p) => p.category === resolvedSlug);
+  }, [resolvedSlug]);
 
-  // Filters state (with category locked to current slug)
-  const [filters, setFilters] = useState<FilterState>(() => parseCategoryFilters(slug, searchParams));
+  // Filters state (with category locked to current resolved category slug)
+  const [filters, setFilters] = useState<FilterState>(() => parseCategoryFilters(resolvedSlug, searchParams));
 
   // Re-sync filters if slug or searchParams changes (e.g. browser back/forward navigation)
   useEffect(() => {
-    setFilters(parseCategoryFilters(slug, searchParams));
-  }, [slug, searchParams]);
+    setFilters(parseCategoryFilters(resolvedSlug, searchParams));
+  }, [resolvedSlug, searchParams]);
 
   // Matching filtered and sorted products
   const matchingProducts = useMemo(() => {
@@ -93,13 +94,13 @@ export const CategoryPage: React.FC = () => {
   const handleResetFilters = () => {
     setFilters({
       ...INITIAL_FILTERS,
-      category: slug || null,
+      category: resolvedSlug,
     });
     setSearchParams({});
   };
 
   const handleFilterChange = (newFilters: FilterState) => {
-    const updated = { ...newFilters, category: slug || null };
+    const updated = { ...newFilters, category: resolvedSlug };
     setFilters(updated);
     const newParams = new URLSearchParams();
     if (updated.feedingType !== 'All') newParams.set('clothingType', updated.feedingType);
@@ -179,9 +180,6 @@ export const CategoryPage: React.FC = () => {
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-600" />
                   <span>{categoryProducts.length} Signature Styles</span>
-                </span>
-                <span className="text-[11px] text-ink-muted font-normal bg-white/70 px-2 py-0.5 rounded border border-ivory-300">
-                  Preview Catalog • Sample Data
                 </span>
               </div>
             </div>
@@ -304,7 +302,7 @@ export const CategoryPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 justify-start sm:justify-center">
-            {CATEGORIES.filter((c) => c.slug !== slug).map((otherCat) => (
+            {CATEGORIES.filter((c) => c.slug !== resolvedSlug).map((otherCat) => (
               <Link
                 key={otherCat.id}
                 to={`/category/${otherCat.slug}`}

@@ -33,7 +33,7 @@ export const HeroBanner: React.FC = () => {
             <img
               src={slide.desktopImage}
               alt={slide.title}
-              className="w-full h-full object-cover object-center transition-all duration-700 ease-in-out"
+              className="w-full h-full object-cover object-[50%_20%] transition-all duration-700 ease-in-out"
             />
           </picture>
           

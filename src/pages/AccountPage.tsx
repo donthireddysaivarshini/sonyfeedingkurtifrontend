@@ -102,9 +102,9 @@ export const AccountPage: React.FC = () => {
               {
                 id: 'nayantara-rose-flared-maxi-dupatta-set_Feeding_clr-maroon_L',
                 productId: 'sfk-01',
-                productTitle: 'Nayantara Rose Flared Maxi Kurti & Dupatta Set',
+                productTitle: 'Nayantara Magenta & Ombre Dupatta Kurti Set',
                 productSlug: 'nayantara-rose-flared-maxi-dupatta-set',
-                productImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
+                productImage: '/images/kurti-dupatta/magenta-ombre-kurti-dupatta.jpg',
                 category: 'Kurti + Dupatta',
                 variantId: 'var-nayantara-feeding-maroon-l',
                 sku: 'SFK-NAY-F-MRN-L',

@@ -11,9 +11,9 @@ export const MidBannerPromo: React.FC = () => {
           {/* Subtle background pattern */}
           <div className="absolute inset-0 opacity-20 mix-blend-overlay">
             <img
-              src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop"
+              src="/images/sarees/wine-banarasi-tissue-saree.jpg"
               alt="Ethnic Texture"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top"
             />
           </div>
 

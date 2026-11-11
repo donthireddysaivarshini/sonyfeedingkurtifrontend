@@ -61,7 +61,7 @@ export const PRODUCTS: Product[] = [
   // 1. KURTI + DUPATTA (Configuration: 'both')
   {
     id: 'prod-1',
-    title: 'Nayantara Rose Flared Maxi Dupatta Set',
+    title: 'Nayantara Magenta & Ombre Dupatta Kurti Set',
     slug: 'nayantara-rose-flared-maxi-dupatta-set',
     skuPrefix: 'SFK-MAX-01',
     category: 'kurti-dupatta',
@@ -69,13 +69,13 @@ export const PRODUCTS: Product[] = [
     price: 1399,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
+      '/images/kurti-dupatta/magenta-ombre-kurti-dupatta.jpg',
+      '/images/kurti-dupatta/navy-zari-kurti-dupatta.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
     availableColors: [
-      { id: 'rose', name: 'Vintage Rose', hex: '#C87D7D' },
+      { id: 'rose', name: 'Rani Magenta', hex: '#B5174D' },
       { id: 'wine', name: 'Royal Wine', hex: '#7A2832' },
       { id: 'teal', name: 'Peacock Teal', hex: '#205E61' },
     ],
@@ -85,7 +85,7 @@ export const PRODUCTS: Product[] = [
       1399,
       'both',
       [
-        { id: 'rose', name: 'Vintage Rose', hex: '#C87D7D' },
+        { id: 'rose', name: 'Rani Magenta', hex: '#B5174D' },
         { id: 'wine', name: 'Royal Wine', hex: '#7A2832' },
         { id: 'teal', name: 'Peacock Teal', hex: '#205E61' },
       ],
@@ -96,8 +96,8 @@ export const PRODUCTS: Product[] = [
         'NF-teal-XXL': 0,
       }
     ),
-    description: 'Flared maxi silhouette tailored from rayon-cotton blend featuring flared gathering and an airy organza dupatta.',
-    fabric: 'Cotton Slub with Organza Dupatta',
+    description: 'Layered georgette flared kurti set highlighted with a hand-beaded scoop neckline and an airy ombre tangerine-coral dupatta finished with mirror-work lace.',
+    fabric: 'Georgette with Embellished Dupatta',
     careInstructions: ['Dry clean first wash recommended', 'Gentle cold hand wash thereafter', 'Medium warm iron'],
     feedingDetails: {
       zipType: 'Concealed dual-side nursing access',
@@ -110,7 +110,7 @@ export const PRODUCTS: Product[] = [
   // 2. FROCKS (Configuration: 'feeding-only')
   {
     id: 'prod-2',
-    title: 'Kalyani Tiered Gathered Pure Mulmul Feeding Frock',
+    title: 'Kalyani Peacock-Teal Zari-Border Tiered Feeding Frock',
     slug: 'kalyani-tiered-gathered-feeding-frock',
     skuPrefix: 'SFK-FRK-02',
     category: 'frocks',
@@ -118,14 +118,14 @@ export const PRODUCTS: Product[] = [
     price: 1149,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      '/images/frocks/teal-zari-tiered-frock.jpg',
+      '/images/frocks/terracotta-tiered-frock.jpg',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
     availableColors: [
-      { id: 'sage', name: 'Muted Sage', hex: '#879780' },
-      { id: 'blush', name: 'Dusty Blush', hex: '#DDB3B3' },
+      { id: 'sage', name: 'Peacock Emerald Teal', hex: '#0B4A42' },
+      { id: 'blush', name: 'Terracotta Rust', hex: '#B33A22' },
       { id: 'navy', name: 'Midnight Navy', hex: '#1F2937' },
     ],
     availableSizes: COMMON_SIZES,
@@ -134,8 +134,8 @@ export const PRODUCTS: Product[] = [
       1149,
       'feeding-only',
       [
-        { id: 'sage', name: 'Muted Sage', hex: '#879780' },
-        { id: 'blush', name: 'Dusty Blush', hex: '#DDB3B3' },
+        { id: 'sage', name: 'Peacock Emerald Teal', hex: '#0B4A42' },
+        { id: 'blush', name: 'Terracotta Rust', hex: '#B33A22' },
         { id: 'navy', name: 'Midnight Navy', hex: '#1F2937' },
       ],
       COMMON_SIZES,
@@ -143,20 +143,21 @@ export const PRODUCTS: Product[] = [
         'FD-blush-S': 0, // Out of stock size for test
       }
     ),
-    description: 'Tiered gathered frock designed with ample ease across the waist and hidden side nursing zippers. Dedicated feeding design.',
-    fabric: 'Mulmul Cotton',
-    careInstructions: ['Machine wash gentle cycle', 'Dry in shade', 'Warm iron'],
+    description: 'Peacock-teal silk-cotton tiered frock with front mock button placket, puffed half sleeves, and woven antique gold zari border. Dedicated feeding design.',
+    fabric: 'Silk-Cotton with Zari Border',
+    careInstructions: ['Dry clean first wash recommended', 'Dry in shade', 'Warm iron'],
     feedingDetails: {
       zipType: 'Concealed dual nursing zippers',
       zipPlacement: 'Discreet side torso openings',
       description: 'Dedicated nursing access integrated cleanly into the gathered frock design.'
     },
+    isFeatured: true,
   },
 
   // 3. CO-ORD SETS (Configuration: 'none')
   {
     id: 'prod-3',
-    title: 'Ira Indigo Hand-Block Chanderi Co-ord Set',
+    title: 'Ira Crimson Botanical-Print Linen Co-ord Set',
     slug: 'ira-indigo-hand-block-chanderi-co-ord-set',
     skuPrefix: 'SFK-CRD-03',
     category: 'co-ord-sets',
@@ -164,14 +165,14 @@ export const PRODUCTS: Product[] = [
     price: 1499,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      '/images/co-ords/crimson-botanical-coord.jpg',
+      '/images/co-ords/wine-floral-coord.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'indigo', name: 'Royal Indigo', hex: '#264653' },
-      { id: 'rust', name: 'Earthy Rust', hex: '#A34828' },
+      { id: 'indigo', name: 'Crimson Leaf Print', hex: '#A41D35' },
+      { id: 'rust', name: 'Wine Floral', hex: '#68192A' },
     ],
     availableSizes: COMMON_SIZES,
     variants: generateVariants(
@@ -179,13 +180,13 @@ export const PRODUCTS: Product[] = [
       1499,
       'none',
       [
-        { id: 'indigo', name: 'Royal Indigo', hex: '#264653' },
-        { id: 'rust', name: 'Earthy Rust', hex: '#A34828' },
+        { id: 'indigo', name: 'Crimson Leaf Print', hex: '#A41D35' },
+        { id: 'rust', name: 'Wine Floral', hex: '#68192A' },
       ],
       COMMON_SIZES
     ),
-    description: 'Straight-cut tunic and tapered pant pairing with hand-block patterns. Standard ethnic wear without nursing zippers.',
-    fabric: 'Printed Chanderi Cotton Blend',
+    description: 'Band-collar notched V-neck tunic and relaxed wide-leg trousers in crimson botanical foliage print. Standard everyday ethnic co-ord set.',
+    fabric: 'Breathable Cotton-Linen Blend',
     careInstructions: ['Dry clean recommended for initial washes', 'Cool iron inside out'],
     isNewArrival: true,
   },
@@ -193,7 +194,7 @@ export const PRODUCTS: Product[] = [
   // 4. 3-PIECE DRESSES (Configuration: 'both')
   {
     id: 'prod-4',
-    title: 'Madhavi Heritage 3-Piece Anarkali Festive Set',
+    title: 'Madhavi Indigo Block-Print 3-Piece Palazzo Set',
     slug: 'madhavi-heritage-3-piece-anarkali-festive-set',
     skuPrefix: 'SFK-3PC-04',
     category: '3-piece-dresses',
@@ -201,15 +202,15 @@ export const PRODUCTS: Product[] = [
     price: 1899,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
+      '/images/3pc-sets/indigo-blockprint-3pc-set.jpg',
+      '/images/3pc-sets/maroon-ajrakh-3pc-set.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
     availableColors: [
-      { id: 'emerald', name: 'Jewel Emerald', hex: '#1B4931' },
-      { id: 'ruby', name: 'Garnet Ruby', hex: '#7A1C24' },
-      { id: 'mustard', name: 'Haldi Mustard', hex: '#C28B1E' },
+      { id: 'emerald', name: 'Deep Indigo', hex: '#1E2D4C' },
+      { id: 'ruby', name: 'Royal Maroon', hex: '#6D1B28' },
+      { id: 'mustard', name: 'Midnight Blue', hex: '#162038' },
     ],
     availableSizes: COMMON_SIZES,
     variants: generateVariants(
@@ -217,14 +218,14 @@ export const PRODUCTS: Product[] = [
       1899,
       'both',
       [
-        { id: 'emerald', name: 'Jewel Emerald', hex: '#1B4931' },
-        { id: 'ruby', name: 'Garnet Ruby', hex: '#7A1C24' },
-        { id: 'mustard', name: 'Haldi Mustard', hex: '#C28B1E' },
+        { id: 'emerald', name: 'Deep Indigo', hex: '#1E2D4C' },
+        { id: 'ruby', name: 'Royal Maroon', hex: '#6D1B28' },
+        { id: 'mustard', name: 'Midnight Blue', hex: '#162038' },
       ],
       COMMON_SIZES
     ),
-    description: 'Three-piece set featuring an embroidered anarkali kurti, elasticated pants, and a coordinated festive dupatta.',
-    fabric: 'Georgette with Inner Lining',
+    description: 'Sleeveless indigo straight kurti paired with relaxed wide-leg palazzo trousers and an artisanal hand-block printed tassel dupatta. Available with discreet feeding zippers.',
+    fabric: 'Cotton Slub with Block-Print Dupatta',
     careInstructions: ['Dry clean only', 'Store in cloth bag'],
     feedingDetails: {
       zipType: 'Concealed vertical dual-side zips',
@@ -245,8 +246,8 @@ export const PRODUCTS: Product[] = [
     price: 1699,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
+      '/images/dresses/maroon-anarkali.jpg',
+      '/images/dresses/mauve-anarkali.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -279,7 +280,7 @@ export const PRODUCTS: Product[] = [
   // 6. SAREES (Configuration: 'none')
   {
     id: 'prod-6',
-    title: 'Kanchivaram Touch Traditional Silk Saree',
+    title: 'Kanchivaram Checked Emerald & Crimson Pattu Saree',
     slug: 'kanchivaram-touch-traditional-silk-saree',
     skuPrefix: 'SFK-SAR-06',
     category: 'sarees',
@@ -287,15 +288,14 @@ export const PRODUCTS: Product[] = [
     price: 1599,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
+      '/images/sarees/bottle-green-maroon-zari-saree.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'magenta', name: 'Rani Magenta', hex: '#A2165A' },
-      { id: 'teal-gold', name: 'Teal & Antique Gold', hex: '#1C5B63' },
+      { id: 'emerald-crimson', name: 'Emerald Green & Crimson', hex: '#0B462B' },
+      { id: 'bottle-maroon', name: 'Bottle Green & Maroon', hex: '#173E2D' },
     ],
     availableSizes: ['Free Size'],
     variants: generateVariants(
@@ -303,13 +303,13 @@ export const PRODUCTS: Product[] = [
       1599,
       'none',
       [
-        { id: 'magenta', name: 'Rani Magenta', hex: '#A2165A' },
-        { id: 'teal-gold', name: 'Teal & Antique Gold', hex: '#1C5B63' },
+        { id: 'emerald-crimson', name: 'Emerald Green & Crimson', hex: '#0B462B' },
+        { id: 'bottle-maroon', name: 'Bottle Green & Maroon', hex: '#173E2D' },
       ],
       ['Free Size']
     ),
-    description: 'Soft silk saree woven with traditional zari border patterns and contrast pallu. Standard traditional 6-yard saree with blouse piece.',
-    fabric: 'Soft Silk with Zari Border',
+    description: 'Traditional Kanchivaram checked silk saree in emerald green woven with golden zari checks and a grand crimson-gold contrast pallu. Includes unstitched contrast blouse piece.',
+    fabric: 'Kanchivaram Pure Silk Blend',
     careInstructions: ['Dry clean recommended', 'Iron on reverse on silk setting'],
   },
 
@@ -366,8 +366,8 @@ export const PRODUCTS: Product[] = [
     price: 999,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
+      '/images/kidswear/yellow-embroidered-frock.jpg',
+      '/images/kidswear/ikat-blue-frock.jpg',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
@@ -400,7 +400,7 @@ export const PRODUCTS: Product[] = [
   // 9. FROCKS (Configuration: 'both')
   {
     id: 'prod-9',
-    title: 'Ananya Block-Print Tiered Maxi Frock',
+    title: 'Ananya Terracotta Ruffle-Shoulder Tiered Frock',
     slug: 'ananya-block-print-tiered-maxi-frock',
     skuPrefix: 'SFK-FRK-09',
     category: 'frocks',
@@ -408,14 +408,14 @@ export const PRODUCTS: Product[] = [
     price: 1299,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      '/images/frocks/terracotta-tiered-frock.jpg',
+      '/images/frocks/teal-zari-tiered-frock.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
     availableColors: [
-      { id: 'terracotta', name: 'Terracotta Rust', hex: '#C05A3E' },
-      { id: 'olive', name: 'Earthy Olive', hex: '#556B2F' },
+      { id: 'terracotta', name: 'Terracotta Rust', hex: '#B33A22' },
+      { id: 'olive', name: 'Peacock Emerald Teal', hex: '#0B4A42' },
     ],
     availableSizes: COMMON_SIZES,
     variants: generateVariants(
@@ -423,13 +423,13 @@ export const PRODUCTS: Product[] = [
       1299,
       'both',
       [
-        { id: 'terracotta', name: 'Terracotta Rust', hex: '#C05A3E' },
-        { id: 'olive', name: 'Earthy Olive', hex: '#556B2F' },
+        { id: 'terracotta', name: 'Terracotta Rust', hex: '#B33A22' },
+        { id: 'olive', name: 'Peacock Emerald Teal', hex: '#0B4A42' },
       ],
       COMMON_SIZES
     ),
-    description: 'Tiered silhouette with handcrafted block print motifs and an elasticated waist. Choose feeding-friendly or regular festive fit.',
-    fabric: 'Mulmul Cotton',
+    description: 'Breezy terracotta georgette tiered long frock accented with delicate ruffle straps and subtle hand-embroidered bodice motifs. Available in Feeding or regular fit.',
+    fabric: 'Georgette with Soft Mulmul Lining',
     careInstructions: ['Hand wash cold separately', 'Dry in shade', 'Warm iron'],
     feedingDetails: {
       zipType: 'Concealed dual-side nursing access',
@@ -442,7 +442,7 @@ export const PRODUCTS: Product[] = [
   // 10. CO-ORD SETS (Configuration: 'both')
   {
     id: 'prod-10',
-    title: 'Vaidehi Linen Tunic & Pant Co-ord Set',
+    title: 'Vaidehi Wine Floral-Hem Tunic & Palazzo Co-ord Set',
     slug: 'vaidehi-linen-tunic-pant-co-ord-set',
     skuPrefix: 'SFK-CRD-10',
     category: 'co-ord-sets',
@@ -450,14 +450,14 @@ export const PRODUCTS: Product[] = [
     price: 1599,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      '/images/co-ords/wine-floral-coord.jpg',
+      '/images/co-ords/crimson-botanical-coord.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
     availableColors: [
-      { id: 'beige', name: 'Natural Sand Beige', hex: '#D2B48C' },
-      { id: 'slate', name: 'Slate Teal', hex: '#3E6B75' },
+      { id: 'beige', name: 'Wine Floral', hex: '#68192A' },
+      { id: 'slate', name: 'Crimson Botanical', hex: '#A41D35' },
     ],
     availableSizes: COMMON_SIZES,
     variants: generateVariants(
@@ -465,12 +465,12 @@ export const PRODUCTS: Product[] = [
       1599,
       'both',
       [
-        { id: 'beige', name: 'Natural Sand Beige', hex: '#D2B48C' },
-        { id: 'slate', name: 'Slate Teal', hex: '#3E6B75' },
+        { id: 'beige', name: 'Wine Floral', hex: '#68192A' },
+        { id: 'slate', name: 'Crimson Botanical', hex: '#A41D35' },
       ],
       COMMON_SIZES
     ),
-    description: 'Contemporary coordinated tunic and cropped trouser pair tailored in breathable linen-cotton blend.',
+    description: 'Deep wine tunic and flared palazzo co-ord set detailed with soft blush-pink floral motifs along the hem and sleeves.',
     fabric: 'Linen Cotton Blend',
     careInstructions: ['Gentle cycle wash', 'Do not bleach', 'Warm iron when slightly damp'],
     feedingDetails: {
@@ -484,7 +484,7 @@ export const PRODUCTS: Product[] = [
   // 11. KURTI + DUPATTA (Configuration: 'feeding-only')
   {
     id: 'prod-11',
-    title: 'Gayathri Rayon Slub Anarkali Kurti & Dupatta',
+    title: 'Gayathri Midnight Navy Zari-Weave Kurti & Dupatta',
     slug: 'gayathri-rayon-slub-anarkali-kurti-dupatta',
     skuPrefix: 'SFK-KRT-11',
     category: 'kurti-dupatta',
@@ -492,13 +492,13 @@ export const PRODUCTS: Product[] = [
     price: 1249,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
+      '/images/kurti-dupatta/navy-zari-kurti-dupatta.jpg',
+      '/images/kurti-dupatta/magenta-ombre-kurti-dupatta.jpg',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
     availableColors: [
-      { id: 'coral', name: 'Festive Coral', hex: '#E06D53' },
+      { id: 'navy-zari', name: 'Midnight Navy & Gold Zari', hex: '#1B2845' },
       { id: 'forest', name: 'Deep Forest Green', hex: '#1C3B2B' },
     ],
     availableSizes: COMMON_SIZES,
@@ -507,25 +507,26 @@ export const PRODUCTS: Product[] = [
       1249,
       'feeding-only',
       [
-        { id: 'coral', name: 'Festive Coral', hex: '#E06D53' },
+        { id: 'navy-zari', name: 'Midnight Navy & Gold Zari', hex: '#1B2845' },
         { id: 'forest', name: 'Deep Forest Green', hex: '#1C3B2B' },
       ],
       COMMON_SIZES
     ),
-    description: 'Flared anarkali kurti featuring floral boota prints and paired with a crinkled mulmul dupatta. Dedicated feeding construction.',
-    fabric: 'Cotton Slub with Organza Dupatta',
+    description: 'Handloom-textured midnight navy straight kurti woven with tiny antique gold motifs and paired with a matching zari-border dupatta. Dedicated feeding construction.',
+    fabric: 'Handloom Cotton-Silk with Zari Dupatta',
     careInstructions: ['Gentle cold wash', 'Medium iron'],
     feedingDetails: {
       zipType: 'Concealed dual-side nursing zips',
       zipPlacement: 'Left and right vertical side seams',
-      description: 'Dedicated nursing access integrated into anarkali silhouette.'
+      description: 'Dedicated nursing access integrated cleanly into straight-cut kurti.'
     },
+    isNewArrival: true,
   },
 
   // 12. 3-PIECE DRESSES (Configuration: 'both')
   {
     id: 'prod-12',
-    title: 'Sharanya Silk Chanderi 3-Piece Festive Ensemble',
+    title: 'Sharanya Maroon Ajrakh Yoke 3-Piece Kurti Set',
     slug: 'sharanya-silk-chanderi-3-piece-ensemble',
     skuPrefix: 'SFK-3PC-12',
     category: '3-piece-dresses',
@@ -533,14 +534,14 @@ export const PRODUCTS: Product[] = [
     price: 2199,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
+      '/images/3pc-sets/maroon-ajrakh-3pc-set.jpg',
+      '/images/3pc-sets/indigo-blockprint-3pc-set.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
     availableColors: [
-      { id: 'maroon', name: 'Royal Maroon', hex: '#63141F' },
-      { id: 'bottle-green', name: 'Bottle Green', hex: '#0B3B24' },
+      { id: 'maroon-ajrakh', name: 'Maroon & Black Ajrakh', hex: '#6D1B28' },
+      { id: 'deep-indigo', name: 'Deep Indigo', hex: '#1E2D4C' },
     ],
     availableSizes: COMMON_SIZES,
     variants: generateVariants(
@@ -548,20 +549,21 @@ export const PRODUCTS: Product[] = [
       2199,
       'both',
       [
-        { id: 'maroon', name: 'Royal Maroon', hex: '#63141F' },
-        { id: 'bottle-green', name: 'Bottle Green', hex: '#0B3B24' },
+        { id: 'maroon-ajrakh', name: 'Maroon & Black Ajrakh', hex: '#6D1B28' },
+        { id: 'deep-indigo', name: 'Deep Indigo', hex: '#1E2D4C' },
       ],
       COMMON_SIZES
     ),
-    description: 'Regal Chanderi three-piece dress ensemble with zari embroidery, matching straight trousers, and banarasi weave border dupatta.',
-    fabric: 'Printed Chanderi Cotton Blend',
+    description: 'Royal maroon A-line straight kurti framed with hand-block Ajrakh yoke & cuff trim, matching straight trousers, and a black-and-maroon Ajrakh dupatta.',
+    fabric: 'Modal Cotton with Ajrakh Dupatta',
     careInstructions: ['Dry clean only'],
     feedingDetails: {
       zipType: 'Concealed dual-side zippers',
       zipPlacement: 'Discreet side placement',
-      description: 'Discreet vertical nursing access designed for festive ensemble.'
+      description: 'Discreet vertical nursing access designed for festive 3-piece set.'
     },
     isFeatured: true,
+    isNewArrival: true,
   },
 
   // 13. PARTYWEAR DRESSES (Configuration: 'both')
@@ -575,8 +577,8 @@ export const PRODUCTS: Product[] = [
     price: 2499,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
+      '/images/dresses/ruby-floral-frock.jpg',
+      '/images/dresses/rust-kalamkari-frock.jpg',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -609,7 +611,7 @@ export const PRODUCTS: Product[] = [
   // 14. SAREES (Configuration: 'none')
   {
     id: 'prod-14',
-    title: 'Vasundhara Handloom Linen Zari Border Saree',
+    title: 'Vasundhara Bottle-Green & Maroon Zari Border Saree',
     slug: 'vasundhara-handloom-linen-zari-border-saree',
     skuPrefix: 'SFK-SAR-14',
     category: 'sarees',
@@ -617,15 +619,14 @@ export const PRODUCTS: Product[] = [
     price: 1899,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1778148046782-2b5c2ce37612?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1737972992518-fa8f155a3b06?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      '/images/sarees/bottle-green-maroon-zari-saree.jpg',
+      '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'mustard', name: 'Earthy Mustard', hex: '#D49B28' },
-      { id: 'olive-silver', name: 'Olive with Silver Zari', hex: '#5E6646' },
+      { id: 'bottle-maroon', name: 'Bottle Green & Maroon', hex: '#173E2D' },
+      { id: 'deep-burgundy', name: 'Antique Burgundy Border', hex: '#691D2A' },
     ],
     availableSizes: ['Free Size'],
     variants: generateVariants(
@@ -633,13 +634,13 @@ export const PRODUCTS: Product[] = [
       1899,
       'none',
       [
-        { id: 'mustard', name: 'Earthy Mustard', hex: '#D49B28' },
-        { id: 'olive-silver', name: 'Olive with Silver Zari', hex: '#5E6646' },
+        { id: 'bottle-maroon', name: 'Bottle Green & Maroon', hex: '#173E2D' },
+        { id: 'deep-burgundy', name: 'Antique Burgundy Border', hex: '#691D2A' },
       ],
       ['Free Size']
     ),
-    description: 'Handcrafted pure linen saree highlighted by silver and gold zari borders. Includes running unstitched blouse fabric.',
-    fabric: 'Linen Cotton Blend',
+    description: 'Handloom cotton-silk saree in deep bottle green paired with woven copper-maroon temple zari borders and delicate tasseled pallu. Includes unstitched maroon contrast blouse piece.',
+    fabric: 'Handloom Cotton-Silk with Zari Border',
     careInstructions: ['Dry clean for initial washes', 'Gentle cold hand wash'],
   },
 
@@ -696,8 +697,8 @@ export const PRODUCTS: Product[] = [
     price: 849,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=800&auto=format&fit=crop',
+      '/images/kidswear/ikat-blue-frock.jpg',
+      '/images/kidswear/yellow-embroidered-frock.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -724,7 +725,7 @@ export const PRODUCTS: Product[] = [
   // 17. SAREES (Configuration: 'none')
   {
     id: 'prod-17',
-    title: 'Meenakshi Banarasi Brocade Bridal Silk Saree',
+    title: 'Meenakshi Wine-Maroon Banarasi Tissue Silk Saree',
     slug: 'meenakshi-banarasi-brocade-bridal-silk-saree',
     skuPrefix: 'SFK-SAR-17',
     category: 'sarees',
@@ -732,14 +733,14 @@ export const PRODUCTS: Product[] = [
     price: 2299,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1727430228383-aa1fb59db8bf?q=80&w=800&auto=format&fit=crop',
+      '/images/sarees/wine-banarasi-tissue-saree.jpg',
+      '/images/sarees/crimson-magenta-butti-saree.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'crimson-gold', name: 'Crimson & Pure Gold Zari', hex: '#8B0000' },
-      { id: 'emerald-gold', name: 'Emerald & Antique Zari', hex: '#004B23' },
+      { id: 'wine-gold', name: 'Deep Wine & Antique Gold', hex: '#4C1520' },
+      { id: 'crimson-gold', name: 'Crimson & Gold Zari', hex: '#8B0029' },
     ],
     availableSizes: ['Free Size'],
     variants: generateVariants(
@@ -747,13 +748,13 @@ export const PRODUCTS: Product[] = [
       2299,
       'none',
       [
-        { id: 'crimson-gold', name: 'Crimson & Pure Gold Zari', hex: '#8B0000' },
-        { id: 'emerald-gold', name: 'Emerald & Antique Zari', hex: '#004B23' },
+        { id: 'wine-gold', name: 'Deep Wine & Antique Gold', hex: '#4C1520' },
+        { id: 'crimson-gold', name: 'Crimson & Gold Zari', hex: '#8B0029' },
       ],
       ['Free Size']
     ),
-    description: 'Opulent Banarasi brocade silk saree with intricate floral jaal weaving and heavy pallu. Traditional festive drape.',
-    fabric: 'Banarasi Brocade Silk',
+    description: 'Opulent deep wine-maroon Banarasi tissue silk saree finished with luminous antique-gold woven borders and a grand bridal zari pallu. Includes matching unstitched blouse piece.',
+    fabric: 'Banarasi Tissue Silk',
     careInstructions: ['Dry clean only', 'Store wrapped in muslin cloth'],
     isFeatured: true,
   },
@@ -761,7 +762,7 @@ export const PRODUCTS: Product[] = [
   // 18. SAREES (Configuration: 'none')
   {
     id: 'prod-18',
-    title: 'Padmini Pure Chanderi Tissue Pattu Saree',
+    title: 'Padmini Crimson Zari-Butti Banarasi Chanderi Saree',
     slug: 'padmini-pure-chanderi-tissue-pattu-saree',
     skuPrefix: 'SFK-SAR-18',
     category: 'sarees',
@@ -769,14 +770,14 @@ export const PRODUCTS: Product[] = [
     price: 1999,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1727430228383-aa1fb59db8bf?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1737972992518-fa8f155a3b06?q=80&w=800&auto=format&fit=crop',
+      '/images/sarees/crimson-magenta-butti-saree.jpg',
+      '/images/sarees/wine-banarasi-tissue-saree.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'pistachio', name: 'Pistachio Gold', hex: '#93C572' },
-      { id: 'rose-gold', name: 'Rose Gold', hex: '#B76E79' },
+      { id: 'crimson-butti', name: 'Crimson Magenta & Gold', hex: '#A61C3C' },
+      { id: 'rose-gold', name: 'Rose Mauve & Gold', hex: '#8E4B63' },
     ],
     availableSizes: ['Free Size'],
     variants: generateVariants(
@@ -784,13 +785,13 @@ export const PRODUCTS: Product[] = [
       1999,
       'none',
       [
-        { id: 'pistachio', name: 'Pistachio Gold', hex: '#93C572' },
-        { id: 'rose-gold', name: 'Rose Gold', hex: '#B76E79' },
+        { id: 'crimson-butti', name: 'Crimson Magenta & Gold', hex: '#A61C3C' },
+        { id: 'rose-gold', name: 'Rose Mauve & Gold', hex: '#8E4B63' },
       ],
       ['Free Size']
     ),
-    description: 'Lightweight Chanderi tissue pattu saree woven with subtle metallic sheen and delicate border. Includes running blouse piece.',
-    fabric: 'Chanderi Tissue Pattu',
+    description: 'Festive crimson-magenta Banarasi Chanderi saree sprinkled with delicate golden zari polka buttis, a traditional woven border, and tasseled zari pallu.',
+    fabric: 'Banarasi Chanderi Silk Blend',
     careInstructions: ['Dry clean recommended', 'Cool iron reverse'],
     isNewArrival: true,
   },
@@ -806,8 +807,8 @@ export const PRODUCTS: Product[] = [
     price: 1099,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1618245472177-2a74ad3b994a?q=80&w=800&auto=format&fit=crop',
+      '/images/kidswear/green-pattu-pavadai.jpg',
+      '/images/kidswear/maroon-pattu-frock.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -835,37 +836,430 @@ export const PRODUCTS: Product[] = [
   // 20. KIDS COLLECTIONS (Configuration: 'none')
   {
     id: 'prod-20',
-    title: 'Krishna Festive Pure Cotton Kurta Set for Boys',
-    slug: 'krishna-festive-pure-cotton-kurta-set',
+    title: 'Vedika Maroon Scallop Temple-Border Pattu Frock',
+    slug: 'vedika-maroon-temple-border-pattu-frock',
     skuPrefix: 'SFK-KID-20',
     category: 'kids-collections',
     categoryName: 'Kids Collections',
-    price: 899,
+    price: 1199,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1778579530670-ef694be30313?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1618245472177-2a74ad3b994a?q=80&w=800&auto=format&fit=crop',
+      '/images/kidswear/maroon-pattu-frock.jpg',
+      '/images/kidswear/green-pattu-pavadai.jpg',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
     availableColors: [
-      { id: 'mustard-yellow', name: 'Haldi Yellow & Ivory', hex: '#E5A93C' },
-      { id: 'sky-blue', name: 'Sky Blue & White', hex: '#6BA4B8' },
+      { id: 'wine-maroon', name: 'Wine Maroon & Gold', hex: '#6D1336' },
+      { id: 'bottle-green', name: 'Bottle Green & Zari', hex: '#134E3A' },
     ],
     availableSizes: ['S', 'M', 'L'],
     variants: generateVariants(
       'SFK-KID-20',
-      899,
+      1199,
       'none',
       [
-        { id: 'mustard-yellow', name: 'Haldi Yellow & Ivory', hex: '#E5A93C' },
-        { id: 'sky-blue', name: 'Sky Blue & White', hex: '#6BA4B8' },
+        { id: 'wine-maroon', name: 'Wine Maroon & Gold', hex: '#6D1336' },
+        { id: 'bottle-green', name: 'Bottle Green & Zari', hex: '#134E3A' },
       ],
       ['S', 'M', 'L']
     ),
-    description: 'Festive cotton kurta and dhoti-pant set designed for comfortable celebration wear with gentle seams for young boys.',
-    fabric: '100% Breathable Cotton',
-    careInstructions: ['Machine wash gentle', 'Warm iron'],
+    description: 'Traditional South Indian Pattu long frock featuring a scalloped neckline, tiered flare, and woven elephant zari temple border.',
+    fabric: 'Art Silk with Cotton Lining',
+    careInstructions: ['Dry clean first wash', 'Gentle hand wash cold'],
+    isNewArrival: true,
+  },
+
+  // 21. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-21',
+    title: 'Meenakshi Royal Plum Silk Angrakha Kurti Set',
+    slug: 'meenakshi-royal-plum-silk-angrakha-set',
+    skuPrefix: 'SFK-KID-21',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 1299,
+    originalPrice: null,
+    images: [
+      '/images/kidswear/purple-angrakha-set.jpg',
+      '/images/kidswear/maroon-pattu-frock.jpg',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'royal-plum', name: 'Royal Plum', hex: '#4A154B' },
+      { id: 'deep-wine', name: 'Deep Wine', hex: '#6D1336' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-21',
+      1299,
+      'none',
+      [
+        { id: 'royal-plum', name: 'Royal Plum', hex: '#4A154B' },
+        { id: 'deep-wine', name: 'Deep Wine', hex: '#6D1336' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Festive silk angrakha peplum kurti paired with matching gota-trimmed straight pants and dainty tassel tie detailing.',
+    fabric: 'Silk Blend with Inner Lining',
+    careInstructions: ['Dry clean recommended', 'Cool steam iron'],
+  },
+
+  // 22. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-22',
+    title: 'Diya Champagne Tissue Organza Kids Party Gown',
+    slug: 'diya-champagne-organza-kids-party-gown',
+    skuPrefix: 'SFK-KID-22',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 1399,
+    originalPrice: null,
+    images: [
+      '/images/kidswear/golden-organza-gown.jpg',
+      '/images/kidswear/peacock-silk-frock.jpg',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'champagne-gold', name: 'Champagne Gold', hex: '#C69254' },
+      { id: 'soft-peach', name: 'Soft Peach', hex: '#E6B8A2' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-22',
+      1399,
+      'none',
+      [
+        { id: 'champagne-gold', name: 'Champagne Gold', hex: '#C69254' },
+        { id: 'soft-peach', name: 'Soft Peach', hex: '#E6B8A2' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Shimmering organza tissue floor-length festive gown with embroidered neckline, soft inner lining, and sheer zari-bordered dupatta.',
+    fabric: 'Georgette with Inner Lining',
+    careInstructions: ['Dry clean only', 'Store hanging or folded gently'],
+    isFeatured: true,
+  },
+
+  // 23. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-23',
+    title: 'Kavya Peacock Blue Ruffled Silk Kids Frock',
+    slug: 'kavya-peacock-blue-ruffled-silk-kids-frock',
+    skuPrefix: 'SFK-KID-23',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 1049,
+    originalPrice: null,
+    images: [
+      '/images/kidswear/peacock-silk-frock.jpg',
+      '/images/kidswear/golden-organza-gown.jpg',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'peacock-emerald', name: 'Peacock Blue & Emerald', hex: '#0A5470' },
+      { id: 'royal-teal', name: 'Royal Teal', hex: '#115E59' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-23',
+      1049,
+      'none',
+      [
+        { id: 'peacock-emerald', name: 'Peacock Blue & Emerald', hex: '#0A5470' },
+        { id: 'royal-teal', name: 'Royal Teal', hex: '#115E59' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Sleeveless festive silk frock crafted in rich peacock blue with subtle metallic motifs and a layered emerald green ruffle hem.',
+    fabric: 'Silk Blend with Inner Lining',
+    careInstructions: ['Dry clean first wash', 'Cool iron on reverse'],
+  },
+
+  // 24. SAREES (Configuration: 'none')
+  {
+    id: 'prod-24',
+    title: 'Arundhati Rose-Mauve & Forest Green Kanjeevaram Saree',
+    slug: 'arundhati-rose-mauve-forest-green-kanjeevaram-saree',
+    skuPrefix: 'SFK-SAR-24',
+    category: 'sarees',
+    categoryName: 'Sarees',
+    price: 2149,
+    originalPrice: null,
+    images: [
+      '/images/sarees/rose-mauve-kanjeevaram-saree.jpg',
+      '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'rose-forest', name: 'Rose Mauve & Forest Green', hex: '#8E4B63' },
+      { id: 'antique-gold', name: 'Forest Green & Gold Zari', hex: '#1B4332' },
+    ],
+    availableSizes: ['Free Size'],
+    variants: generateVariants(
+      'SFK-SAR-24',
+      2149,
+      'none',
+      [
+        { id: 'rose-forest', name: 'Rose Mauve & Forest Green', hex: '#8E4B63' },
+        { id: 'antique-gold', name: 'Forest Green & Gold Zari', hex: '#1B4332' },
+      ],
+      ['Free Size']
+    ),
+    description: 'Lustrous rose-mauve soft Kanjeevaram silk saree woven with gold scalloped temple borders and an heirloom forest-green peacock-motif zari pallu. Includes contrast green brocade blouse piece.',
+    fabric: 'Soft Kanjeevaram Silk with Zari Pallu',
+    careInstructions: ['Dry clean recommended', 'Iron on reverse on silk setting'],
+    isNewArrival: true,
+  },
+
+  // 25. SAREES (Configuration: 'none')
+  {
+    id: 'prod-25',
+    title: 'Nandini Royal Violet Lotus-Pallu Paithani Silk Saree',
+    slug: 'nandini-royal-violet-paithani-silk-saree',
+    skuPrefix: 'SFK-SAR-25',
+    category: 'sarees',
+    categoryName: 'Sarees',
+    price: 2499,
+    originalPrice: null,
+    images: [
+      '/images/sarees/royal-violet-paithani-saree.jpg',
+      '/images/sarees/rose-mauve-kanjeevaram-saree.jpg',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'royal-violet', name: 'Royal Violet & Lavender Zari', hex: '#4A1C6F' },
+      { id: 'plum-silver', name: 'Plum & Pastel Rose', hex: '#6D3B7E' },
+    ],
+    availableSizes: ['Free Size'],
+    variants: generateVariants(
+      'SFK-SAR-25',
+      2499,
+      'none',
+      [
+        { id: 'royal-violet', name: 'Royal Violet & Lavender Zari', hex: '#4A1C6F' },
+        { id: 'plum-silver', name: 'Plum & Pastel Rose', hex: '#6D3B7E' },
+      ],
+      ['Free Size']
+    ),
+    description: 'Signature royal violet Paithani silk saree adorned with tiny silver-gold zari dots, traditional geometric border, and an artisanal floral Paithani pallu. Includes matching contrast blouse piece.',
+    fabric: 'Artisanal Paithani Silk Blend',
+    careInstructions: ['Dry clean only', 'Store wrapped in muslin cloth'],
+    isFeatured: true,
+  },
+
+  // 26. PARTYWEAR DRESSES (Configuration: 'both')
+  {
+    id: 'prod-26',
+    title: 'Chandni Vintage Mauve Zari-Embroidered Anarkali Gown',
+    slug: 'chandni-vintage-mauve-zari-anarkali-gown',
+    skuPrefix: 'SFK-PTY-26',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 2299,
+    originalPrice: null,
+    images: [
+      '/images/dresses/mauve-anarkali.jpg',
+      '/images/dresses/maroon-anarkali.jpg',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'vintage-mauve', name: 'Vintage Mauve Rose', hex: '#B47B84' },
+      { id: 'deep-maroon', name: 'Deep Maroon', hex: '#63141F' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-26',
+      2299,
+      'both',
+      [
+        { id: 'vintage-mauve', name: 'Vintage Mauve Rose', hex: '#B47B84' },
+        { id: 'deep-maroon', name: 'Deep Maroon', hex: '#63141F' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Full-flared vintage mauve silk-cotton anarkali dress finished with heavy antique-gold zari hem embroidery and a sheer tasselled organza dupatta.',
+    fabric: 'Chanderi Silk-Cotton with Zari Hem',
+    careInstructions: ['Dry clean only', 'Cool iron on reverse'],
+    feedingDetails: {
+      zipType: 'Concealed dual-side vertical zips',
+      zipPlacement: 'Integrated smoothly into side seams',
+      description: 'Festive flared anarkali styling with discreet nursing access when Feeding option is selected.'
+    },
+    isFeatured: true,
+  },
+
+  // 27. PARTYWEAR DRESSES (Configuration: 'both')
+  {
+    id: 'prod-27',
+    title: 'Anviksha Olive Block-Print Flared Anarkali Dress',
+    slug: 'anviksha-olive-block-print-flared-anarkali-dress',
+    skuPrefix: 'SFK-PTY-27',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 1899,
+    originalPrice: null,
+    images: [
+      '/images/dresses/olive-anarkali-set.jpg',
+      '/images/dresses/maroon-anarkali.jpg',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'olive-moss', name: 'Earthy Olive Green', hex: '#4F5832' },
+      { id: 'emerald', name: 'Forest Emerald', hex: '#1B4931' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-27',
+      1899,
+      'both',
+      [
+        { id: 'olive-moss', name: 'Earthy Olive Green', hex: '#4F5832' },
+        { id: 'emerald', name: 'Forest Emerald', hex: '#1B4931' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Flowy olive-green hand-block flared anarkali dress finished with sheer printed dupatta and subtle gold border accents. Available in Feeding & Non-Feeding.',
+    fabric: 'Printed Chanderi Silk-Cotton Blend',
+    careInstructions: ['Dry clean first wash', 'Gentle cold hand wash thereafter'],
+    feedingDetails: {
+      zipType: 'Concealed vertical dual-side zips',
+      zipPlacement: 'Integrated smoothly into side seams',
+      description: 'Graceful gathered flare with discreet nursing access.'
+    },
+    isNewArrival: true,
+    isFeatured: true,
+  },
+
+  // 28. PARTYWEAR DRESSES (Configuration: 'both')
+  {
+    id: 'prod-28',
+    title: 'Devika Crimson Floral-Print Tiered Long Dress',
+    slug: 'devika-crimson-floral-tiered-long-frock',
+    skuPrefix: 'SFK-PTY-28',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 1399,
+    originalPrice: null,
+    images: [
+      '/images/dresses/crimson-floral-maxi.jpg',
+      '/images/dresses/ruby-floral-frock.jpg',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'crimson-floral', name: 'Crimson Botanical', hex: '#A61C3C' },
+      { id: 'rust-bloom', name: 'Rust Kalamkari', hex: '#8B3A2B' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-28',
+      1399,
+      'both',
+      [
+        { id: 'crimson-floral', name: 'Crimson Botanical', hex: '#A61C3C' },
+        { id: 'rust-bloom', name: 'Rust Kalamkari', hex: '#8B3A2B' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Vibrant crimson floral tiered ethnic maxi dress featuring flared pleats, soft breathable cotton drape, and concealed side nursing zippers when selected.',
+    fabric: 'Pure Mulmul Cotton',
+    careInstructions: ['Machine wash gentle', 'Dry in shade'],
+    feedingDetails: {
+      zipType: 'Concealed dual-side vertical zips',
+      zipPlacement: 'Integrated into upper bodice side seams',
+      description: 'Relaxed tiered flare suitable for maternity, feeding, and everyday wear.'
+    },
+    isNewArrival: true,
+  },
+
+  // 29. PARTYWEAR DRESSES (Configuration: 'feeding-only')
+  {
+    id: 'prod-29',
+    title: 'Suhani Lavender Heart-Weave Mulmul Feeding Dress',
+    slug: 'suhani-lavender-heart-weave-feeding-dress',
+    skuPrefix: 'SFK-PTY-29',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 1149,
+    originalPrice: null,
+    images: [
+      '/images/dresses/lavender-feeding-frock.jpg',
+      '/images/dresses/rust-kalamkari-frock.jpg',
+    ],
+    feedingConfig: 'feeding-only',
+    supportedClothingTypes: ['Feeding'],
+    availableColors: [
+      { id: 'lavender-heart', name: 'Lavender Heart Weave', hex: '#7E6598' },
+      { id: 'vintage-mauve', name: 'Vintage Mauve', hex: '#B47B84' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-29',
+      1149,
+      'feeding-only',
+      [
+        { id: 'lavender-heart', name: 'Lavender Heart Weave', hex: '#7E6598' },
+        { id: 'vintage-mauve', name: 'Vintage Mauve', hex: '#B47B84' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Soft lavender pure cotton puff-sleeve feeding dress with discreet horizontal nursing overlap flap and roomy gathered skirt.',
+    fabric: 'Pure Mulmul Cotton',
+    careInstructions: ['Machine wash gentle cycle', 'Dry in shade', 'Warm iron'],
+    feedingDetails: {
+      zipType: 'Concealed front-flap dual zippers',
+      zipPlacement: 'Integrated cleanly beneath vertical pleat overlap',
+      description: 'Dedicated nursing access tailored for everyday maternal comfort.'
+    },
+  },
+
+  // 30. PARTYWEAR DRESSES (Configuration: 'both')
+  {
+    id: 'prod-30',
+    title: 'Meghna Rust Kalamkari Tiered Maxi Dress',
+    slug: 'meghna-rust-kalamkari-tiered-maxi-dress',
+    skuPrefix: 'SFK-PTY-30',
+    category: 'partywear-dresses',
+    categoryName: 'Partywear Dresses',
+    price: 1299,
+    originalPrice: null,
+    images: [
+      '/images/dresses/rust-kalamkari-frock.jpg',
+      '/images/dresses/ruby-floral-frock.jpg',
+    ],
+    feedingConfig: 'both',
+    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
+    availableColors: [
+      { id: 'rust-kalamkari', name: 'Rust Kalamkari', hex: '#8B3A2B' },
+      { id: 'ruby-floral', name: 'Ruby Botanical', hex: '#9B1B30' },
+    ],
+    availableSizes: COMMON_SIZES,
+    variants: generateVariants(
+      'SFK-PTY-30',
+      1299,
+      'both',
+      [
+        { id: 'rust-kalamkari', name: 'Rust Kalamkari', hex: '#8B3A2B' },
+        { id: 'ruby-floral', name: 'Ruby Botanical', hex: '#9B1B30' },
+      ],
+      COMMON_SIZES
+    ),
+    description: 'Hand-block Kalamkari tiered ankle-length dress in earthy rust cotton with gathered waist and puff sleeves.',
+    fabric: 'Mulmul Cotton',
+    careInstructions: ['Hand wash cold separately', 'Dry in shade', 'Warm iron'],
+    feedingDetails: {
+      zipType: 'Concealed dual-side nursing access',
+      zipPlacement: 'Left and right vertical side openings',
+      description: 'Available in both discreet Feeding and Non-Feeding fits.'
+    },
     isNewArrival: true,
   }
 ];

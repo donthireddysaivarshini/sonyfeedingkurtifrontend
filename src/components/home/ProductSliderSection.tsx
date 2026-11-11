@@ -56,7 +56,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
               <img
                 alt={product.title}
                 src={product.images[0]}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
             </Link>
@@ -186,7 +186,12 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
         {/* Section Header matching GSS */}
         <div className="flex items-center justify-between pb-2.5">
           <h2 className="font-display text-base font-bold tracking-tight text-stone-900 sm:text-xl md:text-2xl">
-            {title}
+            <Link
+              to={viewAllLink}
+              className="transition-colors hover:text-maroon-800"
+            >
+              {title}
+            </Link>
           </h2>
           
           <div className="flex items-center gap-3 sm:gap-4">

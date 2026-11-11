@@ -11,7 +11,7 @@ export const BrandStorySection: React.FC = () => {
           <div className="relative">
             <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-ivory-200">
               <img
-                src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=900&auto=format&fit=crop"
+                src="/images/dresses/lavender-feeding-frock.jpg"
                 alt="Sony Collections Craftsmanship"
                 className="w-full h-full object-cover"
               />

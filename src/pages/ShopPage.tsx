@@ -15,12 +15,13 @@ import { FilterDrawer } from '../components/shop/FilterDrawer';
 import { SortDropdown } from '../components/shop/SortDropdown';
 import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
+import { resolveCategorySlug } from '../data/categories';
 import { PRODUCTS } from '../data/products';
 import { Product, ProductSize } from '../types/product';
 import { useCart } from '../context/CartContext';
 
 function parseFiltersFromParams(params: URLSearchParams): FilterState {
-  const category = params.get('category') || null;
+  const category = resolveCategorySlug(params.get('category'));
   const feedingParam = params.get('clothingType') || params.get('feeding');
   const feedingType: FilterState['feedingType'] =
     feedingParam === 'Feeding'
@@ -127,10 +128,6 @@ export const ShopPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-ink-secondary mt-1.5 max-w-2xl">
             Browse our complete selection of ethnic wear, frocks, lehengas, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.
           </p>
-          <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-ivory-100 border border-ivory-300 text-[11px] text-ink-muted">
-            <AlertCircle className="w-3.5 h-3.5 text-brand-700 shrink-0" />
-            <span>Preview Catalog • Photography, sample pricing, and variant specs are indicative demonstration data.</span>
-          </div>
         </div>
 
         {/* Toolbar: Filter Toggle on Mobile, Count & Sort */}
