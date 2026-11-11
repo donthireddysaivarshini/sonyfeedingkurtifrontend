@@ -56,15 +56,6 @@ export const CATEGORIES: Category[] = [
     tagline: 'Draped in Traditional Heritage'
   },
   {
-    id: 'lehengas',
-    name: 'Lehengas',
-    slug: 'lehengas',
-    image: 'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=600&auto=format&fit=crop',
-    itemCount: 'Festive Lehengas',
-    description: 'Flared festive skirts paired with coordinated blouses and ornate dupattas.',
-    tagline: 'Festive Twirls & Heritage Craft'
-  },
-  {
     id: 'kids-collections',
     name: 'Kids Collections',
     slug: 'kids-collections',

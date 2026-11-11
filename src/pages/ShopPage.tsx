@@ -126,7 +126,7 @@ export const ShopPage: React.FC = () => {
             Explore All Collections
           </h1>
           <p className="text-xs sm:text-sm text-ink-secondary mt-1.5 max-w-2xl">
-            Browse our complete selection of ethnic wear, frocks, lehengas, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.
+            Browse our complete selection of ethnic wear, frocks, dresses, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.
           </p>
         </div>
 

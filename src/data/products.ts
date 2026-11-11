@@ -313,48 +313,6 @@ export const PRODUCTS: Product[] = [
     careInstructions: ['Dry clean recommended', 'Iron on reverse on silk setting'],
   },
 
-  // 7. LEHENGAS (Configuration: 'both')
-  {
-    id: 'prod-7',
-    title: 'Jiyo Flared Festive Lehenga Set',
-    slug: 'jiyo-flared-festive-lehenga-set',
-    skuPrefix: 'SFK-LHG-07',
-    category: 'lehengas',
-    categoryName: 'Lehengas',
-    price: 1999,
-    originalPrice: null,
-    images: [
-      'https://images.unsplash.com/photo-1676285789557-3bb4450bb67f?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
-    ],
-    feedingConfig: 'both',
-    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
-    availableColors: [
-      { id: 'maroon', name: 'Deep Maroon', hex: '#5E1914' },
-      { id: 'navy', name: 'Imperial Navy', hex: '#1E293B' },
-    ],
-    availableSizes: COMMON_SIZES,
-    variants: generateVariants(
-      'SFK-LHG-07',
-      1999,
-      'both',
-      [
-        { id: 'maroon', name: 'Deep Maroon', hex: '#5E1914' },
-        { id: 'navy', name: 'Imperial Navy', hex: '#1E293B' },
-      ],
-      COMMON_SIZES
-    ),
-    description: 'Flared festive lehenga skirt with comfort waistband. Blouse available in both Feeding and Non-Feeding options.',
-    fabric: 'Silk Blend with Inner Lining',
-    careInstructions: ['Dry clean only'],
-    feedingDetails: {
-      zipType: 'Side concealed zippers in blouse',
-      zipPlacement: 'Side seams of blouse',
-      description: 'Allows nursing access while wearing festive attire.'
-    },
-    isFeatured: true,
-  },
-
   // 8. KIDS COLLECTIONS (Configuration: 'feeding-only')
   {
     id: 'prod-8',
@@ -642,48 +600,6 @@ export const PRODUCTS: Product[] = [
     description: 'Handloom cotton-silk saree in deep bottle green paired with woven copper-maroon temple zari borders and delicate tasseled pallu. Includes unstitched maroon contrast blouse piece.',
     fabric: 'Handloom Cotton-Silk with Zari Border',
     careInstructions: ['Dry clean for initial washes', 'Gentle cold hand wash'],
-  },
-
-  // 15. LEHENGAS (Configuration: 'both')
-  {
-    id: 'prod-15',
-    title: 'Meera Chanderi Semi-Stitched Festive Lehenga',
-    slug: 'meera-chanderi-semi-stitched-festive-lehenga',
-    skuPrefix: 'SFK-LHG-15',
-    category: 'lehengas',
-    categoryName: 'Lehengas',
-    price: 2699,
-    originalPrice: null,
-    images: [
-      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1676285789557-3bb4450bb67f?q=80&w=800&auto=format&fit=crop',
-    ],
-    feedingConfig: 'both',
-    supportedClothingTypes: ['Feeding', 'Non-Feeding'],
-    availableColors: [
-      { id: 'peacock-blue', name: 'Peacock Blue', hex: '#114B5F' },
-      { id: 'crimson', name: 'Deep Crimson', hex: '#7A131A' },
-    ],
-    availableSizes: COMMON_SIZES,
-    variants: generateVariants(
-      'SFK-LHG-15',
-      2699,
-      'both',
-      [
-        { id: 'peacock-blue', name: 'Peacock Blue', hex: '#114B5F' },
-        { id: 'crimson', name: 'Deep Crimson', hex: '#7A131A' },
-      ],
-      COMMON_SIZES
-    ),
-    description: 'Festive twirl lehenga set adorned with gota patti detailing and net dupatta. Blouse features feeding-friendly option.',
-    fabric: 'Silk Blend with Inner Lining',
-    careInstructions: ['Dry clean only'],
-    feedingDetails: {
-      zipType: 'Concealed dual-side zips in blouse',
-      zipPlacement: 'Discreet side placement in blouse',
-      description: 'Enables comfortable nursing during celebrations.'
-    },
-    isNewArrival: true,
   },
 
   // 16. KIDS COLLECTIONS (Configuration: 'none')
