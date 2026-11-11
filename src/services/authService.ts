@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Authentication Service
+ * SONY COLLECTIONS - Authentication Service
  * 
  * Provides typed contract boundaries for customer authentication, Google OAuth token exchange,
  * and profile management.

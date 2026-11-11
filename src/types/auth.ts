@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Authentication Types
+ * SONY COLLECTIONS - Authentication Types
  * 
  * Prepares the frontend for future Django REST Framework + Google OAuth integration.
  */

@@ -16,42 +16,42 @@ export interface HeroSlide {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
-    badge: 'ETHNIC & MATERNITY COLLECTION',
-    title: 'Celebrate Motherhood in',
+    badge: 'DESIGNER ETHNIC COLLECTION',
+    title: 'Celebrate Every Moment in',
     highlightText: 'Ethnic Grace',
-    subtitle: 'Designer Feeding Kurtis, Co-ord Sets & Festive Maxis with discreet concealed nursing zippers crafted for comfort and style.',
-    ctaText: 'Shop Feeding Kurtis',
-    ctaLink: '/shop?clothingType=Feeding',
-    secondaryCtaText: 'Explore All Categories',
+    subtitle: 'Designer Flared Dresses, Frocks & Festive Kurti Sets crafted for timeless grace, comfort, and style.',
+    ctaText: 'Shop Dresses & Frocks',
+    ctaLink: '/category/frocks',
+    secondaryCtaText: 'Explore All Collections',
     secondaryCtaLink: '/shop',
     desktopImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1600&auto=format&fit=crop',
     mobileImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-    tag: 'Feeding & Non-Feeding Options Available'
+    tag: 'Dresses, Kids Wear & Sarees'
   },
   {
     id: 'slide-2',
-    badge: 'FESTIVE COLLECTION',
-    title: 'Traditional Occasions,',
-    highlightText: 'Tailored Comfort',
-    subtitle: 'Step into family gatherings with 3-Piece Anarkali sets and Lehengas designed with optional feeding access.',
-    ctaText: 'Shop Partywear & Sets',
-    ctaLink: '/category/partywear-dresses',
+    badge: 'HERITAGE SAREE COLLECTION',
+    title: 'Traditional Splendour,',
+    highlightText: 'Pure Silk Elegance',
+    subtitle: 'Step into grand celebrations with handcrafted Kanchivaram silk, Banarasi brocades, and festive sarees.',
+    ctaText: 'Shop Sarees',
+    ctaLink: '/category/sarees',
     secondaryCtaText: 'View Collections',
     secondaryCtaLink: '/shop',
-    desktopImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1600&auto=format&fit=crop',
-    mobileImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
-    tag: 'Cotton & Silk Blends'
+    desktopImage: 'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=1600&auto=format&fit=crop',
+    mobileImage: 'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=800&auto=format&fit=crop',
+    tag: 'Handloom & Pure Silk Weaves'
   },
   {
     id: 'slide-3',
     badge: 'FAMILY & KIDS EDIT',
     title: 'Coordinated Moments &',
-    highlightText: 'Everyday Ease',
-    subtitle: 'Breezy cotton frocks and matching mom-child outfits crafted with gentle fabrics for sensitive skin.',
-    ctaText: 'Explore Kids Collections',
+    highlightText: 'Festive Joy',
+    subtitle: 'Breezy cotton frocks, matching mom-child twinning, and traditional kids wear crafted in gentle breathable fabrics.',
+    ctaText: 'Explore Kids Wear',
     ctaLink: '/category/kids-collections',
-    desktopImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1600&auto=format&fit=crop',
-    mobileImage: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
+    desktopImage: 'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=1600&auto=format&fit=crop',
+    mobileImage: 'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
     tag: 'Breathable Natural Fabrics'
   }
 ];
@@ -86,7 +86,7 @@ export const VALUE_PROPOSITIONS: ValueProp[] = [
 ];
 
 export const ANNOUNCEMENT_MESSAGES = [
-  'Welcome to Sony Feeding Kurtis • Thoughtfully Designed Ethnic & Maternity Wear',
+  'Welcome to Sony Collections • Thoughtfully Designed Ethnic & Festive Wear',
   'Concealed Feeding & Regular Ethnic Options Available on Selected Styles',
   'Explore Our Curated Collections of Frocks, Sarees, Sets & Kurtis',
   'Pan-India Delivery Service • Standard Courier Shipping'

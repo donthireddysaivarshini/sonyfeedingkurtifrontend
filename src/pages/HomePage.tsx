@@ -4,12 +4,13 @@ import { AnnouncementBar } from '../components/layout/AnnouncementBar';
 import { Header } from '../components/layout/Header';
 import { HeroBanner } from '../components/home/HeroBanner';
 import { CategorySection } from '../components/home/CategorySection';
-import { FeaturedCollections } from '../components/home/FeaturedCollections';
-import { FeedingHighlightBanner } from '../components/home/FeedingHighlightBanner';
-import { MidBannerPromo } from '../components/home/MidBannerPromo';
 import { WhyChooseUs } from '../components/home/WhyChooseUs';
+import { ProductSliderSection } from '../components/home/ProductSliderSection';
+import { SocialProofBanner } from '../components/home/SocialProofBanner';
 import { CustomerTestimonials } from '../components/home/CustomerTestimonials';
-import { BrandStorySection } from '../components/home/BrandStorySection';
+import { BrandPromiseSection } from '../components/home/BrandPromiseSection';
+import { FloatingWhatsApp } from '../components/layout/FloatingWhatsApp';
+import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 import { Footer } from '../components/layout/Footer';
 import { QuickSelectModal } from '../components/products/QuickSelectModal';
 import { CartDrawer } from '../components/layout/CartDrawer';
@@ -18,8 +19,8 @@ import { MobileDrawer } from '../components/layout/MobileDrawer';
 import { AuthModal } from '../components/auth/AuthModal';
 import { CheckoutPreviewModal } from '../components/checkout/CheckoutPreviewModal';
 import { Product, Category } from '../types/product';
+import { PRODUCTS } from '../data/products';
 import { useCart } from '../context/CartContext';
-import { X, Sparkles } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,9 +34,6 @@ export const HomePage: React.FC = () => {
   // Selected product for variant modal
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
-  // Active category filter (when user taps a category circle)
-  const [activeCategory, setActiveCategory] = useState<Category | null>(null);
-
   const handleSelectCategory = (category: Category) => {
     navigate(`/category/${category.slug}`);
   };
@@ -44,74 +42,131 @@ export const HomePage: React.FC = () => {
     setSelectedProductForModal(product);
   };
 
+  // 1. Dresses: Flared frocks, partywear gowns, 3-piece sets & anarkali dresses
+  const dressProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) =>
+      p.category === 'frocks' ||
+      p.category === 'partywear-dresses' ||
+      p.category === '3-piece-dresses' ||
+      p.category === 'kurti-dupatta'
+    );
+  }, []);
+
+  // 2. Kids Wear: Toddler frocks, mom-child twinning, pattu pavadai & kids kurta sets
+  const kidsWearProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => p.category === 'kids-collections');
+  }, []);
+
+  // 3. Sarees: Traditional Kanchivaram silk, handloom linen zari & Banarasi sarees
+  const sareeProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => p.category === 'sarees');
+  }, []);
+
+  // 4. New Arrivals: Fresh festive and seasonal launches
+  const newArrivalProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => p.isNewArrival);
+  }, []);
+
+  // 5. Best Sellers: Customer-favorite sarees, frocks & feeding designs
+  const bestSellerProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => p.isFeatured);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-ivory w-full overflow-x-hidden">
-      {/* 1. Announcement Bar */}
+    <div className="min-h-screen flex flex-col bg-cream-50 w-full overflow-x-hidden selection:bg-maroon-100 selection:text-maroon-900">
+      {/* 1. Continuous Marquee Announcement Bar */}
       <AnnouncementBar />
 
-      {/* 2. Main Header */}
+      {/* 2. Sticky Header */}
       <Header
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onOpenCart={openCart}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content Area Matching GSS Section Sequence */}
       <main className="flex-1 w-full overflow-x-hidden">
-        {/* 3. Hero Banner Slider */}
+        {/* Section 0: Widescreen Hero Banner Slider */}
         <HeroBanner />
 
-        {/* 4. Circular Category Presentation (All 8 Categories) */}
-        <CategorySection
-          onSelectCategory={handleSelectCategory}
-          activeCategorySlug={activeCategory?.slug}
-        />
+        {/* Section 1: Browse Categories Circles (All 8 Sony Collections) */}
+        <CategorySection onSelectCategory={handleSelectCategory} />
 
-        {/* Active Category Filter Indicator */}
-        {activeCategory && (
-          <div className="bg-brand-50 border-y border-brand-200 py-3 px-4">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs text-brand-900">
-                <Sparkles className="w-4 h-4 text-brand-gold" />
-                <span>
-                  Showing styles for <strong>{activeCategory.name}</strong> ({activeCategory.itemCount})
-                </span>
-              </div>
-              <button
-                onClick={() => setActiveCategory(null)}
-                className="flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-900 bg-white px-2.5 py-1 rounded-full border border-brand-200 shadow-xs"
-              >
-                <span>Clear Filter</span>
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* 5. Featured Collections / Product Cards */}
-        <FeaturedCollections
-          onQuickSelect={handleQuickSelect}
-          selectedCategorySlug={activeCategory?.slug}
-        />
-
-        {/* 6. Educational Feeding Innovation Highlight Banner */}
-        <FeedingHighlightBanner />
-
-        {/* 7. Mid-Page Festive Promotional Banner */}
-        <MidBannerPromo />
-
-        {/* 8. Why Choose Us / Trust Pillars */}
+        {/* Section 2: Trust Badges Strip (3 Pillars) */}
         <WhyChooseUs />
 
-        {/* 9. Real Customer Testimonials */}
+        {/* Section 3: Sliding Carousel 1 — Dresses */}
+        <ProductSliderSection
+          id="dresses"
+          title="Dresses"
+          viewAllLink="/category/frocks"
+          products={dressProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="Trending"
+        />
+
+        {/* Section 4: Sliding Carousel 2 — Kids Wear */}
+        <ProductSliderSection
+          id="kids-wear"
+          title="Kids Wear"
+          viewAllLink="/category/kids-collections"
+          products={kidsWearProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="Festive"
+        />
+
+        {/* Section 5: Sliding Carousel 3 — Sarees */}
+        <ProductSliderSection
+          id="sarees"
+          title="Sarees"
+          viewAllLink="/category/sarees"
+          products={sareeProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="Pure Silk"
+        />
+
+        {/* Section 6: Sliding Carousel 4 — New Arrivals */}
+        <ProductSliderSection
+          id="new-arrivals"
+          title="New Arrivals"
+          viewAllLink="/shop?sort=newest"
+          products={newArrivalProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="New"
+        />
+
+        {/* Section 7: Sliding Carousel 5 — Best Sellers */}
+        <ProductSliderSection
+          id="best-sellers"
+          title="Best Sellers"
+          viewAllLink="/shop?sort=bestseller"
+          products={bestSellerProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="Best Seller"
+        />
+
+        {/* Section 6: Social Proof Strip */}
+        <SocialProofBanner />
+
+        {/* Section 7: Loved by our women (Customer Testimonials Carousel) */}
         <CustomerTestimonials />
 
-        {/* 10. Brand Story & Craftsmanship */}
-        <BrandStorySection />
+        {/* Section 8: The Sony Promise (Maroon Stats Banner & CTA) */}
+        <BrandPromiseSection />
       </main>
 
-      {/* 11. Footer */}
+      {/* Footer */}
       <Footer />
+
+      {/* Floating WhatsApp Action Button */}
+      <FloatingWhatsApp />
+
+      {/* Mobile Sticky Bottom Navigation Bar */}
+      <MobileBottomNav
+        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenCart={openCart}
+        onOpenCategories={() => setIsMobileMenuOpen(true)}
+      />
 
       {/* Overlays, Drawers & Modals */}
       <CartDrawer

@@ -151,7 +151,7 @@ export const AuthModal: React.FC = () => {
 
         {/* Modal Footer */}
         <div className="p-3 bg-ivory-50 border-t border-ivory-200 text-center text-[10px] text-ink-muted">
-          Sony Feeding Kurtis • Secure Ecommerce Architecture
+          Sony Collections • Secure Ecommerce Architecture
         </div>
       </div>
     </div>

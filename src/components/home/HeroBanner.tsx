@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { HERO_SLIDES } from '../../data/banners';
 
 export const HeroBanner: React.FC = () => {
@@ -19,105 +19,104 @@ export const HeroBanner: React.FC = () => {
 
   return (
     <section
-      className="relative overflow-hidden bg-ivory-100 border-b border-ivory-300"
+      aria-label="Hero Promotion"
+      className="relative w-full overflow-hidden bg-cream-50"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="relative min-h-[460px] sm:min-h-[520px] lg:min-h-[580px] flex items-center">
+      <div className="relative w-full min-h-[340px] sm:min-h-[460px] md:min-h-[520px] lg:min-h-[545px] flex items-center">
         
-        {/* Background Image with Enhanced Contrast Overlays */}
+        {/* Background Image Carousel Slide */}
         <div className="absolute inset-0 z-0">
           <picture>
             <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
             <img
               src={slide.desktopImage}
               alt={slide.title}
-              className="w-full h-full object-cover object-top sm:object-center transition-opacity duration-700 ease-in-out"
+              className="w-full h-full object-cover object-center transition-all duration-700 ease-in-out"
             />
           </picture>
-          {/* Enhanced mobile & desktop readability gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-ivory-50/95 via-ivory-50/85 to-transparent sm:w-2/3 lg:w-1/2" />
-          <div className="absolute inset-0 bg-black/15 sm:bg-black/5" />
+          
+          {/* Subtle Contrast Gradients Matching GSS Hero Style */}
+          <div className="absolute inset-0 bg-gradient-to-r from-stone-900/70 via-stone-900/40 to-transparent sm:w-3/4 md:w-3/5" />
+          <div className="absolute inset-0 bg-stone-950/20" />
         </div>
 
-        {/* Content Container */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-          <div className="max-w-xl space-y-3.5 sm:space-y-6 bg-ivory-50/70 sm:bg-transparent backdrop-blur-xs sm:backdrop-blur-none p-4 sm:p-0 rounded-2xl border border-ivory-200/50 sm:border-0 shadow-xs sm:shadow-none">
+        {/* Content Box */}
+        <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 md:px-8 py-10 sm:py-16">
+          <div className="max-w-xl space-y-3 sm:space-y-4 text-white">
             
-            {/* Tag Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-700/90 text-ivory-50 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase backdrop-blur-xs shadow-xs animate-fade-in">
-              <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+            {/* Pill Tag */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-saffron-500/90 text-stone-950 text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-xs shadow-xs animate-fade-in">
+              <span>✦</span>
               <span>{slide.badge}</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-ink-primary leading-[1.2] tracking-tight">
+            {/* Headline */}
+            <h1 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-white">
               {slide.title}{' '}
-              <span className="text-brand-700 block italic font-normal sm:inline">
+              <span className="text-saffron-300 font-serif italic block sm:inline font-normal">
                 {slide.highlightText}
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base text-ink-primary sm:text-ink-secondary leading-relaxed max-w-lg font-medium sm:font-normal">
+            <p className="text-xs sm:text-sm md:text-base text-cream-100/90 leading-relaxed max-w-lg font-normal line-clamp-2 sm:line-clamp-none">
               {slide.subtitle}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
+            {/* CTAs matching GSS Button Styles */}
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-2">
               <Link
                 to={slide.ctaLink}
-                className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-md hover:bg-brand-800 transition-all hover:gap-3 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-maroon-800 text-cream-50 font-bold text-xs sm:text-sm shadow-md hover:bg-maroon-700 transition-all hover:gap-3"
               >
                 <span>{slide.ctaText}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
               {slide.secondaryCtaText && (
                 <Link
                   to={slide.secondaryCtaLink || '/shop'}
-                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/90 text-ink-primary font-semibold text-xs sm:text-sm border border-ivory-300 hover:bg-white hover:text-brand-700 transition-all shadow-xs"
+                  className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/95 text-stone-900 font-bold text-xs sm:text-sm hover:bg-white hover:text-maroon-800 transition-all shadow-xs"
                 >
                   <span>{slide.secondaryCtaText}</span>
                 </Link>
               )}
             </div>
 
-            {/* Feature Callout */}
-            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-ink-secondary pt-1 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
-              <span>{slide.tag}</span>
-            </div>
-
           </div>
         </div>
 
-        {/* Carousel Arrow Controls */}
+        {/* Previous Button */}
         <button
           onClick={() => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
           aria-label="Previous Slide"
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-ink-primary flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-stone-800 flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
+        {/* Next Button */}
         <button
           onClick={() => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
           aria-label="Next Slide"
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-ink-primary flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-stone-800 flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {/* Slide Indicators Dots */}
+        <div className="absolute bottom-3 sm:bottom-4 inset-x-0 z-20 flex justify-center items-center gap-1.5 sm:gap-2">
           {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentSlide === idx ? 'w-8 bg-brand-700' : 'w-2 bg-ink-primary/30 hover:bg-ink-primary/50'
+              className={`transition-all duration-300 rounded-full ${
+                currentSlide === idx
+                  ? 'w-7 sm:w-8 h-2 bg-saffron-400 shadow-xs'
+                  : 'w-2 h-2 bg-white/60 hover:bg-white'
               }`}
             />
           ))}

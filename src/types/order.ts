@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Order & Checkout Types
+ * SONY COLLECTIONS - Order & Checkout Types
  * 
  * Prepares the frontend for future Django order, checkout, and Razorpay endpoints.
  */

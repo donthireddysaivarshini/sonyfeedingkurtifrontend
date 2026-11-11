@@ -344,7 +344,7 @@ export const ProductDetailPage: React.FC = () => {
               <div className="mt-3.5 p-2.5 rounded-xl bg-ivory-100/90 border border-ivory-300 flex items-start gap-2 text-[11px] text-ink-muted">
                 <AlertCircle className="w-3.5 h-3.5 text-brand-700 shrink-0 mt-0.5" />
                 <span>
-                  <strong>Demonstration Preview:</strong> Photography, sample pricing, and indicative specifications shown are for interface review. Official Sony Feeding Kurtis brand assets will be provided upon launch.
+                  <strong>Demonstration Preview:</strong> Photography, sample pricing, and indicative specifications shown are for interface review. Official Sony Collections brand assets will be provided upon launch.
                 </span>
               </div>
             </div>

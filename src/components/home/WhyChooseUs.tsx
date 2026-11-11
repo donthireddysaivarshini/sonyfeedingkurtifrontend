@@ -1,52 +1,58 @@
 import React from 'react';
-import { ShieldCheck, Sparkles, Truck, RotateCcw } from 'lucide-react';
-import { VALUE_PROPOSITIONS } from '../../data/banners';
-
-const ICON_MAP: Record<string, React.ReactNode> = {
-  ShieldCheck: <ShieldCheck className="w-6 h-6 text-brand-700" />,
-  Sparkles: <Sparkles className="w-6 h-6 text-brand-700" />,
-  Truck: <Truck className="w-6 h-6 text-brand-700" />,
-  RotateCcw: <RotateCcw className="w-6 h-6 text-brand-700" />,
-};
+import { Truck, Heart, ShieldCheck } from 'lucide-react';
 
 export const WhyChooseUs: React.FC = () => {
   return (
-    <section className="py-14 sm:py-20 bg-ivory-50 border-b border-ivory-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-brand-700 mb-1 block">
-            Brand Principles
-          </span>
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary">
-            Our Commitment to Quality & Comfort
-          </h2>
-          <p className="text-xs sm:text-sm text-ink-secondary mt-2">
-            Designed to bring together graceful Indian ethnic styles with practical everyday wearing comfort.
-          </p>
-        </div>
-
-        {/* 4 Pillars Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {VALUE_PROPOSITIONS.map((prop, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-2xl bg-white border border-ivory-300 shadow-card hover:shadow-card-hover transition-all text-center flex flex-col items-center"
-            >
-              <div className="w-14 h-14 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
-                {ICON_MAP[prop.icon] || <Sparkles className="w-6 h-6 text-brand-700" />}
-              </div>
-              <h3 className="font-serif text-base font-bold text-ink-primary mb-2">
-                {prop.title}
-              </h3>
-              <p className="text-xs text-ink-secondary leading-relaxed">
-                {prop.description}
+    <section aria-label="Trust Badges" className="py-2.5 sm:py-4 border-b border-stone-200/80 bg-white">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6">
+        <div className="grid grid-cols-1 divide-y divide-stone-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0 text-center">
+          
+          {/* Pillar 1: Free Shipping */}
+          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
+              <Truck className="h-5 w-5" />
+            </div>
+            <div className="text-left">
+              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
+                Free Shipping
+              </p>
+              <p className="text-[11px] sm:text-xs text-stone-500">
+                All Over India (Postal Delivery)
               </p>
             </div>
-          ))}
-        </div>
+          </div>
 
+          {/* Pillar 2: Customer Love */}
+          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
+              <Heart className="h-5 w-5 fill-maroon-800/20" />
+            </div>
+            <div className="text-left">
+              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
+                10,000+ Happy Mothers
+              </p>
+              <p className="text-[11px] sm:text-xs text-stone-500">
+                Loved & Trusted Across 28 States
+              </p>
+            </div>
+          </div>
+
+          {/* Pillar 3: Secure Payments */}
+          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div className="text-left">
+              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
+                100% Secure Payments
+              </p>
+              <p className="text-[11px] sm:text-xs text-stone-500">
+                Safe & Trusted UPI, Cards & NetBanking
+              </p>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );

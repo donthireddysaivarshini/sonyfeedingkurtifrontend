@@ -12,7 +12,7 @@ export const BrandStorySection: React.FC = () => {
             <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-ivory-200">
               <img
                 src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=900&auto=format&fit=crop"
-                alt="Sony Feeding Kurtis Craftsmanship"
+                alt="Sony Collections Craftsmanship"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -25,10 +25,10 @@ export const BrandStorySection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-ink-primary uppercase tracking-wider">
-                    Concealed Innovation
+                    Artisanal Heritage
                   </h4>
                   <p className="text-[11px] text-ink-secondary">
-                    Designed by Indian women, for Indian mothers
+                    Handcrafted traditional Indian fashion
                   </p>
                 </div>
               </div>
@@ -43,11 +43,11 @@ export const BrandStorySection: React.FC = () => {
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-ink-primary leading-tight">
-              Where Royal Heritage Meets Motherhood Ease
+              Where Royal Heritage Meets Everyday Elegance
             </h2>
 
             <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
-              At <strong>Sony Feeding Kurtis</strong>, our mission is to offer thoughtfully designed women's ethnic wear that supports comfortable nursing access while celebrating traditional Indian aesthetics.
+              At <strong>Sony Collections</strong>, our mission is to offer thoughtfully curated women's and kids' ethnic wear that celebrates traditional Indian aesthetics, fine embroidery, and breathable comfort.
             </p>
 
             <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">

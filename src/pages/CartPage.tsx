@@ -300,7 +300,7 @@ export const CartPage: React.FC = () => {
                   {/* Neutral Shipping Policy Note */}
                   <div className="text-[10px] text-ink-muted bg-ivory-100 p-2 rounded-lg border border-ivory-200 flex items-start gap-1.5 leading-tight">
                     <Info className="w-3 h-3 text-brand-gold shrink-0 mt-0.5" />
-                    <span>Courier delivery policies and shipping charges are awaiting confirmation by Sony Feeding Kurtis upon official launch.</span>
+                    <span>Courier delivery policies and shipping charges are awaiting confirmation by Sony Collections upon official launch.</span>
                   </div>
 
                   <div className="flex justify-between text-base font-bold text-ink-primary pt-3 border-t border-ivory-200">

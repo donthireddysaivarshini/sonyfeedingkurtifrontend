@@ -12,14 +12,14 @@ export interface ThemeConfig {
 }
 
 const DEFAULT_THEME: ThemeConfig = {
-  brandName: 'SONY FEEDING KURTIS',
-  brandTagline: 'Maternity & Ethnic Boutique',
-  primaryColor: '#7A2832', // Direction A: Elegant Wine / Burgundy
-  accentColor: '#C87D7D',  // Muted Rose
-  goldColor: '#C5A059',    // Antique Gold
-  ivoryBg: '#FDFBF7',      // Warm Ivory
-  fontSerif: '"Playfair Display", Georgia, serif',
-  fontSans: '"Plus Jakarta Sans", Inter, system-ui, sans-serif',
+  brandName: 'SONY COLLECTIONS',
+  brandTagline: 'Elegant Wear for Every Moment',
+  primaryColor: '#3F0F1E', // GSS Imperial Maroon
+  accentColor: '#7B1832',  // Warm Maroon
+  goldColor: '#E58B12',    // Saffron Gold
+  ivoryBg: '#FBF7EF',      // Warm Cream
+  fontSerif: '"Fraunces", Georgia, serif',
+  fontSans: '"Karla", Inter, system-ui, sans-serif',
 };
 
 interface ThemeContextType {

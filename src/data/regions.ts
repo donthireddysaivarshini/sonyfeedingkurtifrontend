@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Indian States & Union Territories
+ * SONY COLLECTIONS - Indian States & Union Territories
  * 
  * Exhaustive official list of all 28 Indian States and 8 Union Territories (36 total).
  */

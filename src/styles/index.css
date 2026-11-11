@@ -3,45 +3,45 @@
 @tailwind utilities;
 
 :root {
-  /* Brand Palette - Temporary Elegant Boutique Direction */
-  --brand-primary: #7A2832;   /* Deep Wine / Burgundy */
-  --brand-accent: #C87D7D;    /* Muted Rose */
-  --brand-gold: #C5A059;      /* Antique Gold Accent */
+  /* GSS Clothing Harmonized Brand Palette */
+  --brand-primary: #3F0F1E;   /* Imperial Maroon (GSS: rgb(63, 15, 30)) */
+  --brand-accent: #7B1832;    /* Warm Maroon Hover */
+  --brand-gold: #E58B12;      /* Saffron Gold Accent */
   
   --brand-50: #FDF6F5;
   --brand-100: #F9ECE9;
   --brand-200: #F3D5D0;
   --brand-300: #E7B0A8;
   --brand-400: #D5867B;
-  --brand-500: #B75245;
-  --brand-600: #963B30;
-  --brand-700: #7A2832;
-  --brand-800: #611C24;
-  --brand-900: #4A131A;
+  --brand-500: #A32344;
+  --brand-600: #7B1832;
+  --brand-700: #5A152B;
+  --brand-800: #3F0F1E;
+  --brand-900: #2D0B15;
 
-  /* Warm Ivory / Neutral Canvas */
-  --ivory-bg: #FDFBF7;
-  --ivory-50: #FDFBF7;
-  --ivory-100: #FAF7F2;
+  /* GSS Warm Cream Page Background */
+  --ivory-bg: #FBF7EF;
+  --ivory-50: #FBF7EF;
+  --ivory-100: #FAF8F5;
   --ivory-200: #F4EFEA;
   --ivory-300: #EEE7DE;
   --ivory-400: #E4D9CC;
 
   /* Typography Colors */
-  --text-primary: #231F20;
-  --text-secondary: #5C5552;
-  --text-muted: #8A817D;
-  --text-light: #B3AAA5;
+  --text-primary: #1C1917;
+  --text-secondary: #57534E;
+  --text-muted: #78716C;
+  --text-light: #A8A29E;
 
   /* Borders & Dividers */
-  --border-light: #ECE5DA;
-  --border-subtle: #F0EAE1;
+  --border-light: #E7E5E4;
+  --border-subtle: #F5F5F4;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--ivory-100);
@@ -51,7 +51,7 @@
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-accent);
+  background: #7B1832;
 }
 
 /* Base resets & typography */
@@ -61,13 +61,13 @@ html {
 }
 
 body {
-  background-color: var(--ivory-bg);
+  background-color: #FBF7EF;
   color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Karla', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-h1, h2, h3, h4, .font-serif {
-  font-family: 'Playfair Display', Georgia, serif;
+h1, h2, h3, h4, .font-serif, .font-display {
+  font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
 }
 
 /* Utilities */
@@ -87,3 +87,19 @@ h1, h2, h3, h4, .font-serif {
   background-color: var(--brand-gold);
 }
 
+/* Marquee continuous scroll */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.group:hover .animate-marquee,
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

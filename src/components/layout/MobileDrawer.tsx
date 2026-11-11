@@ -44,13 +44,20 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
         
         {/* Drawer Header */}
         <div className="p-4 border-b border-ivory-300 flex items-center justify-between bg-white">
-          <Link to="/" onClick={onClose} className="block">
-            <span className="font-serif text-lg font-bold tracking-wider text-brand-700 block">
-              SONY FEEDING KURTIS
-            </span>
-            <span className="text-[10px] tracking-widest text-ink-muted uppercase">
-              Maternity & Ethnic Boutique
-            </span>
+          <Link to="/" onClick={onClose} className="flex items-center gap-2.5">
+            <img
+              src="/logo.jpeg"
+              alt="Sony Collections Logo"
+              className="h-9 w-9 rounded-full object-cover shadow-xs border border-amber-300/60 shrink-0"
+            />
+            <div>
+              <span className="font-serif text-base font-bold tracking-wider text-brand-700 block leading-tight">
+                SONY COLLECTIONS
+              </span>
+              <span className="text-[10px] tracking-widest text-ink-muted uppercase">
+                Elegant Wear for Every Moment
+              </span>
+            </div>
           </Link>
           <button
             onClick={onClose}

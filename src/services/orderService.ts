@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Order Service
+ * SONY COLLECTIONS - Order Service
  * 
  * Provides typed contract boundaries for order placement and payment orchestration.
  * In Phase 3, this interfaces cleanly with client-side state / sessionStorage.

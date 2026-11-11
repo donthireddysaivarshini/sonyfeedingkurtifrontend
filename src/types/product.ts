@@ -1,5 +1,5 @@
 /**
- * SONY FEEDING KURTIS - Product Type System
+ * SONY COLLECTIONS - Product Type System
  * 
  * Feeding / Non-Feeding is an OPTIONAL product-level configuration:
  * 1. 'both': Customer chooses Feeding or Non-Feeding -> Colour -> Size

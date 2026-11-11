@@ -182,7 +182,7 @@ export const OrderConfirmationPage: React.FC = () => {
 
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/15 text-brand-maroon text-xs font-sans font-semibold uppercase tracking-wider mb-3">
                 <Sparkles className="w-3.5 h-3.5" />
-                Thank You for Choosing Sony Feeding Kurtis
+                Thank You for Choosing Sony Collections
               </div>
 
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-neutral-charcoal mb-2">
@@ -422,7 +422,7 @@ export const OrderConfirmationPage: React.FC = () => {
                       to="/shop"
                       className="w-full inline-flex items-center justify-center gap-2 text-brand-maroon hover:text-brand-maroon/80 font-sans text-xs font-medium py-2 transition-colors"
                     >
-                      Continue Shopping Sony Feeding Kurtis
+                      Continue Shopping Sony Collections
                     </Link>
                   </div>
                 </div>

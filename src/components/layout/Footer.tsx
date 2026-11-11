@@ -1,192 +1,131 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Instagram, Facebook, Youtube, ShieldCheck, Heart, Sparkles } from 'lucide-react';
-import { CATEGORIES } from '../../data/categories';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-ivory-200/90 text-ink-primary border-t border-ivory-300 pt-14 pb-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="border-t border-stone-200 bg-white pb-20 md:pb-8">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 md:grid-cols-3 md:px-8">
         
-        {/* Top Feature Badges Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-ivory-300/80">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-700">
-              <Sparkles className="w-5 h-5 text-brand-700" />
-            </div>
+        {/* Column 1: Brand Info */}
+        <div>
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/logo.jpeg"
+              alt="Sony Collections Logo"
+              className="h-11 w-11 rounded-full object-cover shadow-xs border border-amber-300/60 shrink-0"
+            />
             <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Concealed Zips</h5>
-              <p className="text-[11px] text-ink-secondary">Dual invisible nursing openings on select styles</p>
+              <span className="font-serif text-lg font-bold tracking-tight text-stone-900 uppercase">
+                Sony Collections
+              </span>
+              <p className="text-[10px] tracking-wider text-stone-500 uppercase font-semibold">
+                Elegant Wear for Every Moment
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-700">
-              <ShieldCheck className="w-5 h-5 text-brand-700" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Selected Fabrics</h5>
-              <p className="text-[11px] text-ink-secondary">Soft mulmul cotton & festive silk blends</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-700">
-              <Heart className="w-5 h-5 text-brand-700" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Maternity Ease</h5>
-              <p className="text-[11px] text-ink-secondary">Relaxed cuts for pre & postpartum wear</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0 text-brand-700">
-              <Mail className="w-5 h-5 text-brand-700" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold uppercase tracking-wider text-ink-primary">Pan-India Delivery</h5>
-              <p className="text-[11px] text-ink-secondary">Courier delivery across Indian postal codes</p>
-            </div>
+          <p className="mt-3 max-w-xs text-sm text-stone-500 leading-relaxed">
+            Elegant women's and kids' ethnic fashion — designer kurtas, feeding wear, frocks, sarees, and suits, curated with love.
+          </p>
+        </div>
+
+        {/* Column 2: Our Pages */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+            Our Pages
+          </p>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li>
+              <Link
+                to="/shop"
+                className="text-stone-600 transition-colors hover:text-maroon-600 block"
+              >
+                All Collections
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/shop?clothingType=Feeding"
+                className="text-stone-600 transition-colors hover:text-maroon-600 block"
+              >
+                Feeding Friendly Kurtis
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/account"
+                className="text-stone-600 transition-colors hover:text-maroon-600 block"
+              >
+                My Account & Orders
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/cart"
+                className="text-stone-600 transition-colors hover:text-maroon-600 block"
+              >
+                Shopping Bag
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 3: Contact Us */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+            Contact Us
+          </p>
+          <ul className="mt-3 space-y-2.5 text-sm text-stone-600">
+            <li className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-maroon-500" />
+              <span>Boutique & Manufacturing units at Tamil Nadu & Surat</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <Phone className="h-4 w-4 shrink-0 text-maroon-500" />
+              <a href="tel:+919876543210" className="transition-colors hover:text-maroon-600">
+                +91 98765 43210
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <Mail className="h-4 w-4 shrink-0 text-maroon-500" />
+              <a href="mailto:support@sonycollection.in" className="transition-colors hover:text-maroon-600">
+                support@sonycollection.in
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <Clock className="h-4 w-4 shrink-0 text-maroon-500" />
+              <span>Mon - Sat: 9:30 AM – 7:00 PM</span>
+            </li>
+          </ul>
+
+          {/* WhatsApp Direct Link */}
+          <div className="mt-4 flex items-center gap-3 pt-2">
+            <a
+              href="https://wa.me/919876543210?text=Hi%20Sony%20Collection"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white transition hover:bg-emerald-600"
+            >
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 448 512"
+                className="h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+              </svg>
+            </a>
           </div>
         </div>
 
-        {/* Main Footer Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 py-12">
-          
-          {/* Column 1: Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-brand-700 block uppercase hover:text-brand-900 transition-colors">
-              SONY FEEDING KURTIS
-            </Link>
-            <p className="text-xs text-ink-secondary leading-relaxed max-w-sm">
-              Indian women's ethnic wear boutique specializing in frocks, co-ord sets, sarees, and maternity-friendly feeding kurtis designed for traditional grace and everyday ease.
-            </p>
-            <div className="flex items-center space-x-3 pt-2">
-              <a
-                href="#"
-                aria-label="Instagram placeholder"
-                className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="Facebook placeholder"
-                className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="YouTube placeholder"
-                className="w-9 h-9 rounded-full bg-white border border-ivory-300 flex items-center justify-center text-ink-secondary hover:text-brand-700 hover:border-brand-700 transition-colors"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
+      </div>
 
-          {/* Column 2: Shop Categories */}
-          <div>
-            <h4 className="font-serif text-sm font-bold text-ink-primary uppercase tracking-wider mb-4">
-              Categories
-            </h4>
-            <ul className="space-y-2 text-xs text-ink-secondary">
-              {CATEGORIES.slice(0, 4).map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    to={`/category/${cat.slug}`}
-                    className="hover:text-brand-700 transition-colors block py-0.5"
-                  >
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3: More Collections */}
-          <div>
-            <h4 className="font-serif text-sm font-bold text-ink-primary uppercase tracking-wider mb-4">
-              Collections
-            </h4>
-            <ul className="space-y-2 text-xs text-ink-secondary">
-              {CATEGORIES.slice(4).map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    to={`/category/${cat.slug}`}
-                    className="hover:text-brand-700 transition-colors block py-0.5"
-                  >
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <a href="#feeding-highlight" className="text-brand-700 font-semibold hover:underline block py-0.5">
-                  Feeding Features
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Customer Care & Policies */}
-          <div>
-            <h4 className="font-serif text-sm font-bold text-ink-primary uppercase tracking-wider mb-4">
-              Customer Account
-            </h4>
-            <ul className="space-y-2 text-xs text-ink-secondary">
-              <li>
-                <Link to="/account" className="hover:text-brand-700 transition-colors block py-0.5">
-                  My Account
-                </Link>
-              </li>
-              <li>
-                <Link to="/account/orders" className="hover:text-brand-700 transition-colors block py-0.5">
-                  Track Orders
-                </Link>
-              </li>
-              <li>
-                <Link to="/cart" className="hover:text-brand-700 transition-colors block py-0.5">
-                  Shopping Bag
-                </Link>
-              </li>
-              <li>
-                <Link to="/account/addresses" className="hover:text-brand-700 transition-colors block py-0.5">
-                  Delivery Addresses
-                </Link>
-              </li>
-              <li className="pt-2 text-[11px] text-ink-muted leading-snug">
-                Official support contact and policies will follow client approval upon launch.
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 mt-8 border-t border-ivory-300 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-ink-muted">
-          <div>
-            © {new Date().getFullYear()} <strong>SONY FEEDING KURTIS</strong>. All rights reserved.
-          </div>
-          
-          {/* Payment Badges */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-1.5 sm:gap-2">
-            <span className="text-[10px] uppercase font-semibold text-ink-secondary mr-1">
-              Planned Payments:
-            </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-blue-800">
-              Razorpay
-            </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-indigo-700">
-              UPI
-            </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-bold text-gray-700">
-              Cards
-            </span>
-            <span className="px-2 py-0.5 bg-white border border-ivory-300 rounded text-[10px] font-medium text-amber-800">
-              COD (Provisional)
-            </span>
-          </div>
-        </div>
-
+      {/* Bottom Bar */}
+      <div className="border-t border-stone-100 py-4 text-center text-xs text-stone-400">
+        <p>© {new Date().getFullYear()} Sony Collections. Handcrafted with love in India.</p>
       </div>
     </footer>
   );

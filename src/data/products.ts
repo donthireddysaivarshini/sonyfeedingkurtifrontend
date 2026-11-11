@@ -1,9 +1,9 @@
 /**
- * SONY FEEDING KURTIS - Mock Catalog Data (Demonstration Preview)
+ * SONY COLLECTIONS - Mock Catalog Data (Demonstration Preview)
  * 
  * NOTICE:
- * 1. Imagery: Sample photography sourced from Unsplash for layout and responsive demonstration.
- *    These do NOT represent official Sony Feeding Kurtis product photos.
+ * 1. Imagery: Sample photography for layout and responsive demonstration.
+ *    These do NOT represent official Sony Collections product photos.
  * 2. Pricing & Sizing: Sample price figures and standard sizing are placeholders for interface validation.
  * 3. Construction details: Zipper placements and silhouettes are illustrative models reflecting the
  *    required feeding configurations (both, feeding-only, none) pending final client manufacturing specifications.
@@ -70,8 +70,7 @@ export const PRODUCTS: Product[] = [
     originalPrice: null,
     images: [
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -119,8 +118,7 @@ export const PRODUCTS: Product[] = [
     price: 1149,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'feeding-only',
@@ -166,8 +164,8 @@ export const PRODUCTS: Product[] = [
     price: 1499,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -203,8 +201,8 @@ export const PRODUCTS: Product[] = [
     price: 1899,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -247,8 +245,8 @@ export const PRODUCTS: Product[] = [
     price: 1699,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -289,8 +287,9 @@ export const PRODUCTS: Product[] = [
     price: 1599,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1753981031189-27bb7bd1c079?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -325,8 +324,8 @@ export const PRODUCTS: Product[] = [
     price: 1999,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1676285789557-3bb4450bb67f?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -367,8 +366,8 @@ export const PRODUCTS: Product[] = [
     price: 999,
     originalPrice: null,
     images: [
+      'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
@@ -410,7 +409,7 @@ export const PRODUCTS: Product[] = [
     originalPrice: null,
     images: [
       'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -451,8 +450,8 @@ export const PRODUCTS: Product[] = [
     price: 1599,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -494,7 +493,7 @@ export const PRODUCTS: Product[] = [
     originalPrice: null,
     images: [
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1641382158662-b6ef03d53f53?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'feeding-only',
     supportedClothingTypes: ['Feeding'],
@@ -534,8 +533,8 @@ export const PRODUCTS: Product[] = [
     price: 2199,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1617059063772-34532796cdb5?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1640745690845-4d6aa890811d?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -576,8 +575,8 @@ export const PRODUCTS: Product[] = [
     price: 2499,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1756483510760-e03ca7fb36ae?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -618,8 +617,9 @@ export const PRODUCTS: Product[] = [
     price: 1899,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1778148046782-2b5c2ce37612?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1737972992518-fa8f155a3b06?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -654,8 +654,8 @@ export const PRODUCTS: Product[] = [
     price: 2699,
     originalPrice: null,
     images: [
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1693336429270-094637e16d38?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1676285789557-3bb4450bb67f?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'both',
     supportedClothingTypes: ['Feeding', 'Non-Feeding'],
@@ -697,7 +697,7 @@ export const PRODUCTS: Product[] = [
     originalPrice: null,
     images: [
       'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1596783074918-c84cb06531ca?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=800&auto=format&fit=crop',
     ],
     feedingConfig: 'none',
     supportedClothingTypes: [],
@@ -719,5 +719,153 @@ export const PRODUCTS: Product[] = [
     description: 'Gentle, breathable cotton frock designed for little ones with soft lining and back zipper closure. Standard kids ethnic wear.',
     fabric: 'Soft Cambric Cotton',
     careInstructions: ['Machine wash gentle in cold water', 'Warm iron'],
+  },
+
+  // 17. SAREES (Configuration: 'none')
+  {
+    id: 'prod-17',
+    title: 'Meenakshi Banarasi Brocade Bridal Silk Saree',
+    slug: 'meenakshi-banarasi-brocade-bridal-silk-saree',
+    skuPrefix: 'SFK-SAR-17',
+    category: 'sarees',
+    categoryName: 'Sarees',
+    price: 2299,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1727430228383-aa1fb59db8bf?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'crimson-gold', name: 'Crimson & Pure Gold Zari', hex: '#8B0000' },
+      { id: 'emerald-gold', name: 'Emerald & Antique Zari', hex: '#004B23' },
+    ],
+    availableSizes: ['Free Size'],
+    variants: generateVariants(
+      'SFK-SAR-17',
+      2299,
+      'none',
+      [
+        { id: 'crimson-gold', name: 'Crimson & Pure Gold Zari', hex: '#8B0000' },
+        { id: 'emerald-gold', name: 'Emerald & Antique Zari', hex: '#004B23' },
+      ],
+      ['Free Size']
+    ),
+    description: 'Opulent Banarasi brocade silk saree with intricate floral jaal weaving and heavy pallu. Traditional festive drape.',
+    fabric: 'Banarasi Brocade Silk',
+    careInstructions: ['Dry clean only', 'Store wrapped in muslin cloth'],
+    isFeatured: true,
+  },
+
+  // 18. SAREES (Configuration: 'none')
+  {
+    id: 'prod-18',
+    title: 'Padmini Pure Chanderi Tissue Pattu Saree',
+    slug: 'padmini-pure-chanderi-tissue-pattu-saree',
+    skuPrefix: 'SFK-SAR-18',
+    category: 'sarees',
+    categoryName: 'Sarees',
+    price: 1999,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1727430228383-aa1fb59db8bf?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1737972992518-fa8f155a3b06?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'pistachio', name: 'Pistachio Gold', hex: '#93C572' },
+      { id: 'rose-gold', name: 'Rose Gold', hex: '#B76E79' },
+    ],
+    availableSizes: ['Free Size'],
+    variants: generateVariants(
+      'SFK-SAR-18',
+      1999,
+      'none',
+      [
+        { id: 'pistachio', name: 'Pistachio Gold', hex: '#93C572' },
+        { id: 'rose-gold', name: 'Rose Gold', hex: '#B76E79' },
+      ],
+      ['Free Size']
+    ),
+    description: 'Lightweight Chanderi tissue pattu saree woven with subtle metallic sheen and delicate border. Includes running blouse piece.',
+    fabric: 'Chanderi Tissue Pattu',
+    careInstructions: ['Dry clean recommended', 'Cool iron reverse'],
+    isNewArrival: true,
+  },
+
+  // 19. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-19',
+    title: 'Janaki Traditional Silk Pattu Pavadai Set',
+    slug: 'janaki-traditional-silk-pattu-pavadai-set',
+    skuPrefix: 'SFK-KID-19',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 1099,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1774437896047-e2480d12f7b8?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1618245472177-2a74ad3b994a?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'peacock-green', name: 'Peacock Green & Purple', hex: '#0A5C36' },
+      { id: 'rani-gold', name: 'Rani Pink & Gold', hex: '#C2185B' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-19',
+      1099,
+      'none',
+      [
+        { id: 'peacock-green', name: 'Peacock Green & Purple', hex: '#0A5C36' },
+        { id: 'rani-gold', name: 'Rani Pink & Gold', hex: '#C2185B' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Traditional South Indian Pattu Pavadai lehenga and blouse set tailored for festive family occasions with soft lining.',
+    fabric: 'Art Silk with Cotton Lining',
+    careInstructions: ['Dry clean first wash', 'Gentle hand wash cold'],
+    isFeatured: true,
+  },
+
+  // 20. KIDS COLLECTIONS (Configuration: 'none')
+  {
+    id: 'prod-20',
+    title: 'Krishna Festive Pure Cotton Kurta Set for Boys',
+    slug: 'krishna-festive-pure-cotton-kurta-set',
+    skuPrefix: 'SFK-KID-20',
+    category: 'kids-collections',
+    categoryName: 'Kids Collections',
+    price: 899,
+    originalPrice: null,
+    images: [
+      'https://images.unsplash.com/photo-1778579530670-ef694be30313?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1618245472177-2a74ad3b994a?q=80&w=800&auto=format&fit=crop',
+    ],
+    feedingConfig: 'none',
+    supportedClothingTypes: [],
+    availableColors: [
+      { id: 'mustard-yellow', name: 'Haldi Yellow & Ivory', hex: '#E5A93C' },
+      { id: 'sky-blue', name: 'Sky Blue & White', hex: '#6BA4B8' },
+    ],
+    availableSizes: ['S', 'M', 'L'],
+    variants: generateVariants(
+      'SFK-KID-20',
+      899,
+      'none',
+      [
+        { id: 'mustard-yellow', name: 'Haldi Yellow & Ivory', hex: '#E5A93C' },
+        { id: 'sky-blue', name: 'Sky Blue & White', hex: '#6BA4B8' },
+      ],
+      ['S', 'M', 'L']
+    ),
+    description: 'Festive cotton kurta and dhoti-pant set designed for comfortable celebration wear with gentle seams for young boys.',
+    fabric: '100% Breathable Cotton',
+    careInstructions: ['Machine wash gentle', 'Warm iron'],
+    isNewArrival: true,
   }
 ];
