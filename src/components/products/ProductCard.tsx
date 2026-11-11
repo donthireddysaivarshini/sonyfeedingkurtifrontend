@@ -18,11 +18,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [selectedColor, setSelectedColor] = useState<ProductColor>(product.availableColors[0]);
-  const [isHovered, setIsHovered] = useState(false);
 
   const isFavorited = isInWishlist(product.id);
-  const hasMultipleImages = product.images.length > 1;
-  const currentImage = isHovered && hasMultipleImages ? product.images[1] : product.images[0];
+  const currentImage = product.images[0];
 
   const handleDetailsClick = () => {
     if (onViewDetails) {
@@ -40,8 +38,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div
       className="group relative flex flex-col bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs hover:border-maroon-200 hover:shadow-lg hover:shadow-maroon-950/5 transition-all duration-300"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container with 3:4 portrait ratio */}
       <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 cursor-pointer">
