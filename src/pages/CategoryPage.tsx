@@ -37,6 +37,8 @@ function parseCategoryFilters(categorySlug: string | null, params: URLSearchPara
       ? 'price-high'
       : sortParam === 'newest'
       ? 'newest'
+      : sortParam === 'bestseller'
+      ? 'bestseller'
       : 'featured';
 
   const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
@@ -48,6 +50,7 @@ function parseCategoryFilters(categorySlug: string | null, params: URLSearchPara
   return {
     category: categorySlug,
     feedingType,
+    handstockOnly: params.get('handstock') === 'true',
     sizes,
     colors,
     fabrics,
@@ -104,6 +107,7 @@ export const CategoryPage: React.FC = () => {
     setFilters(updated);
     const newParams = new URLSearchParams();
     if (updated.feedingType !== 'All') newParams.set('clothingType', updated.feedingType);
+    if (updated.handstockOnly) newParams.set('handstock', 'true');
     if (updated.sizes.length > 0) newParams.set('sizes', updated.sizes.join(','));
     if (updated.colors.length > 0) newParams.set('colors', updated.colors.join(','));
     if (updated.fabrics.length > 0) newParams.set('fabrics', updated.fabrics.join(','));

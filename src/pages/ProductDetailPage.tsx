@@ -20,10 +20,14 @@ import { SearchModal } from '../components/layout/SearchModal';
 import { MobileDrawer } from '../components/layout/MobileDrawer';
 import { CheckoutPreviewModal } from '../components/checkout/CheckoutPreviewModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
+import { PriceDisplay } from '../components/common/PriceDisplay';
+import { RatingBadge } from '../components/common/RatingBadge';
 import { ProductGallery } from '../components/product-detail/ProductGallery';
 import { SizeGuideModal } from '../components/product-detail/SizeGuideModal';
 import { ProductCard } from '../components/products/ProductCard';
 import { QuickSelectModal } from '../components/products/QuickSelectModal';
+import { FeedingOptionSelector } from '../components/products/FeedingOptionSelector';
+import { SITE_CONFIG } from '../config/siteConfig';
 import { PRODUCTS } from '../data/products';
 import { Product, ClothingType, ProductColor, ProductSize } from '../types/product';
 import { useCart } from '../context/CartContext';
@@ -239,7 +243,7 @@ export const ProductDetailPage: React.FC = () => {
       selectedColor,
       selectedSize,
       price: currentVariant.price,
-      originalPrice: null,
+      originalPrice: currentVariant.originalPrice ?? product.originalPrice ?? null,
       quantity,
       maxStock: currentVariant.stock,
     };
@@ -320,115 +324,72 @@ export const ProductDetailPage: React.FC = () => {
                 {product.title}
               </h1>
 
-              {/* Price & SKU */}
-              <div className="flex flex-wrap items-baseline gap-3 mt-3">
-                <span className="font-sans text-2xl sm:text-3xl font-extrabold text-brand-900">
-                  ₹{product.price}
-                </span>
-                <span className="text-xs text-ink-muted font-normal">
-                  Inclusive of all taxes
-                </span>
-                {currentVariant && (
-                  <span className="text-[11px] font-mono text-ink-muted bg-ivory-100 px-2 py-0.5 rounded border border-ivory-300">
-                    SKU: {currentVariant.sku}
+              {/* Dynamic Rating & Dispatch Badge */}
+              <div className="mt-2.5 flex flex-wrap items-center gap-2.5">
+                <RatingBadge
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  onClick={() => {
+                    document
+                      .getElementById('pdp-reviews-section')
+                      ?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                />
+                {product.isHandstock && (
+                  <span className="inline-flex items-center rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
+                    Ready to Ship
                   </span>
                 )}
               </div>
 
-              {/* Short Description */}
-              <p className="text-xs sm:text-sm text-ink-secondary mt-3 leading-relaxed">
-                {product.description}
-              </p>
+              {/* Dynamic Price, MRP & Discount */}
+              <div className="mt-3 pt-3 border-t border-ivory-200">
+                <PriceDisplay
+                  price={currentVariant ? currentVariant.price : product.price}
+                  originalPrice={currentVariant?.originalPrice ?? product.originalPrice}
+                  discountPercentage={product.discountPercentage}
+                  size="lg"
+                />
+                <p className="mt-1 text-xs text-ink-muted font-medium">
+                  Inclusive of all taxes
+                </p>
+              </div>
             </div>
 
-            {/* SELECTION ORDER STEP 1: Feeding / Non-Feeding Configuration */}
+            {/* Feeding / Non-Feeding Option */}
             {product.feedingConfig === 'both' && (
-              <div className="p-4 bg-brand-50/60 rounded-2xl border border-brand-200 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-brand-900 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-brand-gold" />
-                    <span>1. Choose Feeding Option</span>
-                    <span className="text-rose-600">*</span>
-                  </label>
-                  {!selectedType && (
-                    <span className="text-[11px] font-semibold text-rose-600 bg-white px-2 py-0.5 rounded-full border border-rose-200 animate-pulse">
-                      Selection required
-                    </span>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => handleTypeChange('Feeding')}
-                    className={`p-3 rounded-xl border text-left transition-all ${
-                      selectedType === 'Feeding'
-                        ? 'border-brand-700 bg-white text-brand-900 ring-2 ring-brand-700/20 shadow-sm'
-                        : 'border-ivory-300 bg-white/80 hover:bg-white text-ink-secondary'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs">🤱 Feeding-Friendly</span>
-                      {selectedType === 'Feeding' && <Check className="w-3.5 h-3.5 text-brand-700" />}
-                    </div>
-                    <p className="text-[10px] text-ink-muted leading-tight">
-                      Discreet dual side nursing zips
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleTypeChange('Non-Feeding')}
-                    className={`p-3 rounded-xl border text-left transition-all ${
-                      selectedType === 'Non-Feeding'
-                        ? 'border-brand-700 bg-white text-brand-900 ring-2 ring-brand-700/20 shadow-sm'
-                        : 'border-ivory-300 bg-white/80 hover:bg-white text-ink-secondary'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-xs">✨ Non-Feeding</span>
-                      {selectedType === 'Non-Feeding' && <Check className="w-3.5 h-3.5 text-brand-700" />}
-                    </div>
-                    <p className="text-[10px] text-ink-muted leading-tight">
-                      Standard festive ethnic fit
-                    </p>
-                  </button>
-                </div>
+              <div className="p-4 bg-brand-50/70 rounded-2xl border border-brand-200">
+                <FeedingOptionSelector
+                  selectedType={selectedType}
+                  onSelect={handleTypeChange}
+                  showPromptError={!selectedType}
+                />
               </div>
             )}
 
-            {/* Feeding-Only Banner (No redundant toggle) */}
+            {/* Slim Feeding-Only Indicator */}
             {product.feedingConfig === 'feeding-only' && (
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center gap-2.5 text-xs text-emerald-900">
-                <Sparkles className="w-4 h-4 text-emerald-700 shrink-0" />
-                <div>
-                  <strong>Dedicated Feeding Silhouette:</strong> Crafted with twin invisible concealed zippers for nursing access.
-                </div>
+              <div className="px-3.5 py-2.5 bg-brand-50/80 rounded-xl border border-brand-200 flex items-center gap-2 text-xs text-brand-900">
+                <Sparkles className="w-4 h-4 text-brand-700 shrink-0" />
+                <span>
+                  <strong>Feeding Friendly:</strong> Twin concealed nursing zippers included.
+                </span>
               </div>
             )}
 
-            {/* Standard Ethnic Wear Notice */}
-            {product.feedingConfig === 'none' && (
-              <div className="p-3 bg-ivory-100 rounded-xl border border-ivory-300 text-xs text-ink-secondary flex items-center gap-2">
-                <Shirt className="w-4 h-4 text-ink-muted shrink-0" />
-                <span>Classic ethnic wardrobe piece. Tailored in standard silhouette.</span>
-              </div>
-            )}
-
-            {/* SELECTION ORDER STEP 2: Colour Selection */}
+            {/* Colour Selector */}
             {selectedColor && (
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <label className="font-bold uppercase tracking-wider text-ink-primary">
-                    {product.feedingConfig === 'both' ? '2. Select Colour:' : '1. Select Colour:'}{' '}
-                    <span className="font-semibold text-brand-700 normal-case">{selectedColor.name}</span>
+                    Colour:{' '}
+                    <span className="font-semibold text-brand-800 normal-case">
+                      {selectedColor.name}
+                    </span>
                   </label>
-                  <span className="text-[11px] text-ink-muted">
-                    {product.availableColors.length} options available
-                  </span>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
                   {product.availableColors.map((color) => {
                     const isSelected = selectedColor.id === color.id;
                     return (
@@ -437,14 +398,15 @@ export const ProductDetailPage: React.FC = () => {
                         type="button"
                         onClick={() => handleColorChange(color)}
                         aria-label={`Select colour ${color.name}`}
-                        className={`group relative flex items-center gap-2 px-3 py-2 rounded-xl border transition-all text-xs ${
+                        aria-pressed={isSelected}
+                        className={`group relative flex items-center gap-2 px-3.5 py-2 rounded-xl border transition-all text-xs ${
                           isSelected
-                            ? 'border-brand-700 bg-brand-50/50 text-brand-900 font-bold ring-2 ring-brand-700/20'
-                            : 'border-ivory-300 bg-white hover:bg-ivory-100 text-ink-secondary'
+                            ? 'border-brand-800 bg-brand-800 text-white font-bold shadow-sm ring-2 ring-brand-200'
+                            : 'border-ivory-300 bg-white hover:bg-brand-50 hover:border-brand-400 text-ink-secondary'
                         }`}
                       >
                         <span
-                          className="w-4 h-4 rounded-full border border-gray-300 shrink-0 shadow-2xs"
+                          className="w-4 h-4 rounded-full border border-white/80 shrink-0 shadow-2xs"
                           style={{ backgroundColor: color.hex }}
                         />
                         <span>{color.name}</span>
@@ -455,17 +417,21 @@ export const ProductDetailPage: React.FC = () => {
               </div>
             )}
 
-            {/* SELECTION ORDER STEP 3: Size Selection */}
+            {/* Size Selector */}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between text-xs">
                 <label className="font-bold uppercase tracking-wider text-ink-primary">
-                  {product.feedingConfig === 'both' ? '3. Select Size:' : '2. Select Size:'}{' '}
-                  {selectedSize && <span className="font-semibold text-brand-700 normal-case">{selectedSize}</span>}
+                  Select Size{' '}
+                  {selectedSize && (
+                    <span className="font-semibold text-brand-800 normal-case">
+                      — {selectedSize}
+                    </span>
+                  )}
                 </label>
                 <button
                   type="button"
                   onClick={() => setIsSizeGuideOpen(true)}
-                  className="flex items-center gap-1 font-semibold text-brand-700 hover:text-brand-900 transition-colors"
+                  className="flex items-center gap-1 font-semibold text-brand-800 hover:text-brand-900 transition-colors"
                 >
                   <Ruler className="w-3.5 h-3.5" />
                   <span>Size Guide</span>
@@ -485,9 +451,9 @@ export const ProductDetailPage: React.FC = () => {
                       onClick={() => setSelectedSize(size)}
                       className={`min-w-[48px] h-11 px-3.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-center relative ${
                         isSelected
-                          ? 'border-brand-700 bg-brand-700 text-white shadow-sm scale-105'
+                          ? 'border-brand-800 bg-brand-800 text-white shadow-sm'
                           : inStock
-                          ? 'border-ivory-300 bg-white text-ink-primary hover:border-brand-700 hover:text-brand-700'
+                          ? 'border-ivory-300 bg-white text-ink-primary hover:border-brand-700 hover:text-brand-800 hover:bg-brand-50'
                           : 'border-ivory-200 bg-ivory-100/50 text-ink-light cursor-not-allowed line-through'
                       }`}
                       title={!inStock ? `${size} is currently out of stock in this combination` : size}
@@ -498,26 +464,18 @@ export const ProductDetailPage: React.FC = () => {
                 })}
               </div>
 
-              {/* Stock Notice */}
-              <div className="pt-1 flex items-center gap-2 text-xs">
-                {isCurrentVariantInStock ? (
-                  <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
-                    <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                    <span>Sample Inventory • In Stock</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-rose-600 font-medium">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>Currently out of stock in selected combination</span>
-                  </span>
-                )}
-              </div>
+              {!isCurrentVariantInStock && (
+                <div className="pt-1 flex items-center gap-1.5 text-xs text-rose-600 font-medium">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>Currently out of stock in selected combination</span>
+                </div>
+              )}
             </div>
 
-            {/* SELECTION ORDER STEP 4: Quantity */}
-            <div className="space-y-2 pt-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block">
-                {product.feedingConfig === 'both' ? '4. Quantity' : '3. Quantity'}
+            {/* Quantity */}
+            <div className="flex items-center gap-4 pt-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-ink-primary">
+                Quantity
               </label>
               <div className="flex items-center gap-3">
                 <div className="inline-flex items-center rounded-xl border border-ivory-300 bg-white p-1">
@@ -525,7 +483,7 @@ export const ProductDetailPage: React.FC = () => {
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-primary hover:bg-ivory-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-primary hover:bg-brand-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
                   >
                     -
                   </button>
@@ -536,14 +494,14 @@ export const ProductDetailPage: React.FC = () => {
                     type="button"
                     onClick={() => setQuantity((q) => Math.min(availableStock || 10, q + 1))}
                     disabled={quantity >= availableStock}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-primary hover:bg-ivory-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-primary hover:bg-brand-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold"
                   >
                     +
                   </button>
                 </div>
                 {availableStock > 0 && availableStock <= 5 && (
                   <span className="text-xs text-amber-700 font-semibold">
-                    Hurry! Only {availableStock} left in stock
+                    Only {availableStock} left
                   </span>
                 )}
               </div>
@@ -610,41 +568,38 @@ export const ProductDetailPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Informational Accordion Sections */}
-            <div className="pt-6 border-t border-ivory-300 space-y-3">
-              
-              {/* Accordion 1: Product Details */}
-              <div className="border border-ivory-300 rounded-xl overflow-hidden bg-white">
-                <button
-                  type="button"
-                  onClick={() => toggleSection('details')}
-                  className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-ink-primary hover:bg-ivory-50 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <Shirt className="w-4 h-4 text-brand-700" />
-                    <span>Product Specifications & Details</span>
-                  </div>
-                  <ChevronDown
-                    className={`w-4 h-4 text-ink-muted transition-transform ${
-                      openSections.details ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                {openSections.details && (
-                  <div className="p-4 pt-0 text-xs text-ink-secondary leading-relaxed space-y-2 border-t border-ivory-200 bg-ivory-50/40">
-                    <p>{product.description}</p>
-                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
-                      <div>
-                        <span className="text-ink-muted block">Category:</span>
-                        <strong className="text-ink-primary">{product.categoryName}</strong>
-                      </div>
-                      <div>
-                        <span className="text-ink-muted block">Style Code:</span>
-                        <strong className="text-ink-primary">{product.skuPrefix}</strong>
-                      </div>
-                    </div>
-                  </div>
+            {/* Product Details & Accordions (Moved cleanly below Buy Actions, Myntra-style) */}
+            <div className="pt-6 border-t border-ivory-300 space-y-4">
+              {/* Open Product Details Summary */}
+              <div className="rounded-xl border border-brand-200 bg-[#FDFBFE] p-4 space-y-3">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-ink-primary">
+                  <Shirt className="w-4 h-4 text-brand-800" />
+                  <span>Product Details</span>
+                </div>
+                <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                  {product.description}
+                </p>
+                {product.feedingConfig === 'none' && (
+                  <p className="text-xs text-ink-muted italic">
+                    Classic ethnic wardrobe piece. Tailored in standard silhouette.
+                  </p>
                 )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 border-t border-ivory-200 text-[11px]">
+                  <div>
+                    <span className="text-ink-muted block">Category</span>
+                    <strong className="text-ink-primary">{product.categoryName}</strong>
+                  </div>
+                  <div>
+                    <span className="text-ink-muted block">Fabric</span>
+                    <strong className="text-ink-primary">{product.fabric}</strong>
+                  </div>
+                  <div>
+                    <span className="text-ink-muted block">Style Code</span>
+                    <strong className="text-ink-primary font-mono">
+                      {currentVariant?.sku || product.skuPrefix}
+                    </strong>
+                  </div>
+                </div>
               </div>
 
               {/* Accordion 2: Fabric & Care */}
@@ -656,7 +611,7 @@ export const ProductDetailPage: React.FC = () => {
                     className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-ink-primary hover:bg-ivory-50 transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-brand-700" />
+                      <Layers className="w-4 h-4 text-brand-800" />
                       <span>Fabric & Wash Care Instructions</span>
                     </div>
                     <ChevronDown
@@ -666,7 +621,7 @@ export const ProductDetailPage: React.FC = () => {
                     />
                   </button>
                   {openSections.fabric && (
-                    <div className="p-4 pt-0 text-xs text-ink-secondary leading-relaxed space-y-2 border-t border-ivory-200 bg-ivory-50/40">
+                    <div className="p-4 pt-3 text-xs text-ink-secondary leading-relaxed space-y-2 border-t border-ivory-200 bg-ivory-50/40">
                       <p>
                         <strong>Fabric Composition:</strong> {product.fabric}
                       </p>
@@ -687,41 +642,51 @@ export const ProductDetailPage: React.FC = () => {
 
               {/* Accordion 3: Feeding Access Design (Only if feeding details exist) */}
               {product.feedingDetails && (
-                <div className="border border-emerald-200 rounded-xl overflow-hidden bg-emerald-50/30">
+                <div className="border border-brand-200 rounded-xl overflow-hidden bg-brand-50/50">
                   <button
                     type="button"
                     onClick={() => toggleSection('feeding')}
-                    className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-emerald-950 hover:bg-emerald-50/60 transition-colors"
+                    className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-brand-900 hover:bg-brand-100/60 transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-emerald-700" />
-                      <span>Feeding Feature & Nursing Zipper Details</span>
+                      <Sparkles className="w-4 h-4 text-brand-800" />
+                      <span>Feeding Access & Zipper Details</span>
                     </div>
                     <ChevronDown
-                      className={`w-4 h-4 text-emerald-700 transition-transform ${
+                      className={`w-4 h-4 text-brand-800 transition-transform ${
                         openSections.feeding ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
                   {openSections.feeding && (
-                    <div className="p-4 pt-0 text-xs text-emerald-900 leading-relaxed space-y-2 border-t border-emerald-200 bg-white/70">
-                      <div>
-                        <strong className="block text-ink-primary">Zipper Mechanism:</strong>
-                        <span>{product.feedingDetails.zipType}</span>
-                      </div>
-                      <div>
-                        <strong className="block text-ink-primary">Placement:</strong>
-                        <span>{product.feedingDetails.zipPlacement}</span>
+                    <div className="p-4 pt-3 text-xs text-ink-secondary leading-relaxed space-y-3 border-t border-brand-200 bg-white/80">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <strong className="block text-ink-primary">Zipper Mechanism:</strong>
+                          <span>{product.feedingDetails.zipType}</span>
+                        </div>
+                        <div>
+                          <strong className="block text-ink-primary">Placement:</strong>
+                          <span>{product.feedingDetails.zipPlacement}</span>
+                        </div>
                       </div>
                       <p className="text-[11px] text-ink-secondary">
                         {product.feedingDetails.description}
                       </p>
+                      <div className="overflow-hidden rounded-xl border border-brand-200 bg-white max-w-xs">
+                        <img
+                          src="/images/guides/feeding-access-guide.jpg"
+                          alt="Discreet Feeding Access Visual Guide"
+                          className="w-full h-auto object-cover"
+                          loading="lazy"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Accordion 4: Delivery & Brand Terms */}
+              {/* Accordion 4: Delivery & Support */}
               <div className="border border-ivory-300 rounded-xl overflow-hidden bg-white">
                 <button
                   type="button"
@@ -729,8 +694,8 @@ export const ProductDetailPage: React.FC = () => {
                   className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-ink-primary hover:bg-ivory-50 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-brand-700" />
-                    <span>Packaging & Delivery Guidance</span>
+                    <Truck className="w-4 h-4 text-brand-800" />
+                    <span>Delivery & Boutique Support</span>
                   </div>
                   <ChevronDown
                     className={`w-4 h-4 text-ink-muted transition-transform ${
@@ -739,11 +704,48 @@ export const ProductDetailPage: React.FC = () => {
                   />
                 </button>
                 {openSections.delivery && (
-                  <div className="p-4 pt-0 text-xs text-ink-secondary leading-relaxed space-y-1.5 border-t border-ivory-200 bg-ivory-50/40 text-[11px]">
-                    <p>• Official dispatch timelines and courier partners will be announced upon catalog launch.</p>
-                    <p>• Sample packaging specifications and tracking updates will follow client policies.</p>
-                    <p>• Returns and exchange terms will adhere to confirmed boutique guidelines.</p>
+                  <div className="p-4 pt-3 text-xs text-ink-secondary leading-relaxed space-y-1.5 border-t border-ivory-200 bg-ivory-50/40 text-[11px]">
+                    <p>• Pan-India dispatch from {SITE_CONFIG.addressPrimary} & {SITE_CONFIG.addressStore}.</p>
+                    <p>• Need sizing or feeding-option advice? Call or WhatsApp {SITE_CONFIG.phoneDisplay} ({SITE_CONFIG.businessHours}).</p>
                   </div>
+                )}
+              </div>
+
+              {/* Dynamic Customer Ratings & Reviews Section */}
+              <div
+                id="pdp-reviews-section"
+                className="rounded-xl border border-ivory-300 bg-white p-4 space-y-3"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-ink-primary">
+                    Customer Ratings & Reviews
+                  </h3>
+                  <RatingBadge rating={product.rating} reviewCount={product.reviewCount} />
+                </div>
+
+                {product.reviews && product.reviews.length > 0 ? (
+                  <div className="space-y-3 pt-2 border-t border-ivory-200">
+                    {product.reviews.map((rev) => (
+                      <div key={rev.id} className="space-y-1 border-b border-ivory-100 pb-3 last:border-b-0 last:pb-0">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-ink-primary">
+                            {rev.userName}
+                            {rev.verifiedPurchase && (
+                              <span className="ml-2 text-[10px] font-medium text-emerald-700">
+                                Verified Buyer
+                              </span>
+                            )}
+                          </span>
+                          <span className="font-bold text-brand-800">{rev.rating.toFixed(1)} ★</span>
+                        </div>
+                        <p className="text-xs text-ink-secondary">{rev.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-ink-muted">
+                    Verified customer ratings and reviews load automatically from the store backend as orders are reviewed.
+                  </p>
                 )}
               </div>
 

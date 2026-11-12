@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import { CATEGORIES } from '../../data/categories';
+import { SITE_CONFIG } from '../../config/siteConfig';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -43,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
-      className={`sticky top-0 z-40 bg-white transition-all duration-300 border-b border-stone-200/80 ${
+      className={`sticky top-0 z-40 bg-[#FDFBFE]/95 backdrop-blur-xs transition-all duration-300 border-b border-brand-200/80 ${
         isScrolled ? 'shadow-xs py-2 sm:py-2.5' : 'shadow-2xs py-2.5 sm:py-3.5'
       }`}
     >
@@ -78,10 +79,10 @@ export const Header: React.FC<HeaderProps> = ({
               />
               <div className="flex flex-col">
                 <span className="font-serif text-sm sm:text-lg lg:text-xl font-bold tracking-tight text-stone-900 group-hover:text-maroon-800 transition-colors uppercase leading-tight truncate">
-                  Sony Collections
+                  {SITE_CONFIG.brandName}
                 </span>
-                <span className="hidden sm:block text-[10px] tracking-widest text-stone-500 uppercase font-semibold">
-                  Elegant Wear for Every Moment
+                <span className="block text-[9px] sm:text-[10px] tracking-widest text-brand-700 uppercase font-semibold">
+                  {SITE_CONFIG.tagline}
                 </span>
               </div>
             </Link>
@@ -132,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({
               {isCategoryDropdownOpen && (
                 <div className="absolute top-full left-0 w-80 bg-white border border-stone-200 rounded-xl shadow-xl py-3 px-2 mt-1 animate-slide-down z-50">
                   <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1.5 flex items-center justify-between">
-                    <span>All 8 Collections</span>
+                    <span>All {CATEGORIES.length} Collections</span>
                     <span className="text-maroon-700 font-semibold">Feeding Options</span>
                   </div>
                   <div className="grid grid-cols-1 gap-1">

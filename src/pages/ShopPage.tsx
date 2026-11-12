@@ -38,6 +38,8 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
       ? 'price-high'
       : sortParam === 'newest'
       ? 'newest'
+      : sortParam === 'bestseller'
+      ? 'bestseller'
       : 'featured';
 
   const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
@@ -49,6 +51,7 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
   return {
     category,
     feedingType,
+    handstockOnly: params.get('handstock') === 'true',
     sizes,
     colors,
     fabrics,
@@ -92,6 +95,7 @@ export const ShopPage: React.FC = () => {
     const newParams = new URLSearchParams();
     if (newFilters.category) newParams.set('category', newFilters.category);
     if (newFilters.feedingType !== 'All') newParams.set('clothingType', newFilters.feedingType);
+    if (newFilters.handstockOnly) newParams.set('handstock', 'true');
     if (newFilters.sizes.length > 0) newParams.set('sizes', newFilters.sizes.join(','));
     if (newFilters.colors.length > 0) newParams.set('colors', newFilters.colors.join(','));
     if (newFilters.fabrics.length > 0) newParams.set('fabrics', newFilters.fabrics.join(','));

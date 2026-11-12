@@ -32,6 +32,7 @@ export const ActiveFilterPills: React.FC<ActiveFilterPillsProps> = ({
   const hasActiveFilters =
     (!lockCategory && filters.category !== null) ||
     filters.feedingType !== 'All' ||
+    filters.handstockOnly ||
     filters.colors.length > 0 ||
     filters.sizes.length > 0 ||
     filters.fabrics.length > 0 ||
@@ -45,6 +46,20 @@ export const ActiveFilterPills: React.FC<ActiveFilterPillsProps> = ({
   return (
     <div className="flex flex-wrap items-center gap-1.5 py-2.5">
       <span className="text-xs text-ink-muted mr-1 font-medium">Active:</span>
+
+      {/* Handstock Ready-to-Ship Filter */}
+      {filters.handstockOnly && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-800 text-white text-xs font-medium shadow-xs">
+          <span>Ready to Ship (Handstock)</span>
+          <button
+            onClick={() => onFilterChange({ ...filters, handstockOnly: false })}
+            className="hover:text-brand-200 transition-colors ml-0.5"
+            aria-label="Remove handstock filter"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </span>
+      )}
 
       {/* Feeding Type */}
       {filters.feedingType !== 'All' && (

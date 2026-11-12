@@ -42,10 +42,12 @@ export const HomePage: React.FC = () => {
     setSelectedProductForModal(product);
   };
 
-  // 1. Dresses: Flared dresses, anarkali gowns & maxis (showcasing all 7 exclusive dress styles)
-  const dressProducts = React.useMemo(() => {
-    const filtered = PRODUCTS.filter((p) => p.category === 'partywear-dresses');
-    const preferredOrder = ['prod-26', 'prod-29', 'prod-27', 'prod-5', 'prod-30', 'prod-13', 'prod-28'];
+  // 1. Feeding & Non-Feeding: Versatile nursing-friendly & regular silhouette collection
+  const feedingCollectionProducts = React.useMemo(() => {
+    const preferredOrder = ['prod-26', 'prod-29', 'prod-27', 'prod-5', 'prod-1', 'prod-2', 'prod-4', 'prod-10'];
+    const filtered = PRODUCTS.filter(
+      (p) => p.feedingConfig === 'both' || p.feedingConfig === 'feeding-only'
+    );
     return [...filtered].sort((a, b) => {
       const idxA = preferredOrder.indexOf(a.id);
       const idxB = preferredOrder.indexOf(b.id);
@@ -53,9 +55,9 @@ export const HomePage: React.FC = () => {
     });
   }, []);
 
-  // 2. Kids Wear: Toddler frocks, mom-child twinning, pattu pavadai & kids kurta sets
-  const kidsWearProducts = React.useMemo(() => {
-    return PRODUCTS.filter((p) => p.category === 'kids-collections');
+  // 2. Handstock: Ready-to-dispatch inventory
+  const handstockProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => Boolean(p.isHandstock));
   }, []);
 
   // 3. Sarees: Traditional Kanchivaram silk, handloom cotton-silk, Paithani & Banarasi sarees
@@ -64,6 +66,11 @@ export const HomePage: React.FC = () => {
     return PRODUCTS.filter((p) => p.category === 'sarees').sort(
       (a, b) => order.indexOf(a.id) - order.indexOf(b.id)
     );
+  }, []);
+
+  // 4. Kids Wear: Toddler frocks, mom-child twinning, pattu pavadai & kids kurta sets
+  const kidsWearProducts = React.useMemo(() => {
+    return PRODUCTS.filter((p) => p.category === 'kids-collections');
   }, []);
 
   // 4. New Arrivals: Fresh festive and seasonal launches
@@ -99,24 +106,24 @@ export const HomePage: React.FC = () => {
         {/* Section 2: Trust Badges Strip (3 Pillars) */}
         <WhyChooseUs />
 
-        {/* Section 3: Sliding Carousel 1 — Dresses */}
+        {/* Section 3: Sliding Carousel 1 — Feeding & Non-Feeding */}
         <ProductSliderSection
-          id="dresses"
-          title="Dresses"
-          viewAllLink="/category/partywear-dresses"
-          products={dressProducts}
+          id="feeding-collection"
+          title="Feeding & Non-Feeding"
+          viewAllLink="/shop?clothingType=Feeding"
+          products={feedingCollectionProducts}
           onQuickSelect={handleQuickSelect}
-          badgeLabel="Trending"
+          badgeLabel="Feeding & Regular"
         />
 
-        {/* Section 4: Sliding Carousel 2 — Kids Wear */}
+        {/* Section 4: Sliding Carousel 2 — Handstock */}
         <ProductSliderSection
-          id="kids-wear"
-          title="Kids Wear"
-          viewAllLink="/category/kids-collections"
-          products={kidsWearProducts}
+          id="handstock"
+          title="Handstock"
+          viewAllLink="/shop?handstock=true"
+          products={handstockProducts}
           onQuickSelect={handleQuickSelect}
-          badgeLabel="Festive"
+          badgeLabel="Ready to Ship"
         />
 
         {/* Section 5: Sliding Carousel 3 — Sarees */}
@@ -129,7 +136,17 @@ export const HomePage: React.FC = () => {
           badgeLabel="Pure Silk"
         />
 
-        {/* Section 6: Sliding Carousel 4 — New Arrivals */}
+        {/* Section 6: Sliding Carousel 4 — Kids Wear */}
+        <ProductSliderSection
+          id="kids-wear"
+          title="Kids Wear"
+          viewAllLink="/category/kids-collections"
+          products={kidsWearProducts}
+          onQuickSelect={handleQuickSelect}
+          badgeLabel="Festive"
+        />
+
+        {/* Section 7: Sliding Carousel 5 — New Arrivals */}
         <ProductSliderSection
           id="new-arrivals"
           title="New Arrivals"
@@ -139,7 +156,7 @@ export const HomePage: React.FC = () => {
           badgeLabel="New"
         />
 
-        {/* Section 7: Sliding Carousel 5 — Best Sellers */}
+        {/* Section 8: Sliding Carousel 6 — Best Sellers */}
         <ProductSliderSection
           id="best-sellers"
           title="Best Sellers"

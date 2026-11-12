@@ -97,4 +97,5 @@ export interface Product {
   isBestseller?: boolean;
   isNewArrival?: boolean;
   isFeatured?: boolean;
+  isHandstock?: boolean;
 }

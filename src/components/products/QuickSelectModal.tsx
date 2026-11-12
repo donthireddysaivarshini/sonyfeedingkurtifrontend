@@ -3,6 +3,8 @@ import { X, Sparkles, Check, ShoppingBag, AlertCircle } from 'lucide-react';
 import { Product, ClothingType, ProductColor, ProductSize } from '../../types/product';
 import { useCart } from '../../context/CartContext';
 import { CartItem } from '../../types/cart';
+import { PriceDisplay } from '../common/PriceDisplay';
+import { FeedingOptionSelector } from './FeedingOptionSelector';
 
 interface QuickSelectModalProps {
   product: Product | null;
@@ -151,7 +153,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
       selectedColor,
       selectedSize,
       price: currentVariant.price,
-      originalPrice: null,
+      originalPrice: currentVariant.originalPrice ?? product.originalPrice ?? null,
       quantity,
       maxStock: currentVariant.stock,
     };
@@ -204,11 +206,12 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
               className="w-16 h-20 object-cover rounded-lg border border-ivory-300 shrink-0"
             />
             <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-bold text-ink-primary">
-                  ₹{currentVariant ? currentVariant.price : product.price}
-                </span>
-              </div>
+              <PriceDisplay
+                price={currentVariant ? currentVariant.price : product.price}
+                originalPrice={currentVariant?.originalPrice ?? product.originalPrice}
+                discountPercentage={product.discountPercentage}
+                size="md"
+              />
               <p className="text-xs text-ink-secondary mt-1">
                 Fabric: <strong>{product.fabric}</strong>
               </p>
@@ -239,52 +242,12 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
 
           {/* STEP 1: Clothing Type Selection (ONLY WHEN ENABLED 'both') */}
           {requiresExplicitFeedingChoice && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-ink-primary flex items-center gap-1.5">
-                  <span className="w-4 h-4 rounded-full bg-brand-700 text-white flex items-center justify-center text-[10px]">
-                    1
-                  </span>
-                  <span>Select Clothing Type:</span>
-                </label>
-                {!selectedType ? (
-                  <span className="text-[11px] text-amber-700 font-semibold animate-pulse">
-                    * Required Selection
-                  </span>
-                ) : (
-                  <span className="text-[11px] text-emerald-700 font-medium">Selected</span>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5">
-                {(['Feeding', 'Non-Feeding'] as ClothingType[]).map((type) => {
-                  const isSelected = selectedType === type;
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => handleTypeChange(type)}
-                      className={`p-3 rounded-xl border text-left transition-all ${
-                        isSelected
-                          ? 'border-brand-700 bg-brand-50/80 ring-2 ring-brand-700'
-                          : 'border-ivory-300 hover:border-brand-400 bg-white'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs sm:text-sm font-bold text-ink-primary">
-                          {type === 'Feeding' ? '🤱 Feeding-Friendly' : '👗 Non-Feeding'}
-                        </span>
-                        {isSelected && <Check className="w-4 h-4 text-brand-700" />}
-                      </div>
-                      <p className="text-[10px] text-ink-secondary mt-1">
-                        {type === 'Feeding'
-                          ? 'Dual concealed side zips for discreet nursing'
-                          : 'Standard regular tailored fit'}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="p-3.5 rounded-2xl bg-brand-50/70 border border-brand-200">
+              <FeedingOptionSelector
+                selectedType={selectedType}
+                onSelect={handleTypeChange}
+                showPromptError={!selectedType}
+              />
             </div>
           )}
 

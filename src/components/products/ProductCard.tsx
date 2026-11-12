@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Sparkles, ShoppingBag } from 'lucide-react';
 import { Product, ProductColor } from '../../types/product';
 import { useWishlist } from '../../context/WishlistContext';
+import { PriceDisplay } from '../common/PriceDisplay';
+import { RatingBadge } from '../common/RatingBadge';
 
 interface ProductCardProps {
   product: Product;
@@ -37,7 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className="group relative flex flex-col bg-white rounded-xl border border-stone-200 overflow-hidden shadow-2xs hover:border-maroon-200 hover:shadow-lg hover:shadow-maroon-950/5 transition-all duration-300"
+      className="group relative flex flex-col bg-[#FDFBFE] rounded-xl border border-brand-200/70 overflow-hidden shadow-2xs hover:border-brand-400 hover:shadow-lg hover:shadow-brand-900/10 transition-all duration-300"
     >
       {/* Image Container with 3:4 portrait ratio */}
       <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 cursor-pointer">
@@ -88,22 +90,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Feeding Feature Badge */}
         {product.feedingConfig === 'both' && (
-          <div className="absolute bottom-2 left-2 z-10 pointer-events-none">
-            <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-maroon-800 text-[10px] font-bold px-1.5 py-0.5 rounded shadow-2xs border border-stone-200">
-              <Sparkles className="w-2.5 h-2.5 text-saffron-500" />
+          <div className="absolute bottom-2 left-2 z-10 pointer-events-none sm:group-hover:opacity-0 transition-opacity">
+            <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-brand-800 text-[10px] font-bold px-1.5 py-0.5 rounded shadow-2xs border border-brand-200">
+              <Sparkles className="w-2.5 h-2.5 text-brand-600" />
               <span>Feeding & Non-Feeding</span>
             </span>
           </div>
         )}
 
         {product.feedingConfig === 'feeding-only' && (
-          <div className="absolute bottom-2 left-2 z-10 pointer-events-none">
+          <div className="absolute bottom-2 left-2 z-10 pointer-events-none sm:group-hover:opacity-0 transition-opacity">
             <span className="inline-flex items-center gap-1 bg-emerald-800 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-2xs">
               <Sparkles className="w-2.5 h-2.5 text-emerald-200" />
               <span>Feeding Friendly</span>
             </span>
           </div>
         )}
+
+        {/* Dynamic Customer Rating Badge */}
+        <div className="pointer-events-none absolute bottom-2 right-2 z-10 sm:group-hover:opacity-0 transition-opacity">
+          <RatingBadge
+            rating={product.rating}
+            reviewCount={product.reviewCount}
+            variant="overlay"
+          />
+        </div>
 
         {/* Desktop Quick Add Button Overlay */}
         <div className="absolute inset-x-2 bottom-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden sm:block">
@@ -112,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               e.stopPropagation();
               onQuickSelect(product);
             }}
-            className="w-full flex items-center justify-center gap-1.5 bg-maroon-800/95 hover:bg-maroon-900 text-white py-2 rounded-lg text-xs font-bold backdrop-blur-xs shadow-md transition-all"
+            className="w-full flex items-center justify-center gap-1.5 bg-brand-800/95 hover:bg-brand-900 text-white py-2 rounded-lg text-xs font-bold backdrop-blur-xs shadow-md transition-all"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Select Options</span>
@@ -125,10 +136,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div>
           {/* Category Tag */}
           <div className="flex items-center justify-between text-[11px] text-stone-500 mb-1">
-            <span className="uppercase tracking-wider font-semibold text-maroon-700">
+            <span className="uppercase tracking-wider font-semibold text-brand-800">
               {product.categoryName}
             </span>
-            <span className="text-[10px] text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded">
+            <span className="text-[10px] text-ink-secondary bg-brand-50 px-1.5 py-0.5 rounded border border-brand-100">
               {product.fabric}
             </span>
           </div>
@@ -136,22 +147,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {/* Product Title */}
           <h3
             onClick={handleDetailsClick}
-            className="text-xs sm:text-sm font-semibold text-stone-900 group-hover:text-maroon-700 transition-colors line-clamp-1 cursor-pointer leading-snug"
+            className="text-xs sm:text-sm font-semibold text-stone-900 group-hover:text-brand-800 transition-colors line-clamp-1 cursor-pointer leading-snug"
             title={product.title}
           >
             {product.title}
           </h3>
 
-          {/* Price matching GSS format */}
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-sm sm:text-base font-bold text-stone-900">
-              ₹{product.price.toLocaleString('en-IN')}.00
-            </span>
-            {product.originalPrice && (
-              <span className="text-[11px] text-stone-400 line-through font-normal">
-                ₹{product.originalPrice.toLocaleString('en-IN')}.00
-              </span>
-            )}
+          {/* Dynamic Price, MRP & Discount */}
+          <div className="mt-1">
+            <PriceDisplay
+              price={product.price}
+              originalPrice={product.originalPrice}
+              discountPercentage={product.discountPercentage}
+              size="sm"
+              showDecimals
+            />
           </div>
         </div>
 

@@ -1,10 +1,11 @@
 import React from 'react';
+import { SITE_CONFIG } from '../../config/siteConfig';
 
 export const FloatingWhatsApp: React.FC = () => {
   return (
     <div className="fixed bottom-20 right-4 z-40 print:hidden sm:bottom-6 sm:right-6">
       <a
-        href="https://wa.me/919876543210?text=Hi%20Sony%20Collection%2C%20I%20have%20an%20inquiry%20about%20your%20ethnic%20wear%20collections."
+        href={SITE_CONFIG.whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"

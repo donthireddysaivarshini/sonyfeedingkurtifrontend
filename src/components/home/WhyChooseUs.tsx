@@ -3,51 +3,51 @@ import { Truck, Heart, ShieldCheck } from 'lucide-react';
 
 export const WhyChooseUs: React.FC = () => {
   return (
-    <section aria-label="Trust Badges" className="py-2.5 sm:py-4 border-b border-stone-200/80 bg-white">
-      <div className="mx-auto max-w-7xl px-3 sm:px-6">
-        <div className="grid grid-cols-1 divide-y divide-stone-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0 text-center">
+    <section aria-label="Trust Badges" className="py-2.5 sm:py-4 border-b border-brand-200/70 bg-ivory-100">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6">
+        <div className="grid grid-cols-3 divide-x divide-brand-200/70 text-center">
           
           {/* Pillar 1: Free Shipping */}
-          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
-              <Truck className="h-5 w-5" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 py-1 sm:py-0 px-1.5 sm:px-4">
+            <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
+              <Truck className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div className="text-left">
-              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
+            <div className="text-center sm:text-left">
+              <p className="text-[10px] sm:text-sm font-bold text-ink-primary tracking-tight uppercase leading-tight">
                 Free Shipping
               </p>
-              <p className="text-[11px] sm:text-xs text-stone-500">
-                All Over India (Postal Delivery)
+              <p className="text-[9px] sm:text-xs text-ink-secondary leading-tight mt-0.5">
+                All Over India
               </p>
             </div>
           </div>
 
           {/* Pillar 2: Customer Love */}
-          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
-              <Heart className="h-5 w-5 fill-maroon-800/20" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 py-1 sm:py-0 px-1.5 sm:px-4">
+            <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5 fill-brand-800/20" />
             </div>
-            <div className="text-left">
-              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
-                10,000+ Happy Mothers
+            <div className="text-center sm:text-left">
+              <p className="text-[10px] sm:text-sm font-bold text-ink-primary tracking-tight uppercase leading-tight">
+                10,000+ Moms
               </p>
-              <p className="text-[11px] sm:text-xs text-stone-500">
-                Loved & Trusted Across 28 States
+              <p className="text-[9px] sm:text-xs text-ink-secondary leading-tight mt-0.5">
+                28 States Loved
               </p>
             </div>
           </div>
 
           {/* Pillar 3: Secure Payments */}
-          <div className="flex items-center justify-center gap-3 py-2 sm:py-0 px-2 sm:px-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream-100 text-maroon-800">
-              <ShieldCheck className="h-5 w-5" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 py-1 sm:py-0 px-1.5 sm:px-4">
+            <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
+              <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div className="text-left">
-              <p className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight uppercase">
-                100% Secure Payments
+            <div className="text-center sm:text-left">
+              <p className="text-[10px] sm:text-sm font-bold text-ink-primary tracking-tight uppercase leading-tight">
+                Secure Pay
               </p>
-              <p className="text-[11px] sm:text-xs text-stone-500">
-                Safe & Trusted UPI, Cards & NetBanking
+              <p className="text-[9px] sm:text-xs text-ink-secondary leading-tight mt-0.5">
+                UPI & Cards
               </p>
             </div>
           </div>

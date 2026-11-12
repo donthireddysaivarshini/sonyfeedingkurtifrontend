@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, ShoppingBag } from 'lucide-react';
 import { Product } from '../../types/product';
 import { useWishlist } from '../../context/WishlistContext';
+import { PriceDisplay } from '../common/PriceDisplay';
+import { RatingBadge } from '../common/RatingBadge';
 
 interface ProductSliderSectionProps {
   id: string;
@@ -45,10 +47,10 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
         key={`${product.id}${keySuffix}`}
         className="w-36 shrink-0 sm:w-48 md:w-56"
       >
-        <div className="group relative flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-white transition-all duration-300 hover:border-maroon-200 hover:shadow-lg hover:shadow-maroon-950/5">
+        <div className="group relative flex flex-col overflow-hidden rounded-xl border border-brand-200/70 bg-[#FDFBFE] transition-all duration-300 hover:border-brand-400 hover:shadow-lg hover:shadow-brand-900/10">
           
           {/* 3:4 Image Container */}
-          <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100">
+          <div className="relative aspect-[3/4] w-full overflow-hidden bg-brand-50">
             <Link
               to={`/product/${product.slug}`}
               className="block h-full w-full focus:outline-none"
@@ -61,14 +63,14 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
               />
             </Link>
 
-            {/* Top-Left Badges matching GSS pill styling */}
+            {/* Top-Left Badges */}
             <div className="pointer-events-none absolute left-2 top-2 z-10 flex flex-col gap-1 items-start">
               {badgeLabel ? (
-                <span className="rounded-xs bg-red-700 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
+                <span className="rounded-xs bg-brand-800 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
                   {badgeLabel}
                 </span>
               ) : product.badge ? (
-                <span className="rounded-xs bg-red-700 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
+                <span className="rounded-xs bg-brand-800 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
                   {product.badge}
                 </span>
               ) : product.feedingConfig === 'both' || product.feedingConfig === 'feeding-only' ? (
@@ -78,10 +80,19 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
               ) : null}
 
               {discountPercent && (
-                <span className="rounded-xs bg-saffron-500 px-1.5 py-0.5 text-[9px] font-bold text-white shadow-xs">
+                <span className="rounded-xs bg-brand-600 px-1.5 py-0.5 text-[9px] font-bold text-white shadow-xs">
                   -{discountPercent}%
                 </span>
               )}
+            </div>
+
+            {/* Dynamic Customer Rating Overlay */}
+            <div className="pointer-events-none absolute left-2 bottom-2 z-10 sm:group-hover:opacity-0 transition-opacity">
+              <RatingBadge
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+                variant="overlay"
+              />
             </div>
 
             {/* Top-Right Wishlist Heart Button */}
@@ -109,7 +120,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
                   e.stopPropagation();
                   onQuickSelect(product);
                 }}
-                className="w-full flex items-center justify-center gap-1.5 bg-maroon-800/95 hover:bg-maroon-900 text-white py-1.5 rounded-lg text-xs font-bold shadow-md transition-all backdrop-blur-xs"
+                className="w-full flex items-center justify-center gap-1.5 bg-brand-800/95 hover:bg-brand-900 text-white py-1.5 rounded-lg text-xs font-bold shadow-md transition-all backdrop-blur-xs"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>Select Options</span>
@@ -121,22 +132,21 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
           <div className="flex flex-1 flex-col p-2.5 sm:p-3">
             <Link
               to={`/product/${product.slug}`}
-              className="line-clamp-1 text-xs font-semibold text-stone-900 transition-colors group-hover:text-maroon-700 sm:text-sm"
+              className="line-clamp-1 text-xs font-semibold text-stone-900 transition-colors group-hover:text-brand-800 sm:text-sm"
               title={product.title}
             >
               {product.title}
             </Link>
 
-            {/* Price with strikethrough */}
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-sm font-bold text-stone-900 sm:text-base">
-                ₹{product.price.toLocaleString('en-IN')}.00
-              </span>
-              {product.originalPrice && (
-                <span className="text-[11px] text-stone-400 line-through">
-                  ₹{product.originalPrice.toLocaleString('en-IN')}.00
-                </span>
-              )}
+            {/* Dynamic Selling Price, MRP & % Discount */}
+            <div className="mt-1">
+              <PriceDisplay
+                price={product.price}
+                originalPrice={product.originalPrice}
+                discountPercentage={product.discountPercentage}
+                size="sm"
+                showDecimals
+              />
             </div>
 
             {/* Available Sizes List */}
@@ -244,13 +254,13 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
           {/* Left Edge Gradient Fade */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[#FAF8F5] to-transparent sm:w-12 md:w-16"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[#FAF5FC] to-transparent sm:w-12 md:w-16"
           />
 
           {/* Right Edge Gradient Fade */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[#FAF8F5] to-transparent sm:w-12 md:w-16"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[#FAF5FC] to-transparent sm:w-12 md:w-16"
           />
 
           {/* Horizontal Track (Manual Swipe + Continuous Glide Marquee) */}
@@ -261,9 +271,10 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
             <div className="group flex w-max gap-2.5 px-3 pb-2 pt-1 sm:gap-4 sm:px-6 md:gap-5 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]">
               {/* Primary Item Set */}
               <div
+                style={enableAutoMarquee ? { animationDuration: '15s' } : undefined}
                 className={`flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 ${
                   enableAutoMarquee
-                    ? 'group-hover:[animation-play-state:paused] animate-marquee [animation-duration:32s]'
+                    ? 'group-hover:[animation-play-state:paused] animate-marquee'
                     : ''
                 }`}
               >
@@ -274,7 +285,8 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
               {enableAutoMarquee && (
                 <div
                   aria-hidden="true"
-                  className="flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 group-hover:[animation-play-state:paused] animate-marquee [animation-duration:32s]"
+                  style={{ animationDuration: '15s' }}
+                  className="flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 group-hover:[animation-play-state:paused] animate-marquee"
                 >
                   {products.map((product) => renderCard(product, '-loop'))}
                 </div>

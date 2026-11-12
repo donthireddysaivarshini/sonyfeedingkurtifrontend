@@ -105,6 +105,7 @@ export const PRODUCTS: Product[] = [
       description: 'Concealed vertical openings designed for practical nursing access.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 2. FROCKS (Configuration: 'feeding-only')
@@ -152,6 +153,7 @@ export const PRODUCTS: Product[] = [
       description: 'Dedicated nursing access integrated cleanly into the gathered frock design.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 3. CO-ORD SETS (Configuration: 'none')
@@ -233,6 +235,7 @@ export const PRODUCTS: Product[] = [
       description: 'Allows feeding without disrupting the silhouette.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 5. PARTYWEAR DRESSES (Configuration: 'both')
@@ -275,6 +278,7 @@ export const PRODUCTS: Product[] = [
       description: 'Hidden nursing openings tailored into festive partywear gown.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 6. SAREES (Configuration: 'none')
@@ -311,6 +315,7 @@ export const PRODUCTS: Product[] = [
     description: 'Traditional Kanchivaram checked silk saree in emerald green woven with golden zari checks and a grand crimson-gold contrast pallu. Includes unstitched contrast blouse piece.',
     fabric: 'Kanchivaram Pure Silk Blend',
     careInstructions: ['Dry clean recommended', 'Iron on reverse on silk setting'],
+    isHandstock: true,
   },
 
   // 8. KIDS COLLECTIONS (Configuration: 'feeding-only')
@@ -353,6 +358,7 @@ export const PRODUCTS: Product[] = [
       description: 'Mother outfit includes discreet side nursing access.'
     },
     isNewArrival: true,
+    isHandstock: true,
   },
 
   // 9. FROCKS (Configuration: 'both')
@@ -437,6 +443,7 @@ export const PRODUCTS: Product[] = [
       description: 'Seamless integration into tunic styling.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 11. KURTI + DUPATTA (Configuration: 'feeding-only')
@@ -1009,6 +1016,7 @@ export const PRODUCTS: Product[] = [
       description: 'Festive flared anarkali styling with discreet nursing access when Feeding option is selected.'
     },
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 27. PARTYWEAR DRESSES (Configuration: 'both')
@@ -1052,6 +1060,7 @@ export const PRODUCTS: Product[] = [
     },
     isNewArrival: true,
     isFeatured: true,
+    isHandstock: true,
   },
 
   // 28. PARTYWEAR DRESSES (Configuration: 'both')
@@ -1135,6 +1144,7 @@ export const PRODUCTS: Product[] = [
       zipPlacement: 'Integrated cleanly beneath vertical pleat overlap',
       description: 'Dedicated nursing access tailored for everyday maternal comfort.'
     },
+    isHandstock: true,
   },
 
   // 30. PARTYWEAR DRESSES (Configuration: 'both')

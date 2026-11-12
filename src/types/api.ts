@@ -24,11 +24,16 @@ export interface DjangoProductResponse {
   category: { id: number; name: string; slug: string };
   price: string;
   original_price: string | null;
+  mrp?: string | null;
+  discount_percentage?: number;
+  rating?: number;
+  review_count?: number;
   description: string;
   fabric: string;
   care_instructions: string;
   is_new_arrival: boolean;
   is_best_seller: boolean;
+  is_handstock?: boolean;
   images: { id: number; image: string; order: number }[];
   variants: DjangoProductVariantResponse[];
 }

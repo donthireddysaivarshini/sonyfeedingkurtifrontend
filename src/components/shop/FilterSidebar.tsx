@@ -6,11 +6,12 @@ import { CATEGORIES } from '../../data/categories';
 export interface FilterState {
   category: string | null;
   feedingType: 'All' | 'Feeding' | 'Non-Feeding';
+  handstockOnly: boolean;
   colors: string[];
   sizes: string[];
   fabrics: string[];
   priceRange: [number, number];
-  sortBy: 'featured' | 'price-low' | 'price-high' | 'newest';
+  sortBy: 'featured' | 'bestseller' | 'price-low' | 'price-high' | 'newest';
 }
 
 export const INITIAL_PRICE_BOUNDS: [number, number] = [800, 3000];
@@ -18,6 +19,7 @@ export const INITIAL_PRICE_BOUNDS: [number, number] = [800, 3000];
 export const INITIAL_FILTERS: FilterState = {
   category: null,
   feedingType: 'All',
+  handstockOnly: false,
   colors: [],
   sizes: [],
   fabrics: [],
@@ -85,6 +87,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   const hasActiveFilters =
     (!lockCategory && filters.category !== null) ||
     filters.feedingType !== 'All' ||
+    filters.handstockOnly ||
     filters.colors.length > 0 ||
     filters.sizes.length > 0 ||
     filters.fabrics.length > 0 ||
@@ -183,6 +186,25 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Handstock Ready-to-Ship Toggle */}
+      <div className="pt-4 border-t border-ivory-200">
+        <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block mb-2.5">
+          Dispatch Availability
+        </label>
+        <button
+          type="button"
+          onClick={() => onFilterChange({ ...filters, handstockOnly: !filters.handstockOnly })}
+          className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
+            filters.handstockOnly
+              ? 'bg-brand-800 text-white shadow-xs'
+              : 'bg-ivory-100/80 hover:bg-ivory-200 text-ink-secondary hover:text-ink-primary border border-ivory-300'
+          }`}
+        >
+          <span>Ready to Ship (Handstock)</span>
+          {filters.handstockOnly && <span className="text-[10px]">✓</span>}
+        </button>
       </div>
 
       {/* 2. Categories (Only shown if category is not locked to current category page) */}

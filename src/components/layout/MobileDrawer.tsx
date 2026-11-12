@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck, User, Search } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
+import { SITE_CONFIG } from '../../config/siteConfig';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -51,11 +52,11 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               className="h-9 w-9 rounded-full object-cover shadow-xs border border-amber-300/60 shrink-0"
             />
             <div>
-              <span className="font-serif text-base font-bold tracking-wider text-brand-700 block leading-tight">
-                SONY COLLECTIONS
+              <span className="font-serif text-base font-bold tracking-wider text-brand-800 block leading-tight">
+                {SITE_CONFIG.brandName.toUpperCase()}
               </span>
-              <span className="text-[10px] tracking-widest text-ink-muted uppercase">
-                Elegant Wear for Every Moment
+              <span className="text-[10px] tracking-widest text-brand-700 uppercase font-semibold">
+                {SITE_CONFIG.tagline}
               </span>
             </div>
           </Link>
@@ -120,7 +121,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
         {/* Categories Section */}
         <div className="p-4 flex-1">
           <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-3">
-            Shop by Category (8 Collections)
+            Shop by Category ({CATEGORIES.length} Collections)
           </p>
           <div className="space-y-1">
             {CATEGORIES.map((cat) => (
@@ -191,20 +192,24 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
               <ShoppingBag className="w-4 h-4" />
               <span>Cart ({totalItemsCount})</span>
             </button>
-            <a
-              href="#wishlist"
+            <Link
+              to="/account"
               onClick={onClose}
+              aria-label="Wishlist"
               className="flex items-center justify-center gap-1.5 px-3 py-2.5 border border-ivory-300 text-ink-primary rounded-xl text-xs font-medium hover:bg-ivory-100"
             >
-              <Heart className="w-4 h-4" />
+              <Heart className="w-4 h-4 text-brand-700" />
               <span>{wishlistCount}</span>
-            </a>
+            </Link>
           </div>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-ink-secondary py-1.5 font-medium">
+          <a
+            href={SITE_CONFIG.phoneHref}
+            className="flex items-center justify-center gap-2 text-xs text-brand-800 hover:text-brand-600 py-1.5 font-semibold"
+          >
             <Phone className="w-3.5 h-3.5 text-brand-700" />
-            <span>Support details to be announced</span>
-          </div>
+            <span>{SITE_CONFIG.phoneDisplay} • {SITE_CONFIG.businessHours}</span>
+          </a>
 
           <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-muted pt-1">
             <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />

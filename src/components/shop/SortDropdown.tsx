@@ -22,6 +22,7 @@ export const SortDropdown: React.FC<SortDropdownProps> = ({ value, onChange }) =
         className="w-full sm:w-auto text-xs font-semibold text-ink-primary bg-white border border-ivory-300 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-1 focus:ring-brand-700 shadow-xs cursor-pointer hover:border-ivory-400"
       >
         <option value="featured">Featured / Recommended</option>
+        <option value="bestseller">Best Sellers</option>
         <option value="price-low">Price: Low to High</option>
         <option value="price-high">Price: High to Low</option>
         <option value="newest">Newest Additions</option>

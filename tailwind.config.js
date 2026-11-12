@@ -7,58 +7,58 @@ export default {
   theme: {
     extend: {
       colors: {
-        // GSS Clothing Signature Colors
+        // Sony Collections Royal Plum & Lavender Brand Palette
         cream: {
-          50: '#FBF7EF',  // GSS warm primary page background (rgb(251, 247, 239))
-          100: '#F6EFE2',
-          200: '#ECE0CA',
-          300: '#DECBA7',
+          50: '#FAF5FC',  // Soft lavender page backdrop
+          100: '#F4EAF8',
+          200: '#EADBF2',
+          300: '#DBC3E7',
         },
         maroon: {
-          400: '#9B2C4E',
-          500: '#8A1F3D',
-          600: '#7B1832',
-          700: '#5A152B',
-          800: '#3F0F1E',  // GSS primary brand accent (rgb(63, 15, 30))
-          900: '#2D0B15',
-          950: '#1A060C',
+          400: '#AE69B3',
+          500: '#944799',
+          600: '#833888',
+          700: '#6B296F',
+          800: '#552058',  // Primary Royal Plum (#552058)
+          900: '#3E1541',
+          950: '#2A0C2D',
         },
         saffron: {
           300: '#FCD34D',
           400: '#FBBF24',
-          500: '#E58B12',  // GSS saffron gold accent (#E58B12 / #F59E0B)
+          500: '#E58B12',  // Warm gold accent for ratings & highlights
           600: '#D97706',
           700: '#B45309',
         },
-        // Existing brand palette mapped to harmonize with GSS
+        // Harmonized Plum & Lavender Brand Scale
         brand: {
-          50: '#FDF6F5',
-          100: '#F9ECE9',
-          200: '#F3D5D0',
-          300: '#E7B0A8',
-          400: '#D5867B',
-          500: '#B75245',
-          600: '#7B1832',
-          700: '#5A152B',
-          800: '#3F0F1E', // GSS Imperial Maroon
-          900: '#2D0B15',
-          DEFAULT: '#3F0F1E',
-          accent: '#C87D7D',
+          50: '#F8F2FB',
+          100: '#EFE3F5',
+          200: '#E2C9E5',
+          300: '#CBA0CE',
+          400: '#AE69B3',
+          500: '#944799',
+          600: '#833888',
+          700: '#6B296F',
+          800: '#552058',
+          900: '#3E1541',
+          DEFAULT: '#552058',
+          accent: '#944799',
           gold: '#E58B12',
         },
         ivory: {
-          50: '#FBF7EF',
-          100: '#FAF8F5',
-          200: '#F4EFEA',
-          300: '#EEE7DE',
-          400: '#E4D9CC',
-          DEFAULT: '#FBF7EF',
+          50: '#FAF5FC',
+          100: '#F6EEF9',
+          200: '#EFE3F5',
+          300: '#E5D3ED',
+          400: '#D7BCE2',
+          DEFAULT: '#FAF5FC',
         },
         ink: {
-          primary: '#1C1917',
-          secondary: '#57534E',
-          muted: '#78716C',
-          light: '#A8A29E',
+          primary: '#1E1621',
+          secondary: '#524457',
+          muted: '#74647A',
+          light: '#A595AB',
         },
       },
       fontFamily: {
@@ -80,9 +80,9 @@ export default {
         'pill': '9999px',
       },
       animation: {
-        'marquee': 'marquee 32s linear infinite',
-        'marquee-fast': 'marquee 22s linear infinite',
-        'marquee-slow': 'marquee 45s linear infinite',
+        'marquee': 'marquee 20s linear infinite',
+        'marquee-fast': 'marquee 14s linear infinite',
+        'marquee-slow': 'marquee 32s linear infinite',
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'slide-down': 'slideDown 0.3s ease-out',
         'slide-up': 'slideUp 0.3s ease-out',

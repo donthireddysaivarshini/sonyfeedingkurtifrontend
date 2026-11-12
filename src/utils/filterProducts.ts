@@ -7,6 +7,11 @@ export function filterAndSortProducts(
 ): Product[] {
   // 1. Filter
   const filtered = products.filter((product) => {
+    // Handstock Filter
+    if (filters.handstockOnly && !product.isHandstock) {
+      return false;
+    }
+
     // Category Filter
     if (filters.category && product.category !== filters.category) {
       return false;
@@ -78,6 +83,11 @@ export function filterAndSortProducts(
       case 'newest': {
         const aScore = a.isNewArrival ? 1 : 0;
         const bScore = b.isNewArrival ? 1 : 0;
+        return bScore - aScore;
+      }
+      case 'bestseller': {
+        const aScore = (a.isFeatured ? 4 : 0) + (a.isHandstock ? 2 : 0) + (a.isNewArrival ? 1 : 0);
+        const bScore = (b.isFeatured ? 4 : 0) + (b.isHandstock ? 2 : 0) + (b.isNewArrival ? 1 : 0);
         return bScore - aScore;
       }
       case 'featured':
