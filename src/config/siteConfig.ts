@@ -10,8 +10,8 @@ export const SITE_CONFIG = {
   emailHref: 'mailto:sonycollections00@gmail.com',
   instagramUrl: 'https://www.instagram.com/feedingkurthis_by_sony?dlrf=OTQ3azJxdXcybmpp',
   instagramHandle: '@feedingkurthis_by_sony',
-  addressPrimary: 'Hyderabad, Telangana',
-  addressStore: '4/159 Shanthi Nagar, Yerraguntla, Kadapa - 516309',
+  addressPrimary: 'Hyderabad',
+  addressStore: '',
   businessHours: 'Daily: 8:00 AM – 11:00 PM',
 } as const;
 

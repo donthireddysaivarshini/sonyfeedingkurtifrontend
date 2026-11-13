@@ -37,7 +37,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={slide.desktopImage}
                   alt={slide.title}
-                  className="w-full h-auto max-h-[540px] object-contain mx-auto transition-opacity duration-500"
+                  className="w-full h-[260px] sm:h-[420px] md:h-[480px] lg:h-[520px] object-contain mx-auto transition-opacity duration-500"
                 />
               </picture>
             </div>

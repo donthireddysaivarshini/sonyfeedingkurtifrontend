@@ -10,26 +10,20 @@ export interface HeroSlide {
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
-    title: 'Sony Collections — Trendy Dresses for Every You',
+    title: 'Sony Feeding Kurtis — Trendy Dresses for Every You',
     ctaLink: '/shop',
-    desktopImage: '/images/banners/hero-sony-collections.jpg',
-    mobileImage: '/images/banners/hero-sony-collections.jpg',
+    desktopImage: '/images/banners/hero-sony-feeding-kurtis.jpg',
+    mobileImage: '/images/banners/hero-sony-feeding-kurtis.jpg',
     preserveArtwork: true,
   },
   {
     id: 'slide-2',
-    title: 'Heritage Pure Silk & Kanchivaram Sarees',
-    ctaLink: '/category/sarees',
-    desktopImage: '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
-    mobileImage: '/images/sarees/emerald-checked-kanchivaram-saree.jpg',
+    title: 'Feeding Dress — Easy Feeding Access & Nursing Friendly',
+    ctaLink: '/shop?clothingType=Feeding',
+    desktopImage: '/images/banners/hero-feeding-dress.jpg',
+    mobileImage: '/images/banners/hero-feeding-dress.jpg',
+    preserveArtwork: true,
   },
-  {
-    id: 'slide-3',
-    title: 'Kids Wear & Festive Twinning',
-    ctaLink: '/category/kids-collections',
-    desktopImage: '/images/kidswear/maroon-pattu-frock.jpg',
-    mobileImage: '/images/kidswear/maroon-pattu-frock.jpg',
-  }
 ];
 
 export interface ValueProp {

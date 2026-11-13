@@ -77,11 +77,9 @@ export const Footer: React.FC = () => {
             Contact Us
           </p>
           <ul className="mt-3 space-y-2.5 text-sm text-ink-secondary">
-            <li className="flex items-start gap-2">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" />
-              <span>
-                {SITE_CONFIG.addressPrimary} • Store: {SITE_CONFIG.addressStore}
-              </span>
+            <li className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 shrink-0 text-brand-700" />
+              <span>{SITE_CONFIG.addressPrimary}</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="h-4 w-4 shrink-0 text-brand-700" />

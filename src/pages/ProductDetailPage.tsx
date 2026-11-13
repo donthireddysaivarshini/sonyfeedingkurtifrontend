@@ -705,7 +705,7 @@ export const ProductDetailPage: React.FC = () => {
                 </button>
                 {openSections.delivery && (
                   <div className="p-4 pt-3 text-xs text-ink-secondary leading-relaxed space-y-1.5 border-t border-ivory-200 bg-ivory-50/40 text-[11px]">
-                    <p>• Pan-India dispatch from {SITE_CONFIG.addressPrimary} & {SITE_CONFIG.addressStore}.</p>
+                    <p>• Pan-India dispatch from {SITE_CONFIG.addressPrimary}.</p>
                     <p>• Need sizing or feeding-option advice? Call or WhatsApp {SITE_CONFIG.phoneDisplay} ({SITE_CONFIG.businessHours}).</p>
                   </div>
                 )}

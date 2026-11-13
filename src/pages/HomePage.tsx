@@ -106,7 +106,7 @@ export const HomePage: React.FC = () => {
         {/* Section 2: Trust Badges Strip (3 Pillars) */}
         <WhyChooseUs />
 
-        {/* Section 3: Sliding Carousel 1 — Feeding & Non-Feeding */}
+        {/* Section 3: Sliding Carousel 1 — Feeding & Non-Feeding (Floats Left) */}
         <ProductSliderSection
           id="feeding-collection"
           title="Feeding & Non-Feeding"
@@ -114,9 +114,10 @@ export const HomePage: React.FC = () => {
           products={feedingCollectionProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Feeding & Regular"
+          direction="left"
         />
 
-        {/* Section 4: Sliding Carousel 2 — Handstock */}
+        {/* Section 4: Sliding Carousel 2 — Handstock (Floats Right) */}
         <ProductSliderSection
           id="handstock"
           title="Handstock"
@@ -124,9 +125,10 @@ export const HomePage: React.FC = () => {
           products={handstockProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Ready to Ship"
+          direction="right"
         />
 
-        {/* Section 5: Sliding Carousel 3 — Sarees */}
+        {/* Section 5: Sliding Carousel 3 — Sarees (Floats Left) */}
         <ProductSliderSection
           id="sarees"
           title="Sarees"
@@ -134,9 +136,10 @@ export const HomePage: React.FC = () => {
           products={sareeProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Pure Silk"
+          direction="left"
         />
 
-        {/* Section 6: Sliding Carousel 4 — Kids Wear */}
+        {/* Section 6: Sliding Carousel 4 — Kids Wear (Floats Right) */}
         <ProductSliderSection
           id="kids-wear"
           title="Kids Wear"
@@ -144,9 +147,10 @@ export const HomePage: React.FC = () => {
           products={kidsWearProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Festive"
+          direction="right"
         />
 
-        {/* Section 7: Sliding Carousel 5 — New Arrivals */}
+        {/* Section 7: Sliding Carousel 5 — New Arrivals (Floats Left) */}
         <ProductSliderSection
           id="new-arrivals"
           title="New Arrivals"
@@ -154,9 +158,10 @@ export const HomePage: React.FC = () => {
           products={newArrivalProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="New"
+          direction="left"
         />
 
-        {/* Section 8: Sliding Carousel 6 — Best Sellers */}
+        {/* Section 8: Sliding Carousel 6 — Best Sellers (Floats Right) */}
         <ProductSliderSection
           id="best-sellers"
           title="Best Sellers"
@@ -164,6 +169,7 @@ export const HomePage: React.FC = () => {
           products={bestSellerProducts}
           onQuickSelect={handleQuickSelect}
           badgeLabel="Best Seller"
+          direction="right"
         />
 
         {/* Section 6: Social Proof Strip */}

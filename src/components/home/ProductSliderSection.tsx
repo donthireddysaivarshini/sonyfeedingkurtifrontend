@@ -14,6 +14,7 @@ interface ProductSliderSectionProps {
   onQuickSelect: (product: Product) => void;
   badgeLabel?: string;
   enableAutoMarquee?: boolean;
+  direction?: 'left' | 'right';
 }
 
 export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
@@ -24,6 +25,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
   onQuickSelect,
   badgeLabel,
   enableAutoMarquee = true,
+  direction = 'left',
 }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -274,7 +276,9 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
                 style={enableAutoMarquee ? { animationDuration: '15s' } : undefined}
                 className={`flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 ${
                   enableAutoMarquee
-                    ? 'group-hover:[animation-play-state:paused] animate-marquee'
+                    ? direction === 'right'
+                      ? 'group-hover:[animation-play-state:paused] animate-marquee-reverse'
+                      : 'group-hover:[animation-play-state:paused] animate-marquee'
                     : ''
                 }`}
               >
@@ -286,7 +290,11 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
                 <div
                   aria-hidden="true"
                   style={{ animationDuration: '15s' }}
-                  className="flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 group-hover:[animation-play-state:paused] animate-marquee"
+                  className={`flex shrink-0 items-stretch gap-2.5 sm:gap-4 md:gap-5 ${
+                    direction === 'right'
+                      ? 'group-hover:[animation-play-state:paused] animate-marquee-reverse'
+                      : 'group-hover:[animation-play-state:paused] animate-marquee'
+                  }`}
                 >
                   {products.map((product) => renderCard(product, '-loop'))}
                 </div>

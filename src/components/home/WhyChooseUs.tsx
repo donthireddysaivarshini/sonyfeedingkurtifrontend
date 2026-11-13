@@ -32,7 +32,7 @@ export const WhyChooseUs: React.FC = () => {
                 10,000+ Moms
               </p>
               <p className="text-[9px] sm:text-xs text-ink-secondary leading-tight mt-0.5">
-                28 States Loved
+                Happy Homes
               </p>
             </div>
           </div>
