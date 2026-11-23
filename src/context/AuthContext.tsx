@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { UserProfile } from '../types/auth';
 import { authService } from '../services/authService';
-import { tokenStorage } from '../services/apiClient';
+import { tokenStorage, performRefresh } from '../services/apiClient';
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -30,21 +30,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [postAuthCallback, setPostAuthCallback] = useState<(() => void) | null>(null);
   const [returnUrl, setReturnUrl] = useState<string | null>(null);
 
-  // Synchronize profile on initial mount if token exists
+  // Synchronize profile on initial mount if token exists (with silent token refresh)
   useEffect(() => {
     const initAuth = async () => {
-      const token = tokenStorage.getAccess();
+      let token = tokenStorage.getAccess();
+      if (!token && tokenStorage.getRefresh()) {
+        try {
+          token = await performRefresh();
+        } catch {
+          token = null;
+        }
+      }
+
       if (token) {
         try {
           const profile = await authService.fetchProfile();
           setUser(profile);
         } catch {
-          // Token expired or invalid, keep existing user or clear
+          // Keep local profile if backend profile call fails temporarily
           const localUser = tokenStorage.getUser();
           setUser(localUser);
         }
       } else {
-        setUser(null);
+        const localUser = tokenStorage.getUser();
+        if (localUser && tokenStorage.getRefresh()) {
+          setUser(localUser);
+        } else {
+          setUser(null);
+        }
       }
       setAuthLoading(false);
     };

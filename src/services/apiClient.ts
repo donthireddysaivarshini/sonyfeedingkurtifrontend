@@ -77,13 +77,15 @@ apiClient.interceptors.request.use((config) => {
 const AUTH_EXCLUDED_URLS = ['/auth/login/', '/auth/signup/', '/auth/google/', '/auth/token/refresh/'];
 let refreshPromise: Promise<string | null> | null = null;
 
-async function performRefresh(): Promise<string | null> {
+export async function performRefresh(): Promise<string | null> {
   const refresh = tokenStorage.getRefresh();
   if (!refresh) return null;
   try {
     const res = await axios.post(`${baseURL}/auth/token/refresh/`, { refresh });
     const newAccess = res.data.access as string;
-    tokenStorage.set(newAccess);
+    const newRefresh = (res.data.refresh as string) || refresh;
+    const currentUser = tokenStorage.getUser();
+    tokenStorage.set(newAccess, newRefresh, currentUser);
     return newAccess;
   } catch {
     tokenStorage.clear();
