@@ -49,6 +49,8 @@ export interface ProductReview {
   rating: number;
   headline?: string;
   comment: string;
+  image?: string | null;
+  image_url?: string | null;
   date: string;
   verifiedPurchase: boolean;
   location?: string;

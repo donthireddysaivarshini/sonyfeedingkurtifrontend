@@ -15,7 +15,10 @@ import {
   Share2,
   Star,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Camera,
+  Maximize2,
+  X
 } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
@@ -119,6 +122,9 @@ export const ProductDetailPage: React.FC = () => {
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [reviewSubmitMessage, setReviewSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [starFilter, setStarFilter] = useState<number | null>(null);
+  const [reviewImageFile, setReviewImageFile] = useState<File | null>(null);
+  const [reviewImagePreview, setReviewImagePreview] = useState<string | null>(null);
+  const [enlargedReviewImage, setEnlargedReviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -420,11 +426,14 @@ export const ProductDetailPage: React.FC = () => {
         rating: newRating,
         headline: newHeadline.trim(),
         comment: newComment.trim(),
+        image: reviewImageFile,
       });
       setReviewsData(updated);
       setReviewSubmitMessage({ type: 'success', text: 'Thank you! Your verified review has been submitted successfully.' });
       setNewHeadline('');
       setNewComment('');
+      setReviewImageFile(null);
+      setReviewImagePreview(null);
       setIsWritingReview(false);
       setProduct((prev) => prev ? { ...prev, rating: updated.averageRating, reviewCount: updated.totalReviews } : null);
     } catch (err: any) {
@@ -481,57 +490,7 @@ export const ProductDetailPage: React.FC = () => {
 
       {/* Main Product Layout */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10 w-full">
-        {/* Mobile First-View Header (Title, Rating, Price, Tags directly above images) */}
-        <div className="lg:hidden mb-4 space-y-2">
-          {/* Category, Fabric & Stock Badges */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Link
-              to={`/category/${product.category}`}
-              className="text-[11px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded uppercase tracking-wider"
-            >
-              {product.categoryName}
-            </Link>
-            {product.fabric && (
-              <span className="text-[11px] text-ink-secondary bg-ivory-200 px-2 py-0.5 rounded font-medium">
-                {product.fabric}
-              </span>
-            )}
-            {product.isHandstock && (
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
-                Ready to Ship
-              </span>
-            )}
-          </div>
-
-          {/* Product Name */}
-          <h1 className="font-serif text-xl sm:text-2xl font-bold text-ink-primary leading-tight">
-            {product.title}
-          </h1>
-
-          {/* Price, MRP, Discount and Rating on one compact row */}
-          <div className="flex items-center justify-between gap-3 pt-1">
-            <div>
-              <PriceDisplay
-                price={currentVariant ? currentVariant.price : product.price}
-                originalPrice={currentVariant?.originalPrice ?? product.originalPrice}
-                discountPercentage={product.discountPercentage}
-                size="md"
-              />
-              <p className="text-[10px] text-ink-muted">Inclusive of all taxes</p>
-            </div>
-            <RatingBadge
-              rating={product.rating}
-              reviewCount={product.reviewCount}
-              onClick={() => {
-                document
-                  .getElementById('pdp-reviews-section')
-                  ?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
           
           {/* Left Column: Product Gallery (5 cols on lg) */}
           <div className="lg:col-span-6 xl:col-span-5">
@@ -551,10 +510,10 @@ export const ProductDetailPage: React.FC = () => {
           </div>
 
           {/* Right Column: Variant Selection & Details (7 cols on lg) */}
-          <div className="lg:col-span-6 xl:col-span-7 space-y-6">
+          <div className="lg:col-span-6 xl:col-span-7 space-y-5 sm:space-y-6">
             
-            {/* Title, Category & Price Header (Desktop View) */}
-            <div className="hidden lg:block">
+            {/* Title, Category & Price Header (Rendered below gallery thumbnails on mobile, right column on desktop) */}
+            <div>
               <div className="flex items-center justify-between text-xs text-ink-muted mb-2">
                 <Link
                   to={`/category/${product.category}`}
@@ -569,11 +528,11 @@ export const ProductDetailPage: React.FC = () => {
                 )}
               </div>
 
-              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary leading-tight">
+              <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-ink-primary leading-tight">
                 {product.title}
               </h1>
 
-              {/* Dynamic Rating & Dispatch Badge */}
+              {/* Dynamic Rating */}
               <div className="mt-2.5 flex flex-wrap items-center gap-2.5">
                 <RatingBadge
                   rating={product.rating}
@@ -584,11 +543,6 @@ export const ProductDetailPage: React.FC = () => {
                       ?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 />
-                {product.isHandstock && (
-                  <span className="inline-flex items-center rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
-                    Ready to Ship
-                  </span>
-                )}
               </div>
 
               {/* Dynamic Price, MRP & Discount */}
@@ -1149,7 +1103,7 @@ export const ProductDetailPage: React.FC = () => {
                     />
                   </div>
 
-                  {/* Comment */}
+                  {/* Written Review */}
                   <div>
                     <label htmlFor="review-comment" className="block text-xs font-bold text-ink-primary mb-1">
                       Written Review *
@@ -1163,6 +1117,54 @@ export const ProductDetailPage: React.FC = () => {
                       className="w-full px-3.5 py-2 rounded-lg border border-ivory-300 text-xs focus:ring-2 focus:ring-brand-700 focus:outline-none leading-relaxed"
                       required
                     />
+                  </div>
+
+                  {/* Photo Upload Attachment (Amazon-style) */}
+                  <div>
+                    <label className="block text-xs font-bold text-ink-primary mb-1.5">
+                      Add Product Photo (Optional)
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-dashed border-brand-700/50 bg-brand-50/50 hover:bg-brand-50 text-xs font-semibold text-brand-800 transition-colors">
+                        <Camera className="w-4 h-4 text-brand-700 shrink-0" />
+                        <span>{reviewImageFile ? 'Change Photo' : 'Attach Outfit Photo'}</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/jpg,image/webp"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setReviewImageFile(file);
+                              setReviewImagePreview(URL.createObjectURL(file));
+                            }
+                          }}
+                        />
+                      </label>
+                      {reviewImagePreview && (
+                        <div className="relative group">
+                          <img
+                            src={reviewImagePreview}
+                            alt="Selected review"
+                            className="w-12 h-12 rounded-xl object-cover border border-ivory-300 shadow-2xs"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReviewImageFile(null);
+                              setReviewImagePreview(null);
+                            }}
+                            className="absolute -top-1.5 -right-1.5 p-0.5 rounded-full bg-stone-900 text-white hover:bg-rose-600 transition-colors shadow-xs"
+                            title="Remove photo"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-ink-muted mt-1">
+                      Upload photo showing fit, fabric, or feeding features (JPG, PNG, WebP up to 10MB).
+                    </p>
                   </div>
 
                   {reviewSubmitMessage && (
@@ -1276,6 +1278,27 @@ export const ProductDetailPage: React.FC = () => {
                       <p className="text-xs text-ink-secondary leading-relaxed pt-0.5">
                         {rev.comment}
                       </p>
+
+                      {/* Customer Photo Attachment (Amazon style) */}
+                      {rev.image && (
+                        <div className="pt-2">
+                          <button
+                            type="button"
+                            onClick={() => setEnlargedReviewImage(getImageUrl(rev.image!))}
+                            className="group relative inline-block rounded-xl overflow-hidden border border-ivory-300 bg-ivory-50 hover:border-brand-700 transition-all cursor-zoom-in shadow-2xs"
+                            title="Click to view full photo"
+                          >
+                            <img
+                              src={getImageUrl(rev.image)}
+                              alt={`${rev.userName}'s review photo`}
+                              className="w-20 h-20 sm:w-24 sm:h-24 object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                              <Maximize2 className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" />
+                            </div>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ));
                 })()}
@@ -1360,6 +1383,34 @@ export const ProductDetailPage: React.FC = () => {
         <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white text-xs font-sans font-medium px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-4 h-4 text-emerald-400" />
           <span>Product link copied to clipboard!</span>
+        </div>
+      )}
+
+      {/* Fullscreen Customer Review Photo Lightbox Modal */}
+      {enlargedReviewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setEnlargedReviewImage(null)}
+        >
+          <div className="relative max-w-2xl max-h-[90vh] flex flex-col items-center">
+            <button
+              type="button"
+              onClick={() => setEnlargedReviewImage(null)}
+              className="absolute -top-10 right-0 p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Close photo"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img
+              src={enlargedReviewImage}
+              alt="Customer Review Enlarged"
+              className="max-h-[80vh] w-auto object-contain rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <p className="text-ivory-300 text-xs mt-3 text-center">
+              Customer Photo • Tap anywhere outside or ✕ to close
+            </p>
+          </div>
         </div>
       )}
     </div>

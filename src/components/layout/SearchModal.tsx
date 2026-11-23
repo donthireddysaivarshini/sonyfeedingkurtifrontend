@@ -90,17 +90,23 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           />
           {query && (
             <button
+              type="button"
               onClick={() => setQuery('')}
-              className="p-1 hover:bg-ivory-200 rounded-full text-ink-secondary"
+              aria-label="Clear query"
+              className="p-1 hover:bg-ivory-200 rounded-full text-ink-muted hover:text-ink-primary transition-colors"
+              title="Clear search text"
             >
               <X className="w-4 h-4" />
             </button>
           )}
           <button
+            type="button"
             onClick={onClose}
-            className="text-xs font-semibold px-2.5 py-1 text-ink-secondary hover:text-brand-700 rounded-lg hover:bg-ivory-200"
+            aria-label="Close search"
+            className="p-1.5 rounded-full text-ink-secondary hover:text-brand-700 hover:bg-ivory-200 transition-colors shrink-0"
+            title="Close (ESC)"
           >
-            ESC
+            <X className="w-5 h-5" />
           </button>
         </div>
 

@@ -459,6 +459,7 @@ export const storeApi = {
           rating: Number(r.rating) || 5,
           headline: r.headline || '',
           comment: r.comment || '',
+          image: r.image_url || r.image || null,
           date: r.created_at
             ? new Date(r.created_at).toLocaleDateString('en-IN', {
                 day: 'numeric',
@@ -494,20 +495,32 @@ export const storeApi = {
 
   async submitProductReview(
     slug: string,
-    data: { rating: number; headline?: string; comment: string }
+    data: { rating: number; headline?: string; comment: string; image?: File | null }
   ): Promise<{
     averageRating: number;
     totalReviews: number;
     distribution: Record<string, { stars: number; count: number; percentage: number }>;
     reviews: ProductReview[];
   }> {
-    const res = await apiClient.post<any>(`/catalog/products/${slug}/reviews/`, data);
+    let payload: any = data;
+    let headers: Record<string, string> | undefined = undefined;
+    if (data.image) {
+      const formData = new FormData();
+      formData.append('rating', String(data.rating));
+      if (data.headline) formData.append('headline', data.headline);
+      formData.append('comment', data.comment);
+      formData.append('image', data.image);
+      payload = formData;
+      headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    const res = await apiClient.post<any>(`/catalog/products/${slug}/reviews/`, payload, { headers });
     const reviews: ProductReview[] = (res.data.reviews || []).map((r: any) => ({
       id: String(r.id),
       userName: r.user_name || 'Verified Customer',
       rating: Number(r.rating) || 5,
       headline: r.headline || '',
       comment: r.comment || '',
+      image: r.image_url || r.image || null,
       date: r.created_at
         ? new Date(r.created_at).toLocaleDateString('en-IN', {
             day: 'numeric',

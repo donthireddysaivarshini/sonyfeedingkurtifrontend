@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 interface WishlistContextType {
-  wishlist: string[]; // product IDs
-  toggleWishlist: (productId: string) => void;
-  isInWishlist: (productId: string) => boolean;
+  wishlist: string[]; // unique product IDs
+  toggleWishlist: (productId: string | number) => void;
+  isInWishlist: (productId: string | number) => boolean;
   wishlistCount: number;
 }
 
@@ -15,7 +15,12 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(WISHLIST_KEY);
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        return Array.from(new Set(parsed.map((id) => String(id).trim()))).filter(Boolean);
+      }
+      return [];
     } catch {
       return [];
     }
@@ -29,21 +34,37 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [wishlist]);
 
-  const toggleWishlist = (productId: string) => {
-    setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
-    );
+  const toggleWishlist = (rawId: string | number) => {
+    const productId = String(rawId).trim();
+    if (!productId) return;
+
+    setWishlist((prev) => {
+      const cleanPrev = Array.from(new Set(prev.map((id) => String(id).trim()))).filter(Boolean);
+      if (cleanPrev.includes(productId)) {
+        return cleanPrev.filter((id) => id !== productId);
+      } else {
+        return [...cleanPrev, productId];
+      }
+    });
   };
 
-  const isInWishlist = (productId: string) => wishlist.includes(productId);
+  const isInWishlist = (rawId: string | number): boolean => {
+    const productId = String(rawId).trim();
+    if (!productId) return false;
+    return wishlist.some((id) => String(id).trim() === productId);
+  };
+
+  const uniqueWishlist = useMemo(() => {
+    return Array.from(new Set(wishlist.map((id) => String(id).trim()))).filter(Boolean);
+  }, [wishlist]);
 
   return (
     <WishlistContext.Provider
       value={{
-        wishlist,
+        wishlist: uniqueWishlist,
         toggleWishlist,
         isInWishlist,
-        wishlistCount: wishlist.length,
+        wishlistCount: uniqueWishlist.length,
       }}
     >
       {children}
@@ -58,4 +79,3 @@ export const useWishlist = (): WishlistContextType => {
   }
   return context;
 };
-

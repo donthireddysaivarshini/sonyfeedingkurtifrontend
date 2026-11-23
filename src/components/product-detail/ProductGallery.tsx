@@ -158,10 +158,25 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           </>
         )}
 
-        {/* Image index pill */}
+        {/* Carousel pagination dots indicator */}
         {images.length > 1 && (
-          <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium backdrop-blur-xs">
-            {safeIndex + 1} / {images.length}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm z-10">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleThumbnailClick(idx);
+                }}
+                className={`transition-all rounded-full ${
+                  safeIndex === idx
+                    ? 'w-4 h-1.5 bg-white shadow-xs'
+                    : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
           </div>
         )}
       </div>

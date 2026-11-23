@@ -34,7 +34,6 @@ import { MobileDrawer } from '../components/layout/MobileDrawer';
 import { AuthModal } from '../components/auth/AuthModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
 import { authService } from '../services/authService';
 import { orderService } from '../services/orderService';
 import { Order, DeliveryAddress } from '../types/order';
@@ -89,7 +88,6 @@ export const AccountPage: React.FC = () => {
   const { tab: urlTab } = useParams<{ tab?: string }>();
   const navigate = useNavigate();
   const { user, isAuthenticated, authLoading, logout, updateUser, openAuthModal } = useAuth();
-  const { totalItemsCount } = useCart();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -579,53 +577,6 @@ export const AccountPage: React.FC = () => {
                 {/* 1. OVERVIEW TAB */}
                 {activeTab === 'overview' && (
                   <div className="space-y-6">
-                    {/* Quick Metric Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div
-                        onClick={() => handleTabChange('orders')}
-                        className="bg-white rounded-2xl border border-neutral-stone/40 p-5 shadow-sm cursor-pointer hover:border-brand-maroon/30 transition-all group"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-sans text-neutral-charcoal/60 uppercase tracking-wider font-semibold">Total Orders</span>
-                          <Package className="w-5 h-5 text-brand-maroon group-hover:scale-110 transition-transform" />
-                        </div>
-                        <div className="text-3xl font-serif font-bold text-neutral-charcoal">{orders.length}</div>
-                        <p className="text-xs font-sans text-brand-maroon mt-2 font-medium flex items-center gap-1">
-                          View order history <ArrowRight className="w-3 h-3" />
-                        </p>
-                      </div>
-
-                      <div
-                        onClick={() => handleTabChange('addresses')}
-                        className="bg-white rounded-2xl border border-neutral-stone/40 p-5 shadow-sm cursor-pointer hover:border-brand-maroon/30 transition-all group"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-sans text-neutral-charcoal/60 uppercase tracking-wider font-semibold">Saved Addresses</span>
-                          <MapPin className="w-5 h-5 text-brand-maroon group-hover:scale-110 transition-transform" />
-                        </div>
-                        <div className="text-3xl font-serif font-bold text-neutral-charcoal">
-                          {savedAddresses.length}
-                        </div>
-                        <p className="text-xs font-sans text-brand-maroon mt-2 font-medium flex items-center gap-1">
-                          Manage delivery destinations <ArrowRight className="w-3 h-3" />
-                        </p>
-                      </div>
-
-                      <Link
-                        to="/cart"
-                        className="bg-white rounded-2xl border border-neutral-stone/40 p-5 shadow-sm hover:border-brand-maroon/30 transition-all group block"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-sans text-neutral-charcoal/60 uppercase tracking-wider font-semibold">Shopping Bag</span>
-                          <ShoppingBag className="w-5 h-5 text-brand-maroon group-hover:scale-110 transition-transform" />
-                        </div>
-                        <div className="text-3xl font-serif font-bold text-neutral-charcoal">{totalItemsCount}</div>
-                        <p className="text-xs font-sans text-brand-maroon mt-2 font-medium flex items-center gap-1">
-                          Open shopping bag <ArrowRight className="w-3 h-3" />
-                        </p>
-                      </Link>
-                    </div>
-
                     {/* Recent Order Preview */}
                     <div className="bg-white rounded-2xl border border-neutral-stone/40 p-6 shadow-sm">
                       <div className="flex items-center justify-between pb-4 border-b border-neutral-stone/30 mb-4">
