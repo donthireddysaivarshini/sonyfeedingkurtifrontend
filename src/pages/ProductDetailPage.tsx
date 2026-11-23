@@ -86,6 +86,7 @@ export const ProductDetailPage: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [addSuccessMessage, setAddSuccessMessage] = useState<string | null>(null);
+  const [shareSuccessToast, setShareSuccessToast] = useState(false);
 
   // Helper functions for strict hierarchy derivation
   const getColorsForType = (
@@ -325,8 +326,6 @@ export const ProductDetailPage: React.FC = () => {
     setTimeout(() => setAddSuccessMessage(null), 4000);
     openCart();
   };
-
-  const [shareSuccessToast, setShareSuccessToast] = useState(false);
 
   const handleShare = async () => {
     const shareData = {
