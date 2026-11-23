@@ -48,9 +48,24 @@ export interface DeliveryAddress {
   isDefault?: boolean;
 }
 
-export type OrderStatus = 'placed' | 'confirmed' | 'dispatched' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | 'placed'
+  | 'confirmed'
+  | 'ordered'
+  | 'processing'
+  | 'dispatched'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'requires_attention';
 
-export type PaymentStatus = 'pending' | 'processing' | 'paid' | 'cod_pending' | 'failed';
+export type PaymentStatus =
+  | 'pending'
+  | 'processing'
+  | 'paid'
+  | 'refunded'
+  | 'cod_pending'
+  | 'failed';
 
 export interface OrderItem extends CartItem {
   lineTotal: number;
@@ -73,5 +88,6 @@ export interface Order {
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
   orderStatus: OrderStatus;
+  isCancellable?: boolean;
   notes?: string;
 }

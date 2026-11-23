@@ -60,6 +60,7 @@ export const mapBackendOrder = (fetched: any): Order => ({
   paymentMethod: fetched.payment_method || 'razorpay',
   paymentStatus: (fetched.payment_status || 'completed').toLowerCase() as any,
   orderStatus: (fetched.order_status || 'placed').toLowerCase() as any,
+  isCancellable: fetched.is_cancellable ?? ['ordered', 'processing', 'placed'].includes((fetched.order_status || '').toLowerCase()),
 });
 
 export interface CouponValidationResponse {
@@ -202,6 +203,14 @@ export const orderService = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return res.data;
+  },
+
+  /**
+   * Cancel order prior to shipping (with automated Razorpay refund dispatch if paid)
+   */
+  async cancelOrder(orderNumber: string): Promise<{ message: string; order_status: string; payment_status: string }> {
+    const res = await apiClient.post(`/orders/${orderNumber}/cancel/`);
     return res.data;
   },
 

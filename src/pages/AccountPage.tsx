@@ -25,7 +25,8 @@ import {
   X,
   AlertTriangle,
   RefreshCw,
-  Truck
+  Truck,
+  XCircle
 } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
@@ -137,6 +138,42 @@ export const AccountPage: React.FC = () => {
       setTimeout(() => setInvoiceErrorMsg(null), 4000);
     } finally {
       setDownloadingInvoiceNumber(null);
+    }
+  };
+
+  // Order Cancellation States & Handlers (Available strictly before dispatch)
+  const [orderToCancel, setOrderToCancel] = useState<Order | null>(null);
+  const [isCancellingOrder, setIsCancellingOrder] = useState<boolean>(false);
+  const [cancelOrderSuccessMsg, setCancelOrderSuccessMsg] = useState<string | null>(null);
+  const [cancelOrderErrorMsg, setCancelOrderErrorMsg] = useState<string | null>(null);
+
+  const handleCancelOrder = async () => {
+    if (!orderToCancel) return;
+    setIsCancellingOrder(true);
+    setCancelOrderErrorMsg(null);
+    try {
+      const res = await orderService.cancelOrder(orderToCancel.orderNumber);
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.orderNumber === orderToCancel.orderNumber
+            ? {
+                ...o,
+                orderStatus: 'cancelled',
+                paymentStatus: (res.payment_status?.toLowerCase() === 'refunded' ? 'refunded' : o.paymentStatus) as any,
+                isCancellable: false,
+              }
+            : o
+        )
+      );
+      setCancelOrderSuccessMsg(res.message || 'Order has been cancelled successfully. Any online payment will be refunded automatically.');
+      setOrderToCancel(null);
+      setTimeout(() => setCancelOrderSuccessMsg(null), 6000);
+    } catch (err: any) {
+      setCancelOrderErrorMsg(
+        err?.response?.data?.error || err?.response?.data?.detail || 'Could not cancel order. It may have already dispatched.'
+      );
+    } finally {
+      setIsCancellingOrder(false);
     }
   };
 
@@ -630,6 +667,25 @@ export const AccountPage: React.FC = () => {
                               <span className="font-sans font-bold text-sm text-neutral-charcoal">₹{orders[0].total.toLocaleString('en-IN')}</span>
                             </div>
                             <div className="flex items-center gap-2">
+                              {orders[0].paymentStatus === 'refunded' && (
+                                <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                                  Refunded
+                                </span>
+                              )}
+                              {(orders[0].isCancellable ?? ['ordered', 'processing', 'placed'].includes((orders[0].orderStatus || '').toLowerCase())) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setOrderToCancel(orders[0]);
+                                    setCancelOrderErrorMsg(null);
+                                  }}
+                                  className="inline-flex items-center gap-1 text-[11px] font-sans font-medium px-2.5 py-1 rounded-lg border border-rose-300 bg-white hover:bg-rose-50 text-rose-700 transition-colors cursor-pointer shadow-2xs"
+                                  title="Cancel order before shipment"
+                                >
+                                  <XCircle className="w-3 h-3" />
+                                  <span>Cancel</span>
+                                </button>
+                              )}
                               <button
                                 onClick={() => handleDownloadInvoice(orders[0].orderNumber)}
                                 disabled={downloadingInvoiceNumber === orders[0].orderNumber}
@@ -754,7 +810,12 @@ export const AccountPage: React.FC = () => {
                                   )}
                                 </div>
 
-                                <div>
+                                <div className="flex items-center gap-2">
+                                  {ord.paymentStatus === 'refunded' && (
+                                    <span className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                                      Refunded
+                                    </span>
+                                  )}
                                   {renderOrderStatusBadge(ord.orderStatus)}
                                 </div>
                               </div>
@@ -910,7 +971,21 @@ export const AccountPage: React.FC = () => {
                                 <div className="text-neutral-charcoal/70">
                                   Deliver to: <strong className="text-neutral-charcoal">{ord.shippingAddress.fullName}</strong> ({ord.shippingAddress.city}, {ord.shippingAddress.pincode})
                                 </div>
-                                <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                                  {(ord.isCancellable ?? ['ordered', 'processing', 'placed'].includes((ord.orderStatus || '').toLowerCase())) && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setOrderToCancel(ord);
+                                        setCancelOrderErrorMsg(null);
+                                      }}
+                                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-300 bg-white hover:bg-rose-50 text-rose-700 font-medium transition-colors cursor-pointer shadow-2xs"
+                                      title="Cancel this order prior to warehouse dispatch"
+                                    >
+                                      <XCircle className="w-3.5 h-3.5" />
+                                      <span>Cancel Order</span>
+                                    </button>
+                                  )}
                                   <button
                                     onClick={() => handleDownloadInvoice(ord.orderNumber)}
                                     disabled={downloadingInvoiceNumber === ord.orderNumber}
@@ -1680,6 +1755,85 @@ export const AccountPage: React.FC = () => {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Order Cancellation Confirmation Modal */}
+        {orderToCancel && (
+          <div
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+            onClick={() => !isCancellingOrder && setOrderToCancel(null)}
+          >
+            <div
+              className="relative w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl border border-neutral-stone/30 space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-3.5">
+                <div className="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-serif font-bold text-lg text-neutral-charcoal">
+                    Cancel Order #{orderToCancel.orderNumber}?
+                  </h3>
+                  <p className="text-xs font-sans text-neutral-charcoal/70 mt-1 leading-relaxed">
+                    Are you sure you want to cancel this order?
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3.5 bg-neutral-stone/15 rounded-xl text-xs font-sans text-neutral-charcoal/80 space-y-1.5 border border-neutral-stone/20">
+                <p className="font-semibold text-neutral-charcoal">Refund & Cancellation Policy:</p>
+                <ul className="list-disc pl-4 space-y-1 text-neutral-charcoal/75">
+                  <li>Cancellation is permitted <strong>strictly before dispatch</strong>.</li>
+                  <li>If paid online via Razorpay, an <strong>automated full refund</strong> of ₹{orderToCancel.total.toLocaleString('en-IN')} will be initiated directly to your payment source.</li>
+                  <li>Reserved inventory is immediately restored.</li>
+                </ul>
+              </div>
+
+              {cancelOrderErrorMsg && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 font-medium">
+                  {cancelOrderErrorMsg}
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setOrderToCancel(null)}
+                  disabled={isCancellingOrder}
+                  className="px-4 py-2 rounded-xl border border-neutral-stone/30 bg-white hover:bg-neutral-stone/10 text-neutral-charcoal font-medium text-xs transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  Keep Order
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelOrder}
+                  disabled={isCancellingOrder}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+                >
+                  {isCancellingOrder ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Cancelling...</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-3.5 h-3.5" />
+                      <span>Confirm Cancellation</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cancellation Success Toast */}
+        {cancelOrderSuccessMsg && (
+          <div className="fixed bottom-6 right-6 z-50 bg-emerald-900 text-white text-xs font-sans font-medium px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 border border-emerald-700">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{cancelOrderSuccessMsg}</span>
           </div>
         )}
       </main>
