@@ -2,22 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CATEGORIES } from '../../data/categories';
 import { Category } from '../../types/product';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface CategorySectionProps {
+  categories?: Category[];
   onSelectCategory?: (category: Category) => void;
   activeCategorySlug?: string | null;
 }
 
 export const CategorySection: React.FC<CategorySectionProps> = ({
+  categories: propCategories,
   onSelectCategory,
   activeCategorySlug,
 }) => {
+  const categories = propCategories && propCategories.length > 0 ? propCategories : CATEGORIES;
   return (
     <section aria-label="Browse Categories" className="bg-ivory-100/80 py-3 md:py-6 border-b border-ivory-300">
       <div className="mx-auto max-w-7xl px-3 sm:px-6">
         {/* Responsive Layout: 3 columns per row on mobile (large touch targets), centered flex on desktop */}
         <div className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-4 sm:flex sm:flex-wrap sm:justify-center sm:gap-6 md:gap-8">
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isActive = activeCategorySlug === cat.slug;
             return (
               <Link
@@ -41,7 +45,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                 >
                   <img
                     alt={cat.name}
-                    src={cat.image}
+                    src={getImageUrl(cat.image)}
                     className="h-full w-full rounded-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
                   />

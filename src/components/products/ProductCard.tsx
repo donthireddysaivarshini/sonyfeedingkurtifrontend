@@ -5,6 +5,7 @@ import { Product, ProductColor } from '../../types/product';
 import { useWishlist } from '../../context/WishlistContext';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { RatingBadge } from '../common/RatingBadge';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface ProductCardProps {
   product: Product;
@@ -44,7 +45,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Image Container with 3:4 portrait ratio */}
       <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 cursor-pointer">
         <img
-          src={currentImage}
+          src={getImageUrl(currentImage)}
           alt={product.title}
           className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
           loading="lazy"

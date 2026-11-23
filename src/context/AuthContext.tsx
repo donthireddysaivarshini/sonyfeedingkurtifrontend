@@ -1,54 +1,66 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { UserProfile } from '../types/auth';
+import { authService } from '../services/authService';
+import { tokenStorage } from '../services/apiClient';
 
 interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isAuthModalOpen: boolean;
+  authLoading: boolean;
   returnUrl: string | null;
   openAuthModal: (callback?: () => void, returnPath?: string) => void;
   closeAuthModal: () => void;
-  loginWithGoogle: () => Promise<{ success: boolean; message: string }>;
-  devLogin: (customProfile?: Partial<UserProfile>) => void;
+  loginWithGoogle: (credentialOrCode: string, isCode?: boolean) => Promise<{ success: boolean; message?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  signup: (data: { name: string; email: string; phone?: string; password: string }) => Promise<{ success: boolean; message?: string }>;
   updateUser: (updated: Partial<UserProfile>) => void;
   logout: () => void;
   setReturnUrl: (url: string | null) => void;
+  // Backward compatibility stub (deprecated)
+  devLogin?: (customProfile?: Partial<UserProfile>) => void;
 }
-
-const AUTH_STORAGE_KEY = 'sony_feeding_kurtis_auth_user';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load session from storage if previously authenticated in demo session
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    try {
-      const saved = sessionStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(AUTH_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
-
+  const [user, setUser] = useState<UserProfile | null>(() => tokenStorage.getUser());
+  const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [postAuthCallback, setPostAuthCallback] = useState<(() => void) | null>(null);
   const [returnUrl, setReturnUrl] = useState<string | null>(null);
 
+  // Synchronize profile on initial mount if token exists
   useEffect(() => {
-    try {
-      if (user) {
-        sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+    const initAuth = async () => {
+      const token = tokenStorage.getAccess();
+      if (token) {
+        try {
+          const profile = await authService.fetchProfile();
+          setUser(profile);
+        } catch {
+          // Token expired or invalid, keep existing user or clear
+          const localUser = tokenStorage.getUser();
+          setUser(localUser);
+        }
       } else {
-        sessionStorage.removeItem(AUTH_STORAGE_KEY);
-        localStorage.removeItem(AUTH_STORAGE_KEY);
+        setUser(null);
       }
-    } catch {
-      // storage unavailable
-    }
-  }, [user]);
+      setAuthLoading(false);
+    };
 
-  const openAuthModal = (callback?: () => void, returnPath?: string) => {
+    initAuth();
+
+    const handleSessionExpired = () => {
+      setUser(null);
+      tokenStorage.clear();
+    };
+
+    window.addEventListener('auth:session-expired', handleSessionExpired);
+    return () => window.removeEventListener('auth:session-expired', handleSessionExpired);
+  }, []);
+
+  const openAuthModal = useCallback((callback?: () => void, returnPath?: string) => {
     if (callback) {
       setPostAuthCallback(() => callback);
     } else {
@@ -58,56 +70,90 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setReturnUrl(returnPath);
     }
     setIsAuthModalOpen(true);
-  };
+  }, []);
 
-  const closeAuthModal = () => {
+  const closeAuthModal = useCallback(() => {
     setIsAuthModalOpen(false);
     setPostAuthCallback(null);
-  };
+  }, []);
 
-  /**
-   * Google OAuth Entrypoint (Stage 5 Integration Target)
-   * 
-   * When Django backend is connected, this redirects to:
-   * GET /api/auth/google/ -> Google Accounts -> /api/auth/google/callback/
-   */
-  const loginWithGoogle = async (): Promise<{ success: boolean; message: string }> => {
-    // In current frontend-only phase, return clean status without fabricating fake OAuth tokens
-    return {
-      success: false,
-      message: 'Google OAuth token exchange requires Django backend with client ID and secret configured. Backend integration scheduled for Stage 5.',
-    };
-  };
-
-  /**
-   * Development Mode Authentication for Interface Review & Testing
-   * 
-   * Transparently signs in with a sample customer profile so reviewers
-   * can test the checkout, address forms, and account dashboards without fake OAuth.
-   */
-  const devLogin = (customProfile?: Partial<UserProfile>) => {
-    // Restricted strictly to development builds only
-    if (!import.meta.env.DEV) {
-      console.warn('devLogin is restricted to development builds only.');
-      return;
-    }
-
-    const sampleUser: UserProfile = {
-      id: 'cust-demo-01',
-      name: customProfile?.name || 'Pooja Sharma',
-      email: customProfile?.email || 'pooja.sharma@example.com',
-      phone: customProfile?.phone || '9876543210',
-      createdAt: '2026-11-01',
-    };
-
-    setUser(sampleUser);
+  const executePostAuth = useCallback(() => {
     setIsAuthModalOpen(false);
-
     if (postAuthCallback) {
       setTimeout(() => {
         postAuthCallback();
         setPostAuthCallback(null);
-      }, 150);
+      }, 100);
+    }
+  }, [postAuthCallback]);
+
+function extractAuthErrorMessage(err: any, defaultMsg: string): string {
+  if (typeof err === 'string') return err;
+  if (err?.error) return String(err.error);
+  if (err?.detail) return String(err.detail);
+  if (err?.response?.data?.error) return String(err.response.data.error);
+  if (err?.response?.data?.detail) return String(err.response.data.detail);
+  if (err?.email) return Array.isArray(err.email) ? String(err.email[0]) : String(err.email);
+  if (err?.password) return Array.isArray(err.password) ? String(err.password[0]) : String(err.password);
+  if (err?.non_field_errors) return Array.isArray(err.non_field_errors) ? String(err.non_field_errors[0]) : String(err.non_field_errors);
+  if (err?.message && !err.message.includes('status code')) return String(err.message);
+  return defaultMsg;
+}
+
+  /**
+   * Google OAuth login
+   */
+  const loginWithGoogle = async (
+    credentialOrCode: string,
+    isCode: boolean = false
+  ): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const payload = isCode ? { code: credentialOrCode } : { id_token: credentialOrCode };
+      const profile = await authService.googleLogin(payload);
+      setUser(profile);
+      executePostAuth();
+      return { success: true };
+    } catch (err: any) {
+      const msg = extractAuthErrorMessage(err, 'Google sign-in could not be completed. Please try again.');
+      return { success: false, message: msg };
+    }
+  };
+
+  /**
+   * Email & Password login
+   */
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const profile = await authService.login(email, password);
+      setUser(profile);
+      executePostAuth();
+      return { success: true };
+    } catch (err: any) {
+      const msg = extractAuthErrorMessage(err, 'Invalid email or password. Please try again.');
+      return { success: false, message: msg };
+    }
+  };
+
+  /**
+   * Customer registration
+   */
+  const signup = async (data: {
+    name: string;
+    email: string;
+    phone?: string;
+    password: string;
+  }): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const profile = await authService.signup(data);
+      setUser(profile);
+      executePostAuth();
+      return { success: true };
+    } catch (err: any) {
+      const msg = extractAuthErrorMessage(err, 'Registration failed. Please verify your details.');
+      return { success: false, message: msg };
     }
   };
 
@@ -116,8 +162,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    authService.logout();
     setUser(null);
-    sessionStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
   return (
@@ -126,11 +172,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: Boolean(user),
         isAuthModalOpen,
+        authLoading,
         returnUrl,
         openAuthModal,
         closeAuthModal,
         loginWithGoogle,
-        devLogin,
+        login,
+        signup,
         updateUser,
         logout,
         setReturnUrl,
@@ -148,4 +196,5 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
+
 export type { UserProfile };

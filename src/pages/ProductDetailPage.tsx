@@ -11,14 +11,14 @@ import {
   ArrowRight,
   ChevronDown,
   Layers,
-  Shirt
+  Shirt,
+  Share2
 } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { CartDrawer } from '../components/layout/CartDrawer';
 import { SearchModal } from '../components/layout/SearchModal';
 import { MobileDrawer } from '../components/layout/MobileDrawer';
-import { CheckoutPreviewModal } from '../components/checkout/CheckoutPreviewModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { PriceDisplay } from '../components/common/PriceDisplay';
 import { RatingBadge } from '../components/common/RatingBadge';
@@ -29,7 +29,9 @@ import { QuickSelectModal } from '../components/products/QuickSelectModal';
 import { FeedingOptionSelector } from '../components/products/FeedingOptionSelector';
 import { SITE_CONFIG } from '../config/siteConfig';
 import { PRODUCTS } from '../data/products';
-import { Product, ClothingType, ProductColor, ProductSize } from '../types/product';
+import { getImageUrl } from '../utils/imageUrl';
+import { Product, ClothingType, ProductColor, ProductSize, ProductVariant, FeedingConfiguration } from '../types/product';
+import { storeApi } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { CartItem } from '../types/cart';
@@ -44,7 +46,6 @@ export const ProductDetailPage: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
-  const [isCheckoutPreviewOpen, setIsCheckoutPreviewOpen] = useState(false);
   const [quickSelectProduct, setQuickSelectProduct] = useState<Product | null>(null);
 
   // Accordion section states
@@ -59,13 +60,26 @@ export const ProductDetailPage: React.FC = () => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Find matching product by slug
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  // Find matching product by slug (initialized from local cache if available, enriched from backend)
+  const [product, setProduct] = useState<Product | null>(() => PRODUCTS.find((p) => p.slug === slug) || null);
 
-  // Variant Selection Order State:
-  // 1. Feeding Type (null if 'both' to require explicit selection; 'Feeding' if 'feeding-only'; null if 'none')
-  // 2. Colour
-  // 3. Size
+  useEffect(() => {
+    if (!slug) return;
+    let isMounted = true;
+    storeApi.getProductBySlug(slug).then((fetched) => {
+      if (isMounted && fetched) {
+        setProduct(fetched);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+// Variant Selection Order State:
+  // 1. Feeding Type (Defaults to 'Feeding' if 'both' or 'feeding-only')
+  // 2. Colour (Strictly filtered by valid variants for current Feeding Type)
+  // 3. Size (Strictly filtered by valid variants for current Type & Colour)
   // 4. Quantity
   const [selectedType, setSelectedType] = useState<ClothingType | null>(null);
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
@@ -73,32 +87,98 @@ export const ProductDetailPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [addSuccessMessage, setAddSuccessMessage] = useState<string | null>(null);
 
+  // Helper functions for strict hierarchy derivation
+  const getColorsForType = (
+    currentProduct: Product,
+    clothingType: ClothingType | null
+  ): ProductColor[] => {
+    const map = new Map<string, ProductColor>();
+
+    // 1. From variants for this clothing type
+    (currentProduct.variants || []).forEach((v) => {
+      const typeMatch =
+        currentProduct.feedingConfig === 'none' ||
+        !clothingType ||
+        v.clothingType === clothingType;
+      if (typeMatch && v.color) {
+        const cid = String(v.color.id);
+        if (!map.has(cid)) {
+          map.set(cid, v.color);
+        }
+      }
+    });
+
+    // 2. From gallery images matching this clothing type
+    (currentProduct.galleryImages || []).forEach((g) => {
+      const typeMatch =
+        currentProduct.feedingConfig === 'none' ||
+        !clothingType ||
+        !g.clothingType ||
+        g.clothingType === 'Standard' ||
+        g.clothingType === clothingType;
+      if (typeMatch && g.colorId && g.colorName) {
+        const cid = String(g.colorId);
+        if (!map.has(cid)) {
+          map.set(cid, {
+            id: cid,
+            name: g.colorName,
+            hex: g.colorHex || '#552058',
+          });
+        }
+      }
+    });
+
+    return Array.from(map.values());
+  };
+
+  const getSizesForSelection = (
+    variants: ProductVariant[],
+    feedingConfig: FeedingConfiguration,
+    clothingType: ClothingType | null,
+    color: ProductColor | null
+  ): { size: ProductSize; inStock: boolean; stock: number; variant: ProductVariant }[] => {
+    if (!color) return [];
+    const matching = variants.filter((v) => {
+      const typeMatch =
+        feedingConfig === 'none' ||
+        !clothingType ||
+        v.clothingType === clothingType;
+      const colorMatch = String(v.color.id) === String(color.id);
+      return typeMatch && colorMatch;
+    });
+
+    return matching.map((v) => ({
+      size: v.size,
+      stock: v.stock,
+      inStock: v.stock > 0,
+      variant: v,
+    }));
+  };
+
   // Initialize or reset selections when product changes
   useEffect(() => {
     if (product) {
-      if (product.feedingConfig === 'both') {
-        setSelectedType(null); // REQUIRE explicit user choice
-      } else if (product.feedingConfig === 'feeding-only') {
-        setSelectedType('Feeding'); // Dedicated feeding wear
-      } else {
-        setSelectedType(null); // Standard product
+      // 1. Default clothing type: 'Feeding' by default if supported/both, else 'Non-Feeding', else null
+      let defaultType: ClothingType | null = null;
+      if (product.feedingConfig === 'both' || product.feedingConfig === 'feeding-only') {
+        defaultType = 'Feeding';
+      } else if (product.supportedClothingTypes?.includes('Feeding')) {
+        defaultType = 'Feeding';
+      } else if (product.supportedClothingTypes?.includes('Non-Feeding')) {
+        defaultType = 'Non-Feeding';
       }
+      setSelectedType(defaultType);
 
-      const initialColor = product.availableColors[0] || null;
+      // 2. Default color: first valid color for this clothing type
+      const validColors = getColorsForType(product, defaultType);
+      const initialColor = validColors[0] || null;
       setSelectedColor(initialColor);
 
-      // Find first available in-stock size for this initial configuration
+      // 3. Find first available in-stock size for this initial configuration
       if (initialColor) {
-        const firstAvailable = product.availableSizes.find((size) => {
-          return product.variants.some((v) => {
-            const typeMatch =
-              product.feedingConfig === 'none' ||
-              (product.feedingConfig === 'feeding-only' && v.clothingType === 'Feeding') ||
-              product.feedingConfig === 'both';
-            return typeMatch && v.color.id === initialColor.id && v.size === size && v.stock > 0;
-          });
-        });
-        setSelectedSize(firstAvailable || product.availableSizes[0] || null);
+        const validSizes = getSizesForSelection(product.variants, product.feedingConfig, defaultType, initialColor);
+        const inStockSize = validSizes.find((s) => s.inStock)?.size;
+        setSelectedSize(inStockSize || validSizes[0]?.size || null);
       } else {
         setSelectedSize(null);
       }
@@ -107,6 +187,54 @@ export const ProductDetailPage: React.FC = () => {
       setAddSuccessMessage(null);
     }
   }, [product]);
+
+  // Derived available colors strictly based on current clothing type
+  const availableColorsForType = React.useMemo(() => {
+    if (!product) return [];
+    return getColorsForType(product, selectedType);
+  }, [product, selectedType]);
+
+  // Derived available sizes strictly based on current clothing type and selected color
+  const availableSizesForSelection = React.useMemo(() => {
+    if (!product || !selectedColor) return [];
+    return getSizesForSelection(product.variants, product.feedingConfig, selectedType, selectedColor);
+  }, [product, selectedType, selectedColor]);
+
+  // Handle color change with smart size auto-selection
+  const handleColorChange = (newColor: ProductColor) => {
+    setSelectedColor(newColor);
+    if (!product) return;
+
+    const newSizes = getSizesForSelection(product.variants, product.feedingConfig, selectedType, newColor);
+    const currentSizeMatch = newSizes.find((s) => s.size === selectedSize && s.inStock);
+    if (!currentSizeMatch) {
+      const firstInStock = newSizes.find((s) => s.inStock);
+      setSelectedSize(firstInStock?.size || newSizes[0]?.size || null);
+    }
+  };
+
+  // Handle clothing type change with color & size re-synchronization
+  const handleTypeChange = (newType: ClothingType) => {
+    setSelectedType(newType);
+    if (!product) return;
+
+    // Check if current color exists in new clothing type
+    const newColors = getColorsForType(product, newType);
+    let nextColor = selectedColor;
+    if (!selectedColor || !newColors.some((c) => String(c.id) === String(selectedColor.id))) {
+      nextColor = newColors[0] || null;
+      setSelectedColor(nextColor);
+    }
+
+    // Now re-calculate valid sizes for (newType, nextColor)
+    if (nextColor) {
+      const newSizes = getSizesForSelection(product.variants, product.feedingConfig, newType, nextColor);
+      const inStockSize = newSizes.find((s) => s.inStock)?.size;
+      setSelectedSize(inStockSize || newSizes[0]?.size || null);
+    } else {
+      setSelectedSize(null);
+    }
+  };
 
   if (!product) {
     return (
@@ -140,23 +268,12 @@ export const ProductDetailPage: React.FC = () => {
   const requiresExplicitFeedingChoice = product.feedingConfig === 'both';
   const hasSelectedFeedingChoice = !requiresExplicitFeedingChoice || selectedType !== null;
 
-  // Check if a size is valid and in-stock for current (selectedType, selectedColor)
-  const isSizeValidAndInStock = (size: ProductSize): boolean => {
-    if (!selectedColor) return false;
-    return product.variants.some((v) => {
-      const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-      const colorMatch = v.color.id === selectedColor.id;
-      const sizeMatch = v.size === size;
-      return typeMatch && colorMatch && sizeMatch && v.stock > 0;
-    });
-  };
-
   // Find exact matching variant
   const currentVariant =
     selectedColor && selectedSize
       ? product.variants.find((v) => {
           const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-          const colorMatch = v.color.id === selectedColor.id;
+          const colorMatch = String(v.color.id) === String(selectedColor.id);
           const sizeMatch = v.size === selectedSize;
           return typeMatch && colorMatch && sizeMatch;
         })
@@ -164,56 +281,6 @@ export const ProductDetailPage: React.FC = () => {
 
   const isCurrentVariantInStock = Boolean(currentVariant && currentVariant.stock > 0);
   const availableStock = currentVariant ? currentVariant.stock : 0;
-
-  // Handle color change with size re-validation
-  const handleColorChange = (newColor: ProductColor) => {
-    setSelectedColor(newColor);
-    if (
-      selectedSize &&
-      !product.variants.some((v) => {
-        const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-        return typeMatch && v.color.id === newColor.id && v.size === selectedSize && v.stock > 0;
-      })
-    ) {
-      // Find new available size
-      const validSize = product.availableSizes.find((size) => {
-        return product.variants.some((v) => {
-          const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-          return typeMatch && v.color.id === newColor.id && v.size === size && v.stock > 0;
-        });
-      });
-      setSelectedSize(validSize || null);
-    }
-  };
-
-  // Handle feeding type change with size re-validation
-  const handleTypeChange = (newType: ClothingType) => {
-    setSelectedType(newType);
-    if (
-      selectedColor &&
-      selectedSize &&
-      !product.variants.some((v) => {
-        return (
-          v.clothingType === newType &&
-          v.color.id === selectedColor.id &&
-          v.size === selectedSize &&
-          v.stock > 0
-        );
-      })
-    ) {
-      const validSize = product.availableSizes.find((size) => {
-        return product.variants.some((v) => {
-          return (
-            v.clothingType === newType &&
-            v.color.id === selectedColor.id &&
-            v.size === size &&
-            v.stock > 0
-          );
-        });
-      });
-      setSelectedSize(validSize || null);
-    }
-  };
 
   const buildCartItem = (): CartItem | null => {
     if (!hasSelectedFeedingChoice || !selectedColor || !selectedSize || !currentVariant || !isCurrentVariantInStock) {
@@ -235,7 +302,7 @@ export const ProductDetailPage: React.FC = () => {
       productId: product.id,
       productTitle: product.title,
       productSlug: product.slug,
-      productImage: product.images[0],
+      productImage: getImageUrl(product.images[0]),
       category: product.category,
       variantId: currentVariant.id,
       sku: currentVariant.sku,
@@ -259,12 +326,40 @@ export const ProductDetailPage: React.FC = () => {
     openCart();
   };
 
+  const [shareSuccessToast, setShareSuccessToast] = useState(false);
+
+  const handleShare = async () => {
+    const shareData = {
+      title: product.title,
+      text: `Take a look at "${product.title}" on Sony Collections!`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (err: any) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareSuccessToast(true);
+      setTimeout(() => setShareSuccessToast(false), 3000);
+    } catch {
+      // fallback if clipboard fails
+    }
+  };
+
   const handleBuyNow = () => {
     const item = buildCartItem();
     if (!item) return;
 
-    addToCart(item);
-    openCart();
+    // Direct Buy Now Express Checkout: does not pollute user's regular bag
+    sessionStorage.setItem('sony_buy_now_item', JSON.stringify(item));
+    navigate('/checkout?mode=buy_now');
   };
 
   // Related products from same category or relevant collection
@@ -297,7 +392,17 @@ export const ProductDetailPage: React.FC = () => {
           {/* Left Column: Product Gallery (5 cols on lg) */}
           <div className="lg:col-span-6 xl:col-span-5">
             <div className="sticky top-24">
-              <ProductGallery product={product} />
+              <ProductGallery
+                product={product}
+                activeColor={selectedColor}
+                activeClothingType={selectedType}
+                onColorSelect={(colorId) => {
+                  const match = availableColorsForType.find((c) => String(c.id) === String(colorId));
+                  if (match) {
+                    handleColorChange(match);
+                  }
+                }}
+              />
             </div>
           </div>
 
@@ -390,7 +495,7 @@ export const ProductDetailPage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5">
-                  {product.availableColors.map((color) => {
+                  {availableColorsForType.map((color) => {
                     const isSelected = selectedColor.id === color.id;
                     return (
                       <button
@@ -439,9 +544,8 @@ export const ProductDetailPage: React.FC = () => {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {product.availableSizes.map((size) => {
+                {availableSizesForSelection.map(({ size, inStock }) => {
                   const isSelected = selectedSize === size;
-                  const inStock = isSizeValidAndInStock(size);
 
                   return (
                     <button
@@ -507,14 +611,6 @@ export const ProductDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Validation Notice if Feeding choice is required */}
-            {!hasSelectedFeedingChoice && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                <span>Please select either <strong>Feeding-Friendly</strong> or <strong>Non-Feeding</strong> above to proceed.</span>
-              </div>
-            )}
-
             {/* Success Toast */}
             {addSuccessMessage && (
               <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between animate-slide-up">
@@ -536,7 +632,7 @@ export const ProductDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={!hasSelectedFeedingChoice || !isCurrentVariantInStock}
+                disabled={!isCurrentVariantInStock}
                 className="flex-1 py-3.5 px-6 rounded-full bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs sm:text-sm shadow-md transition-all hover:shadow-lg disabled:bg-ivory-300 disabled:text-ink-muted disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
@@ -546,7 +642,7 @@ export const ProductDetailPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleBuyNow}
-                disabled={!hasSelectedFeedingChoice || !isCurrentVariantInStock}
+                disabled={!isCurrentVariantInStock}
                 className="flex-1 py-3.5 px-6 rounded-full bg-brand-900 hover:bg-ink-primary text-white font-semibold text-xs sm:text-sm shadow-md transition-all hover:shadow-lg disabled:bg-ivory-300 disabled:text-ink-muted disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <span>Buy Now</span>
@@ -566,6 +662,16 @@ export const ProductDetailPage: React.FC = () => {
               >
                 <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
               </button>
+
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label="Share product"
+                className="p-3.5 rounded-full border border-ivory-300 bg-white text-ink-secondary hover:text-brand-800 hover:bg-brand-50 hover:border-brand-300 transition-all flex items-center justify-center cursor-pointer shadow-xs"
+                title="Share this product (Myntra/Amazon style)"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
             </div>
 
             {/* Product Details & Accordions (Moved cleanly below Buy Actions, Myntra-style) */}
@@ -576,7 +682,7 @@ export const ProductDetailPage: React.FC = () => {
                   <Shirt className="w-4 h-4 text-brand-800" />
                   <span>Product Details</span>
                 </div>
-                <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed whitespace-pre-line">
                   {product.description}
                 </p>
                 {product.feedingConfig === 'none' && (
@@ -800,9 +906,7 @@ export const ProductDetailPage: React.FC = () => {
       />
 
       {/* Cart Drawer */}
-      <CartDrawer
-        onProceedToCheckout={() => setIsCheckoutPreviewOpen(true)}
-      />
+      <CartDrawer />
 
       {/* Size Guide Modal */}
       <SizeGuideModal
@@ -827,11 +931,13 @@ export const ProductDetailPage: React.FC = () => {
         onOpenCart={openCart}
       />
 
-      {/* Checkout Preview Modal */}
-      <CheckoutPreviewModal
-        isOpen={isCheckoutPreviewOpen}
-        onClose={() => setIsCheckoutPreviewOpen(false)}
-      />
+      {/* Share Toast */}
+      {shareSuccessToast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white text-xs font-sans font-medium px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+          <Check className="w-4 h-4 text-emerald-400" />
+          <span>Product link copied to clipboard!</span>
+        </div>
+      )}
     </div>
   );
 };

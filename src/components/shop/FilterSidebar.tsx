@@ -5,6 +5,7 @@ import { CATEGORIES } from '../../data/categories';
 
 export interface FilterState {
   category: string | null;
+  section?: string | null;
   feedingType: 'All' | 'Feeding' | 'Non-Feeding';
   handstockOnly: boolean;
   colors: string[];
@@ -18,6 +19,7 @@ export const INITIAL_PRICE_BOUNDS: [number, number] = [800, 3000];
 
 export const INITIAL_FILTERS: FilterState = {
   category: null,
+  section: null,
   feedingType: 'All',
   handstockOnly: false,
   colors: [],

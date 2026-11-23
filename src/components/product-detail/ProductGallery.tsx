@@ -1,18 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Sparkles, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Product } from '../../types/product';
+import { Product, ProductColor, ClothingType } from '../../types/product';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface ProductGalleryProps {
   product: Product;
+  activeColor?: ProductColor | null;
+  activeClothingType?: ClothingType | null;
+  onColorSelect?: (colorId: string) => void;
 }
 
-export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
+export const ProductGallery: React.FC<ProductGalleryProps> = ({
+  product,
+  activeColor,
+  activeClothingType,
+  onColorSelect,
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
 
-  const images = product.images.length > 0 ? product.images : [
-    '/images/dresses/mauve-anarkali.jpg'
-  ];
+  // Derive filtered images strictly adhering to Clothing Type (Option B - Myntra Fashion Model)
+  // Shows all photos of active clothing type, while activeColor focuses the corresponding photo.
+  const displayImages = useMemo(() => {
+    const rawList = product.galleryImages || [];
+
+    // Fallback if galleryImages is not populated
+    if (rawList.length === 0) {
+      return product.images.length > 0
+        ? product.images.map((url, idx) => ({ id: idx, url, colorId: null, colorHex: null, colorName: null }))
+        : [{ id: 0, url: '/images/dresses/mauve-anarkali.jpg', colorId: null, colorHex: null, colorName: null }];
+    }
+
+    // 1. Strict Clothing Type Filtering:
+    // If activeClothingType is Non-Feeding, ONLY show Non-Feeding (and neutral/standard) images!
+    // If activeClothingType is Feeding, ONLY show Feeding (and neutral/standard) images!
+    let typeMatches = rawList.filter((g) => {
+      if (!activeClothingType || product.feedingConfig === 'none') return true;
+      if (!g.clothingType || g.clothingType === 'Standard') return true;
+      return g.clothingType.toLowerCase() === activeClothingType.toLowerCase();
+    });
+
+    // Fallback to neutral/standard images if no images exist for this specific clothing type
+    if (typeMatches.length === 0) {
+      typeMatches = rawList.filter((g) => !g.clothingType || g.clothingType === 'Standard');
+    }
+
+    // If still empty, fallback safely
+    if (typeMatches.length === 0) {
+      typeMatches = rawList;
+    }
+
+    return typeMatches;
+  }, [product.galleryImages, product.images, product.feedingConfig, activeClothingType]);
+
+  // Focus matching image whenever activeColor or activeClothingType changes
+  useEffect(() => {
+    if (activeColor && displayImages.length > 0) {
+      const matchIdx = displayImages.findIndex(
+        (g) => g.colorId && String(g.colorId) === String(activeColor.id)
+      );
+      if (matchIdx !== -1) {
+        setSelectedIndex(matchIdx);
+      } else {
+        setSelectedIndex(0);
+      }
+    } else {
+      setSelectedIndex(0);
+    }
+  }, [activeColor?.id, activeClothingType, displayImages]);
+
+  const images = displayImages.map((g) => g.url);
+  const safeIndex = selectedIndex < images.length ? selectedIndex : 0;
+  const currentImageUrl = images[safeIndex] || '/images/dresses/mauve-anarkali.jpg';
 
   const handleNext = () => {
     setSelectedIndex((prev) => (prev + 1) % images.length);
@@ -22,13 +81,21 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
     setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const handleThumbnailClick = (idx: number) => {
+    setSelectedIndex(idx);
+    const clicked = displayImages[idx];
+    if (clicked && clicked.colorId && onColorSelect) {
+      onColorSelect(String(clicked.colorId));
+    }
+  };
+
   return (
     <div className="space-y-3 sm:space-y-4">
       {/* Main Image Frame (3:4 ratio) */}
       <div className="relative aspect-[3/4] bg-ivory-100 rounded-2xl overflow-hidden border border-ivory-300 group shadow-card">
         <img
-          src={images[selectedIndex]}
-          alt={`${product.title} - View ${selectedIndex + 1}`}
+          src={getImageUrl(currentImageUrl)}
+          alt={`${product.title} - View ${safeIndex + 1}`}
           className="w-full h-full object-cover object-top transition-transform duration-500 ease-out cursor-zoom-in"
           onClick={() => setIsZoomModalOpen(true)}
         />
@@ -94,30 +161,37 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
         {/* Image index pill */}
         {images.length > 1 && (
           <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-black/60 text-white text-[10px] font-medium backdrop-blur-xs">
-            {selectedIndex + 1} / {images.length}
+            {safeIndex + 1} / {images.length}
           </div>
         )}
       </div>
 
-      {/* Thumbnails Strip */}
-      {images.length > 1 && (
+      {/* Thumbnails Strip — Shows all photos for active clothing type (Myntra style) */}
+      {displayImages.length > 1 && (
         <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1">
-          {images.map((img, idx) => (
+          {displayImages.map((g, idx) => (
             <button
               key={idx}
-              onClick={() => setSelectedIndex(idx)}
+              onClick={() => handleThumbnailClick(idx)}
               aria-label={`View image ${idx + 1}`}
               className={`relative w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all shrink-0 bg-ivory-100 ${
-                selectedIndex === idx
+                safeIndex === idx
                   ? 'border-brand-700 ring-2 ring-brand-700/20 shadow-xs'
                   : 'border-ivory-300 opacity-70 hover:opacity-100'
               }`}
             >
               <img
-                src={img}
+                src={getImageUrl(g.url)}
                 alt={`${product.title} thumbnail ${idx + 1}`}
                 className="w-full h-full object-cover object-top"
               />
+              {g.colorHex && (
+                <span
+                  className="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full border border-white shadow-xs"
+                  style={{ backgroundColor: g.colorHex }}
+                  title={g.colorName || undefined}
+                />
+              )}
             </button>
           ))}
         </div>
@@ -131,13 +205,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
         >
           <div className="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
             <img
-              src={images[selectedIndex]}
+              src={getImageUrl(currentImageUrl)}
               alt={product.title}
               className="max-h-[82vh] w-auto object-contain rounded-xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
             <p className="text-ivory-200 text-xs mt-3 text-center">
-              {product.title} • {selectedIndex + 1} of {images.length} (Tap anywhere outside to close)
+              {product.title} • {safeIndex + 1} of {images.length} (Tap anywhere outside to close)
             </p>
           </div>
         </div>

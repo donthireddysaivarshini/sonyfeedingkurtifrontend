@@ -116,3 +116,51 @@ h1, h2, h3, h4, .font-serif, .font-display {
 .animate-marquee-reverse:hover {
   animation-play-state: paused;
 }
+
+/* Print Optimization for Clean A4 Order Receipts / Invoices */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 15mm 10mm 15mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force hide header, footer, interactive controls, drawers, modals */
+  header,
+  footer,
+  nav,
+  aside,
+  .no-print,
+  button:not(.allow-print),
+  .print-hidden {
+    display: none !important;
+  }
+
+  /* Prevent page breaks inside tables and receipts */
+  .print-break-inside-avoid,
+  table,
+  tr,
+  img {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Remove all shadows, sticky headers, fixed bars */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+}

@@ -31,9 +31,13 @@ export interface DjangoProductResponse {
   description: string;
   fabric: string;
   care_instructions: string;
+  feeding_config?: 'both' | 'feeding-only' | 'none';
   is_new_arrival: boolean;
   is_best_seller: boolean;
   is_handstock?: boolean;
+  is_feeding_collection?: boolean;
+  is_sarees_collection?: boolean;
+  is_kidswear_collection?: boolean;
   images: { id: number; image: string; order: number }[];
   variants: DjangoProductVariantResponse[];
 }

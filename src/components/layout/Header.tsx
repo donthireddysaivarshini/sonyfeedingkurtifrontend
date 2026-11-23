@@ -5,7 +5,10 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import { CATEGORIES } from '../../data/categories';
+import { Category } from '../../types/product';
+import { storeApi } from '../../services/api';
 import { SITE_CONFIG } from '../../config/siteConfig';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -25,6 +28,13 @@ export const Header: React.FC<HeaderProps> = ({
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
+
+  useEffect(() => {
+    storeApi.getCategories().then((cats) => {
+      if (cats && cats.length > 0) setCategoriesList(cats);
+    });
+  }, []);
 
   const handleCartClick = () => {
     if (onOpenCart) {
@@ -133,11 +143,11 @@ export const Header: React.FC<HeaderProps> = ({
               {isCategoryDropdownOpen && (
                 <div className="absolute top-full left-0 w-80 bg-white border border-stone-200 rounded-xl shadow-xl py-3 px-2 mt-1 animate-slide-down z-50">
                   <div className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-400 border-b border-stone-100 mb-1.5 flex items-center justify-between">
-                    <span>All {CATEGORIES.length} Collections</span>
+                    <span>All {categoriesList.length} Collections</span>
                     <span className="text-maroon-700 font-semibold">Feeding Options</span>
                   </div>
                   <div className="grid grid-cols-1 gap-1">
-                    {CATEGORIES.map((category) => (
+                    {categoriesList.map((category) => (
                       <Link
                         key={category.id}
                         to={`/category/${category.slug}`}
@@ -145,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-cream-50 transition-colors group"
                       >
                         <img
-                          src={category.image}
+                          src={getImageUrl(category.image)}
                           alt={category.name}
                           className="w-9 h-9 rounded-full object-cover border border-stone-200 group-hover:border-maroon-700 transition-colors"
                         />

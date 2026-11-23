@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { HERO_SLIDES } from '../../data/banners';
+import { HERO_SLIDES, HeroSlide } from '../../data/banners';
+import { getImageUrl } from '../../utils/imageUrl';
 
-export const HeroBanner: React.FC = () => {
+interface HeroBannerProps {
+  slides?: HeroSlide[];
+}
+
+export const HeroBanner: React.FC<HeroBannerProps> = ({ slides: propSlides }) => {
+  const slides = propSlides && propSlides.length > 0 ? propSlides : HERO_SLIDES;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isPaused, slides.length]);
 
-  const slide = HERO_SLIDES[currentSlide];
+  const slide = slides[currentSlide] || slides[0] || HERO_SLIDES[0];
 
   return (
     <section
@@ -33,9 +39,9 @@ export const HeroBanner: React.FC = () => {
           {slide.preserveArtwork ? (
             <div className="mx-auto max-w-6xl">
               <picture>
-                <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
+                <source media="(max-width: 640px)" srcSet={getImageUrl(slide.mobileImage)} />
                 <img
-                  src={slide.desktopImage}
+                  src={getImageUrl(slide.desktopImage)}
                   alt={slide.title}
                   className="w-full h-[260px] sm:h-[420px] md:h-[480px] lg:h-[520px] object-contain mx-auto transition-opacity duration-500"
                 />
@@ -43,9 +49,9 @@ export const HeroBanner: React.FC = () => {
             </div>
           ) : (
             <picture>
-              <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
+              <source media="(max-width: 640px)" srcSet={getImageUrl(slide.mobileImage)} />
               <img
-                src={slide.desktopImage}
+                src={getImageUrl(slide.desktopImage)}
                 alt={slide.title}
                 className="w-full h-[280px] sm:h-[440px] md:h-[500px] lg:h-[540px] object-cover object-[50%_20%] transition-opacity duration-500"
               />
@@ -56,7 +62,7 @@ export const HeroBanner: React.FC = () => {
         {/* Previous Button */}
         <button
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+          onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)}
           aria-label="Previous Slide"
           className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/85 hover:bg-white text-brand-900 flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
         >
@@ -66,7 +72,7 @@ export const HeroBanner: React.FC = () => {
         {/* Next Button */}
         <button
           type="button"
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
           aria-label="Next Slide"
           className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/85 hover:bg-white text-brand-900 flex items-center justify-center shadow-md transition-all hover:scale-105 hidden sm:flex"
         >
@@ -75,7 +81,7 @@ export const HeroBanner: React.FC = () => {
 
         {/* Slide Indicators Dots */}
         <div className="absolute bottom-2.5 sm:bottom-4 inset-x-0 z-20 flex justify-center items-center gap-1.5 sm:gap-2">
-          {HERO_SLIDES.map((_, idx) => (
+          {slides.map((_, idx) => (
             <button
               key={idx}
               type="button"

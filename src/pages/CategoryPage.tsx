@@ -6,7 +6,6 @@ import { Footer } from '../components/layout/Footer';
 import { CartDrawer } from '../components/layout/CartDrawer';
 import { SearchModal } from '../components/layout/SearchModal';
 import { MobileDrawer } from '../components/layout/MobileDrawer';
-import { CheckoutPreviewModal } from '../components/checkout/CheckoutPreviewModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductCard } from '../components/products/ProductCard';
 import { QuickSelectModal } from '../components/products/QuickSelectModal';
@@ -17,8 +16,10 @@ import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
 import { PRODUCTS } from '../data/products';
 import { CATEGORIES, resolveCategorySlug } from '../data/categories';
-import { Product, ProductSize } from '../types/product';
+import { Product, ProductSize, Category } from '../types/product';
+import { storeApi } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 function parseCategoryFilters(categorySlug: string | null, params: URLSearchParams): FilterState {
   const feedingParam = params.get('clothingType') || params.get('feeding');
@@ -70,16 +71,32 @@ export const CategoryPage: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [isCheckoutPreviewOpen, setIsCheckoutPreviewOpen] = useState(false);
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
+  // Live categories and products from Django backend (with initial fallback)
+  const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+
+  useEffect(() => {
+    let isMounted = true;
+    storeApi.getCategories().then((cats) => {
+      if (isMounted && cats && cats.length > 0) setCategoriesList(cats);
+    });
+    storeApi.getProducts().then((prods) => {
+      if (isMounted && prods && prods.length > 0) setProductsList(prods);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Find category metadata
-  const category = CATEGORIES.find((c) => c.slug === resolvedSlug);
+  const category = categoriesList.find((c) => c.slug === resolvedSlug);
 
   // Products belonging to this category
   const categoryProducts = useMemo(() => {
-    return PRODUCTS.filter((p) => p.category === resolvedSlug);
-  }, [resolvedSlug]);
+    return productsList.filter((p) => p.category === resolvedSlug);
+  }, [productsList, resolvedSlug]);
 
   // Filters state (with category locked to current resolved category slug)
   const [filters, setFilters] = useState<FilterState>(() => parseCategoryFilters(resolvedSlug, searchParams));
@@ -191,7 +208,7 @@ export const CategoryPage: React.FC = () => {
             {/* Category Imagery */}
             <div className="w-full md:w-2/5 h-48 md:h-64 overflow-hidden relative">
               <img
-                src={category.image}
+                src={getImageUrl(category.image)}
                 alt={category.name}
                 className="w-full h-full object-cover object-top"
               />
@@ -348,9 +365,7 @@ export const CategoryPage: React.FC = () => {
       />
 
       {/* Cart Drawer */}
-      <CartDrawer
-        onProceedToCheckout={() => setIsCheckoutPreviewOpen(true)}
-      />
+      <CartDrawer />
 
       {/* Search Modal */}
       <SearchModal
@@ -367,12 +382,6 @@ export const CategoryPage: React.FC = () => {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         onOpenCart={openCart}
-      />
-
-      {/* Checkout Preview Modal */}
-      <CheckoutPreviewModal
-        isOpen={isCheckoutPreviewOpen}
-        onClose={() => setIsCheckoutPreviewOpen(false)}
       />
     </div>
   );

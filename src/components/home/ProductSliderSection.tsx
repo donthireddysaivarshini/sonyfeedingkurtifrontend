@@ -5,6 +5,7 @@ import { Product } from '../../types/product';
 import { useWishlist } from '../../context/WishlistContext';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { RatingBadge } from '../common/RatingBadge';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface ProductSliderSectionProps {
   id: string;
@@ -59,7 +60,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
             >
               <img
                 alt={product.title}
-                src={product.images[0]}
+                src={getImageUrl(product.images[0])}
                 className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />

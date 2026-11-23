@@ -53,6 +53,16 @@ export interface ProductReview {
   location?: string;
 }
 
+export interface ProductGalleryImage {
+  id: number;
+  url: string;
+  clothingType?: 'Feeding' | 'Non-Feeding' | 'Standard' | null;
+  colorId?: string | null;
+  colorName?: string | null;
+  colorHex?: string | null;
+  order: number;
+}
+
 export interface Product {
   id: string;
   title: string;
@@ -67,6 +77,7 @@ export interface Product {
   
   // High quality photography
   images: string[];
+  galleryImages?: ProductGalleryImage[];
   
   // Optional Feeding Configuration
   feedingConfig: FeedingConfiguration;
@@ -98,4 +109,7 @@ export interface Product {
   isNewArrival?: boolean;
   isFeatured?: boolean;
   isHandstock?: boolean;
+  isFeedingCollection?: boolean;
+  isSareesCollection?: boolean;
+  isKidswearCollection?: boolean;
 }

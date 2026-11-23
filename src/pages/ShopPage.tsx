@@ -6,7 +6,6 @@ import { Footer } from '../components/layout/Footer';
 import { CartDrawer } from '../components/layout/CartDrawer';
 import { SearchModal } from '../components/layout/SearchModal';
 import { MobileDrawer } from '../components/layout/MobileDrawer';
-import { CheckoutPreviewModal } from '../components/checkout/CheckoutPreviewModal';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductCard } from '../components/products/ProductCard';
 import { QuickSelectModal } from '../components/products/QuickSelectModal';
@@ -18,10 +17,12 @@ import { filterAndSortProducts } from '../utils/filterProducts';
 import { resolveCategorySlug } from '../data/categories';
 import { PRODUCTS } from '../data/products';
 import { Product, ProductSize } from '../types/product';
+import { storeApi } from '../services/api';
 import { useCart } from '../context/CartContext';
 
 function parseFiltersFromParams(params: URLSearchParams): FilterState {
   const category = resolveCategorySlug(params.get('category'));
+  const section = params.get('section') || null;
   const feedingParam = params.get('clothingType') || params.get('feeding');
   const feedingType: FilterState['feedingType'] =
     feedingParam === 'Feeding'
@@ -50,8 +51,9 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
 
   return {
     category,
+    section,
     feedingType,
-    handstockOnly: params.get('handstock') === 'true',
+    handstockOnly: params.get('handstock') === 'true' || section === 'handstock',
     sizes,
     colors,
     fabrics,
@@ -69,8 +71,22 @@ export const ShopPage: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [isCheckoutPreviewOpen, setIsCheckoutPreviewOpen] = useState(false);
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
+
+  // Live products loaded from Django backend (with initial fallback)
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+
+  useEffect(() => {
+    let isMounted = true;
+    storeApi.getProducts().then((res) => {
+      if (isMounted && res && res.length > 0) {
+        setProductsList(res);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Initialize filter state from URL query parameters
   const [filters, setFilters] = useState<FilterState>(() => parseFiltersFromParams(searchParams));
@@ -82,8 +98,8 @@ export const ShopPage: React.FC = () => {
 
   // Compute filtered and sorted products
   const matchingProducts = useMemo(() => {
-    return filterAndSortProducts(PRODUCTS, filters);
-  }, [filters]);
+    return filterAndSortProducts(productsList, filters);
+  }, [productsList, filters]);
 
   const handleResetFilters = () => {
     setFilters(INITIAL_FILTERS);
@@ -93,6 +109,7 @@ export const ShopPage: React.FC = () => {
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
     const newParams = new URLSearchParams();
+    if (newFilters.section) newParams.set('section', newFilters.section);
     if (newFilters.category) newParams.set('category', newFilters.category);
     if (newFilters.feedingType !== 'All') newParams.set('clothingType', newFilters.feedingType);
     if (newFilters.handstockOnly) newParams.set('handstock', 'true');
@@ -105,6 +122,58 @@ export const ShopPage: React.FC = () => {
     setSearchParams(newParams);
   };
 
+  const getBannerContent = () => {
+    if (filters.section === 'feeding-collection') {
+      return {
+        badge: 'Feeding & Non-Feeding',
+        title: 'Feeding & Non-Feeding Collection',
+        desc: 'Thoughtfully designed ethnic kurtis, frocks, and gowns tailored with concealed zips for feeding comfort as well as graceful regular fit.',
+      };
+    }
+    if (filters.section === 'handstock') {
+      return {
+        badge: 'Ready to Dispatch',
+        title: 'Handstocks (Ready to Ship)',
+        desc: 'In-stock ethnic ensembles ready for immediate 24-hour dispatch directly from our Hyderabad studio.',
+      };
+    }
+    if (filters.section === 'sarees') {
+      return {
+        badge: 'Pure Silk & Handloom',
+        title: 'Sarees Collection',
+        desc: 'Exquisite handloom and festive sarees crafted with timeless tradition and fine weaves.',
+      };
+    }
+    if (filters.section === 'kids-wear') {
+      return {
+        badge: 'Festive Ethnic Wear',
+        title: 'Kids Wear Collection',
+        desc: 'Charming festive frocks and traditional lehengas tailored with love for little stars.',
+      };
+    }
+    if (filters.section === 'new-arrivals') {
+      return {
+        badge: 'Fresh Launches',
+        title: 'New Arrivals',
+        desc: 'Fresh arrivals and contemporary ethnic trends just dropped in our collections.',
+      };
+    }
+    if (filters.section === 'best-sellers') {
+      return {
+        badge: 'Top Rated',
+        title: 'Best Sellers',
+        desc: 'Most loved designs celebrated and trusted by hundreds of satisfied mothers and families.',
+      };
+    }
+    return {
+      badge: 'Curated Ethnic Wardrobe',
+      title: 'Explore All Collections',
+      desc: 'Browse our complete selection of ethnic wear, frocks, dresses, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.',
+    };
+  };
+
+  const banner = getBannerContent();
+
   return (
     <div className="min-h-screen flex flex-col bg-ivory">
       {/* Header */}
@@ -115,7 +184,7 @@ export const ShopPage: React.FC = () => {
       />
 
       {/* Breadcrumb Navigation */}
-      <Breadcrumbs items={[{ label: 'Shop All Collections' }]} />
+      <Breadcrumbs items={[{ label: banner.title }]} />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
@@ -124,13 +193,13 @@ export const ShopPage: React.FC = () => {
         <div className="mb-6 sm:mb-8 text-center sm:text-left border-b border-ivory-300 pb-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-2 border border-brand-200">
             <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-            <span>Curated Ethnic Wardrobe</span>
+            <span>{banner.badge}</span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-ink-primary">
-            Explore All Collections
+            {banner.title}
           </h1>
           <p className="text-xs sm:text-sm text-ink-secondary mt-1.5 max-w-2xl">
-            Browse our complete selection of ethnic wear, frocks, dresses, sarees, co-ord sets, and thoughtfully engineered feeding-friendly designs.
+            {banner.desc}
           </p>
         </div>
 
@@ -250,9 +319,7 @@ export const ShopPage: React.FC = () => {
       />
 
       {/* Cart Drawer */}
-      <CartDrawer
-        onProceedToCheckout={() => setIsCheckoutPreviewOpen(true)}
-      />
+      <CartDrawer />
 
       {/* Search Modal */}
       <SearchModal
@@ -269,12 +336,6 @@ export const ShopPage: React.FC = () => {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         onOpenCart={openCart}
-      />
-
-      {/* Checkout Preview Modal */}
-      <CheckoutPreviewModal
-        isOpen={isCheckoutPreviewOpen}
-        onClose={() => setIsCheckoutPreviewOpen(false)}
       />
     </div>
   );

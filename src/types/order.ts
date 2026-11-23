@@ -28,10 +28,9 @@ export const PAYMENT_METHODS: PaymentOption[] = [
   {
     id: 'cod',
     name: 'Cash on Delivery (COD)',
-    badge: 'Provisional',
-    description: 'Pay cash upon delivery. (Provisional payment mode pending final client approval).',
+    badge: 'Available',
+    description: 'Pay cash upon courier delivery at your doorstep.',
     isAvailable: true,
-    isProvisional: true,
   },
 ];
 
@@ -67,6 +66,8 @@ export interface Order {
   shippingAddress: DeliveryAddress;
   items: OrderItem[];
   subtotal: number;
+  discount?: number;
+  coupon_code?: string;
   shippingFee: number;
   total: number;
   paymentMethod: PaymentMethod;

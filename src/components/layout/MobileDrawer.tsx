@@ -2,10 +2,13 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck, User, Search } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
+import { Category } from '../../types/product';
+import { storeApi } from '../../services/api';
 import { SITE_CONFIG } from '../../config/siteConfig';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -19,6 +22,13 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
   const { wishlistCount } = useWishlist();
   const { totalItemsCount } = useCart();
   const { isAuthenticated, user } = useAuth();
+  const [categoriesList, setCategoriesList] = React.useState<Category[]>(CATEGORIES);
+
+  React.useEffect(() => {
+    storeApi.getCategories().then((cats) => {
+      if (cats && cats.length > 0) setCategoriesList(cats);
+    });
+  }, []);
 
   if (!isOpen) return null;
 
@@ -121,10 +131,10 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
         {/* Categories Section */}
         <div className="p-4 flex-1">
           <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-3">
-            Shop by Category ({CATEGORIES.length} Collections)
+            Shop by Category ({categoriesList.length} Collections)
           </p>
           <div className="space-y-1">
-            {CATEGORIES.map((cat) => (
+            {categoriesList.map((cat) => (
               <Link
                 key={cat.id}
                 to={`/category/${cat.slug}`}
@@ -132,7 +142,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-ivory-200 transition-colors group"
               >
                 <img
-                  src={cat.image}
+                  src={getImageUrl(cat.image)}
                   alt={cat.name}
                   className="w-10 h-10 rounded-full object-cover border border-ivory-300 group-hover:border-brand-700"
                 />

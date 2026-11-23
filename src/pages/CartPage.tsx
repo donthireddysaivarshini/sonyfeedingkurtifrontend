@@ -23,6 +23,7 @@ import { EditVariantModal } from '../components/cart/EditVariantModal';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { CartItem } from '../types/cart';
+import { getImageUrl } from '../utils/imageUrl';
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ export const CartPage: React.FC = () => {
                       className="w-24 sm:w-28 aspect-[3/4] rounded-xl overflow-hidden border border-ivory-300 bg-ivory-100 shrink-0 block group"
                     >
                       <img
-                        src={item.productImage}
+                        src={getImageUrl(item.productImage)}
                         alt={item.productTitle}
                         className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                       />
@@ -305,10 +306,14 @@ export const CartPage: React.FC = () => {
 
                   <div className="flex justify-between text-base font-bold text-ink-primary pt-3 border-t border-ivory-200">
                     <span>Final Amount</span>
-                    <span className="text-brand-900 text-lg">₹{total}</span>
+                    <span className="text-brand-maroon text-lg">₹{total.toLocaleString('en-IN')}</span>
                   </div>
                   <p className="text-[10px] text-ink-muted text-right">
                     Inclusive of all applicable taxes
+                  </p>
+
+                  <p className="text-[11px] text-neutral-charcoal/70 bg-ivory-100 p-2 rounded-lg text-center border border-ivory-200">
+                    🏷️ Have a coupon or exchange code? Apply it during checkout.
                   </p>
                 </div>
 
@@ -316,7 +321,7 @@ export const CartPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleProceedToCheckout}
-                  className="w-full flex items-center justify-center gap-2 bg-brand-700 hover:bg-brand-800 text-white py-3.5 px-4 rounded-xl font-semibold text-sm shadow-md transition-all hover:shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-brand-maroon hover:bg-brand-maroon/90 text-white py-3.5 px-4 rounded-xl font-semibold text-sm shadow-md transition-all hover:shadow-lg cursor-pointer"
                 >
                   {isAuthenticated ? (
                     <>
@@ -326,7 +331,7 @@ export const CartPage: React.FC = () => {
                   ) : (
                     <>
                       <LogIn className="w-4 h-4" />
-                      <span>Google Sign In to Checkout</span>
+                      <span>Sign In & Proceed to Checkout</span>
                     </>
                   )}
                 </button>
@@ -339,7 +344,7 @@ export const CartPage: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-brand-gold shrink-0" />
-                    <span>Cash on Delivery (Provisional Support)</span>
+                    <span>Prepaid Orders Only • Insured Express Dispatch</span>
                   </div>
                 </div>
               </div>
@@ -348,7 +353,7 @@ export const CartPage: React.FC = () => {
               <div className="text-center">
                 <Link
                   to="/shop"
-                  className="text-xs font-semibold text-brand-700 hover:text-brand-900 transition-colors"
+                  className="text-xs font-semibold text-brand-maroon hover:text-brand-maroon/80 transition-colors"
                 >
                   ← Continue browsing more styles
                 </Link>

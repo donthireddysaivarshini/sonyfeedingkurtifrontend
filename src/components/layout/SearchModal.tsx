@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Search, X, Sparkles, ChevronRight, Tag } from 'lucide-react';
 import { PRODUCTS } from '../../data/products';
 import { CATEGORIES } from '../../data/categories';
-import { Product } from '../../types/product';
+import { Product, Category } from '../../types/product';
+import { storeApi } from '../../services/api';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -19,7 +21,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'Feeding' | 'Non-Feeding'>('All');
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+  const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    storeApi.getProducts().then((res) => {
+      if (res && res.length > 0) setProductsList(res);
+    });
+    storeApi.getCategories().then((cats) => {
+      if (cats && cats.length > 0) setCategoriesList(cats);
+    });
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -32,12 +45,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
   if (!isOpen) return null;
 
-  const filteredProducts = PRODUCTS.filter((product) => {
+  const filteredProducts = productsList.filter((product) => {
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+
     const matchesQuery =
-      product.title.toLowerCase().includes(query.toLowerCase()) ||
-      product.categoryName.toLowerCase().includes(query.toLowerCase()) ||
-      product.fabric.toLowerCase().includes(query.toLowerCase()) ||
-      product.description.toLowerCase().includes(query.toLowerCase());
+      product.title.toLowerCase().includes(q) ||
+      product.categoryName.toLowerCase().includes(q) ||
+      product.fabric.toLowerCase().includes(q) ||
+      product.description.toLowerCase().includes(q) ||
+      (product.skuPrefix && product.skuPrefix.toLowerCase().includes(q)) ||
+      (product.variants && product.variants.some((v) => v.sku.toLowerCase().includes(q)));
 
     const matchesFilter =
       selectedFilter === 'All'
@@ -113,15 +131,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2.5">
                 Popular Categories
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                {CATEGORIES.slice(0, 4).map((c) => (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                {categoriesList.slice(0, 4).map((c) => (
                   <button
                     key={c.id}
                     onClick={() => setQuery(c.name)}
                     className="flex items-center gap-2 p-2 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-left transition-colors border border-ivory-200"
                   >
                     <img
-                      src={c.image}
+                      src={getImageUrl(c.image)}
                       alt={c.name}
                       className="w-8 h-8 rounded-full object-cover"
                     />
@@ -130,23 +148,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     </div>
                   </button>
                 ))}
-              </div>
-
-              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
-                Trending Searches
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {['Dual Zip Feeding Kurti', 'Cotton Frocks', 'Organza Dupatta', 'Pure Silk Saree', '3-Piece Anarkali'].map(
-                  (tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => setQuery(tag)}
-                      className="text-xs px-3 py-1 bg-ivory-100 hover:bg-brand-100 hover:text-brand-800 rounded-full text-ink-secondary border border-ivory-200 transition-colors"
-                    >
-                      {tag}
-                    </button>
-                  )
-                )}
               </div>
             </div>
           ) : filteredProducts.length > 0 ? (
@@ -168,7 +169,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-ivory-100 border border-transparent hover:border-ivory-300 transition-all cursor-pointer group"
                 >
                   <img
-                    src={product.images[0]}
+                    src={getImageUrl(product.images[0])}
                     alt={product.title}
                     className="w-14 h-18 object-cover rounded-lg border border-ivory-300 shrink-0"
                   />

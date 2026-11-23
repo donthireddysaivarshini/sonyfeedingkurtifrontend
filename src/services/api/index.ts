@@ -2,18 +2,29 @@ import { CATEGORIES } from '../../data/categories';
 import { PRODUCTS } from '../../data/products';
 import { HERO_SLIDES, HeroSlide } from '../../data/banners';
 import { CUSTOMER_REVIEWS, CustomerReview } from '../../data/reviews';
-import { Product, Category, ClothingType, ProductColor, ProductSize, ProductVariant } from '../../types/product';
+import { Product, Category, ClothingType, ProductColor, ProductSize, ProductVariant, ProductGalleryImage, FeedingConfiguration } from '../../types/product';
 import { DjangoProductResponse } from '../../types/api';
+import { apiClient } from '../apiClient';
+import { getImageUrl } from '../../utils/imageUrl';
 
 export interface ProductFilterParams {
   category?: string;
   clothingType?: ClothingType;
   handstock?: boolean;
+  section?: string;
   search?: string;
   sortBy?: 'popular' | 'bestseller' | 'newest' | 'price-low' | 'price-high';
 }
 
 /** Normalizes a Django REST API product payload (including dynamic MRP, SP, discount & ratings) into Product. */
+export const normalizeClothingType = (val: string | null | undefined): ClothingType | null => {
+  if (!val) return null;
+  const lower = String(val).toLowerCase().replace(/_/g, '-');
+  if (lower === 'feeding') return 'Feeding';
+  if (lower === 'non-feeding') return 'Non-Feeding';
+  return null;
+};
+
 export function mapDjangoProduct(dto: DjangoProductResponse): Product {
   const sp = Number(dto.price);
   const mrpRaw = dto.mrp ?? dto.original_price;
@@ -22,14 +33,18 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
     dto.discount_percentage ??
     (originalPrice && originalPrice > sp ? Math.round(((originalPrice - sp) / originalPrice) * 100) : undefined);
 
-  const hasFeeding = dto.variants.some((v) => v.clothing_type === 'feeding');
-  const hasNonFeeding = dto.variants.some((v) => v.clothing_type === 'non_feeding');
-  const feedingConfig =
-    hasFeeding && hasNonFeeding ? 'both' : hasFeeding ? 'feeding-only' : 'none';
+  let feedingConfig: FeedingConfiguration = 'both';
+  if (dto.feeding_config === 'feeding-only') feedingConfig = 'feeding-only';
+  else if (dto.feeding_config === 'none') feedingConfig = 'none';
+  else {
+    const hasFeeding = (dto.variants || []).some((v) => normalizeClothingType(v.clothing_type) === 'Feeding');
+    const hasNonFeeding = (dto.variants || []).some((v) => normalizeClothingType(v.clothing_type) === 'Non-Feeding');
+    feedingConfig = hasFeeding && hasNonFeeding ? 'both' : hasFeeding ? 'feeding-only' : 'none';
+  }
 
   const colorMap = new Map<string, ProductColor>();
   const sizeSet = new Set<ProductSize>();
-  const variants: ProductVariant[] = dto.variants.map((v) => {
+  const variants: ProductVariant[] = (dto.variants || []).map((v) => {
     const colorId = String(v.color.id);
     if (!colorMap.has(colorId)) {
       colorMap.set(colorId, { id: colorId, name: v.color.name, hex: v.color.hex_code });
@@ -39,13 +54,35 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
     return {
       id: String(v.id),
       sku: v.sku,
-      clothingType: v.clothing_type === 'feeding' ? 'Feeding' : 'Non-Feeding',
+      clothingType: normalizeClothingType(v.clothing_type),
       color: { id: colorId, name: v.color.name, hex: v.color.hex_code },
       size,
       price: Number(v.final_price || sp),
       originalPrice,
       stock: v.stock,
       inStock: v.stock > 0,
+    };
+  });
+
+  const sortedRawImages = [...(dto.images || [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const galleryImages: ProductGalleryImage[] = sortedRawImages.map((img: any) => {
+    const imgUrl = getImageUrl(img.url || img.image || '');
+    const cId = img.color_id ? String(img.color_id) : (img.color?.id ? String(img.color.id) : null);
+    const cName = img.color_name || img.color?.name || null;
+    const cHex = img.color_hex || img.color?.hex_code || '#552058';
+
+    if (cId && cName && !colorMap.has(cId)) {
+      colorMap.set(cId, { id: cId, name: cName, hex: cHex });
+    }
+
+    return {
+      id: img.id,
+      url: imgUrl,
+      clothingType: normalizeClothingType(img.clothing_type),
+      colorId: cId,
+      colorName: cName,
+      colorHex: cHex,
+      order: img.order ?? 0,
     };
   });
 
@@ -61,7 +98,8 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
     discountPercentage,
     rating: dto.rating,
     reviewCount: dto.review_count,
-    images: [...dto.images].sort((a, b) => a.order - b.order).map((img) => img.image),
+    images: galleryImages.map((g) => g.url),
+    galleryImages,
     feedingConfig,
     supportedClothingTypes:
       feedingConfig === 'both'
@@ -79,29 +117,125 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
     isBestseller: dto.is_best_seller,
     isFeatured: dto.is_best_seller,
     isHandstock: dto.is_handstock,
+    isFeedingCollection: dto.is_feeding_collection,
+    isSareesCollection: dto.is_sarees_collection,
+    isKidswearCollection: dto.is_kidswear_collection,
   };
 }
 
 /**
- * Service layer ready for Django REST Framework.
- * In Phase 1 it cleanly wraps the centralized mock store.
- * In Stage 5, axios / fetch calls will replace the mock resolvers without changing any component code!
+ * Service layer integrated directly with Django REST Framework backend APIs.
+ * Automatically falls back to resilient local stores if backend is offline.
  */
 export const storeApi = {
+  async getSiteConfig(): Promise<{
+    shipping_fee: number;
+    free_shipping_threshold: number;
+    shipping_notice: string;
+    exchange_window_days: number;
+    max_saved_addresses: number;
+  }> {
+    try {
+      const res = await apiClient.get<any>('/catalog/config/');
+      if (res.data) {
+        return {
+          shipping_fee: Number(res.data.shipping_fee ?? 99),
+          free_shipping_threshold: Number(res.data.free_shipping_threshold ?? 1499),
+          shipping_notice: res.data.shipping_notice || 'Free shipping across India on orders above ₹1499',
+          exchange_window_days: Number(res.data.exchange_window_days ?? 7),
+          max_saved_addresses: Number(res.data.max_saved_addresses ?? 3),
+        };
+      }
+    } catch (e) {
+      console.warn('Failed to fetch site config from backend:', e);
+    }
+    return {
+      shipping_fee: 99,
+      free_shipping_threshold: 1499,
+      shipping_notice: 'Free shipping across India on orders above ₹1499',
+      exchange_window_days: 7,
+      max_saved_addresses: 3,
+    };
+  },
+
   async getCategories(): Promise<Category[]> {
-    // Simulated network latency
-    return new Promise((resolve) => {
-      setTimeout(() => resolve([...CATEGORIES]), 50);
-    });
+    try {
+      const res = await apiClient.get<any[]>('/catalog/categories/');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        return res.data.map((c) => ({
+          id: c.slug,
+          name: c.name,
+          slug: c.slug,
+          image: getImageUrl(c.image_url || c.image || ''),
+          itemCount: c.item_count_label || '',
+          description: c.description || '',
+          tagline: c.tagline || '',
+        }));
+      }
+    } catch (e) {
+      console.warn('Failed to fetch categories from backend, using local fallback:', e);
+    }
+    return [...CATEGORIES];
   },
 
   async getCategoryBySlug(slug: string): Promise<Category | null> {
+    try {
+      const res = await apiClient.get<any>(`/catalog/categories/${slug}/`);
+      if (res.data) {
+        const c = res.data;
+        return {
+          id: c.slug,
+          name: c.name,
+          slug: c.slug,
+          image: getImageUrl(c.image_url || c.image || ''),
+          itemCount: c.item_count_label || '',
+          description: c.description || '',
+          tagline: c.tagline || '',
+        };
+      }
+    } catch {
+      // Fallback to local
+    }
     const category = CATEGORIES.find((c) => c.slug === slug);
     return category || null;
   },
 
   async getProducts(params?: ProductFilterParams): Promise<Product[]> {
+    try {
+      const queryParams: Record<string, string> = {};
+      if (params?.category) queryParams.category = params.category;
+      if (params?.clothingType) queryParams.clothing_type = params.clothingType;
+      if (params?.handstock) queryParams.handstock = 'true';
+      if (params?.section) queryParams.section = params.section;
+      if (params?.search) queryParams.search = params.search;
+      if (params?.sortBy) queryParams.sortBy = params.sortBy;
+
+      const res = await apiClient.get<DjangoProductResponse[]>('/catalog/products/', { params: queryParams });
+      if (Array.isArray(res.data)) {
+        return res.data.map(mapDjangoProduct);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch products from backend, using local fallback:', e);
+    }
+
     let result = [...PRODUCTS];
+
+    if (params?.section) {
+      const s = params.section.toLowerCase();
+      if (s === 'feeding-collection' || s === 'feeding') {
+        result = result.filter((p) => p.isFeedingCollection || p.feedingConfig === 'both' || p.feedingConfig === 'feeding-only');
+      } else if (s === 'handstock' || s === 'handstocks') {
+        result = result.filter((p) => Boolean(p.isHandstock));
+      } else if (s === 'sarees') {
+        result = result.filter((p) => p.isSareesCollection || p.category === 'sarees');
+      } else if (s === 'kids-wear' || s === 'kidswear') {
+        result = result.filter((p) => p.isKidswearCollection || p.category === 'kids-collections');
+      } else if (s === 'new-arrivals') {
+        result = result.filter((p) => Boolean(p.isNewArrival));
+      } else if (s === 'best-sellers') {
+        result = result.filter((p) => Boolean(p.isBestseller || p.isFeatured));
+      }
+    }
 
     if (params?.category) {
       result = result.filter(
@@ -140,8 +274,6 @@ export const storeApi = {
           result.sort((a, b) => (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0));
           break;
         case 'bestseller':
-          result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
-          break;
         case 'popular':
         default:
           result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
@@ -153,33 +285,160 @@ export const storeApi = {
   },
 
   async getProductBySlug(slug: string): Promise<Product | null> {
+    try {
+      const res = await apiClient.get<DjangoProductResponse>(`/catalog/products/${slug}/`);
+      if (res.data && res.data.id) {
+        return mapDjangoProduct(res.data);
+      }
+    } catch (e) {
+      console.warn(`Failed to fetch product ${slug} from backend, using local fallback:`, e);
+    }
     const product = PRODUCTS.find((p) => p.slug === slug);
     return product || null;
   },
 
   async getBestsellers(): Promise<Product[]> {
+    try {
+      const res = await apiClient.get<DjangoProductResponse[]>('/catalog/products/', { params: { is_best_seller: 'true' } });
+      if (Array.isArray(res.data)) {
+        return res.data.map(mapDjangoProduct);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch bestsellers from backend, using local fallback:', e);
+    }
     return PRODUCTS.filter((p) => p.isFeatured);
   },
 
   async getNewArrivals(): Promise<Product[]> {
+    try {
+      const res = await apiClient.get<DjangoProductResponse[]>('/catalog/products/', { params: { is_new_arrival: 'true' } });
+      if (Array.isArray(res.data)) {
+        return res.data.map(mapDjangoProduct);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch new arrivals from backend, using local fallback:', e);
+    }
     return PRODUCTS.filter((p) => p.isNewArrival || p.badge === 'New Arrival');
   },
 
   async getHeroSlides(): Promise<HeroSlide[]> {
+    try {
+      const res = await apiClient.get<any[]>('/catalog/hero-slides/');
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        return res.data.map((s) => ({
+          id: String(s.id),
+          title: s.title,
+          ctaLink: s.cta_link || '/shop',
+          desktopImage: getImageUrl(s.desktop_image_url || s.desktop_image),
+          mobileImage: getImageUrl(s.mobile_image_url || s.mobile_image || s.desktop_image_url || s.desktop_image),
+          preserveArtwork: s.preserve_artwork ?? true,
+        }));
+      }
+    } catch (e) {
+      console.warn('Failed to fetch hero slides from backend, using local fallback:', e);
+    }
     return [...HERO_SLIDES];
+  },
+
+  async getHomeData(): Promise<{
+    heroSlides: HeroSlide[];
+    categories: Category[];
+    sectionsMeta?: Record<
+      string,
+      {
+        id: number;
+        title: string;
+        slug: string;
+        subtitle?: string;
+        badge_label?: string;
+        view_all_link?: string;
+        direction?: string;
+        display_order?: number;
+      }
+    >;
+    sections: {
+      feedingCollection: Product[];
+      handstock: Product[];
+      sarees: Product[];
+      kidsWear: Product[];
+      newArrivals: Product[];
+      bestSellers: Product[];
+    };
+  }> {
+    try {
+      const res = await apiClient.get<any>('/catalog/home/');
+      if (res.data) {
+        const d = res.data;
+        const heroSlides: HeroSlide[] = Array.isArray(d.hero_slides)
+          ? d.hero_slides.map((s: any) => ({
+              id: String(s.id),
+              title: s.title,
+              ctaLink: s.cta_link || '/shop',
+              desktopImage: getImageUrl(s.desktop_image_url || s.desktop_image),
+              mobileImage: getImageUrl(s.mobile_image_url || s.mobile_image || s.desktop_image_url || s.desktop_image),
+              preserveArtwork: s.preserve_artwork ?? true,
+            }))
+          : [...HERO_SLIDES];
+
+        const categories: Category[] = Array.isArray(d.categories)
+          ? d.categories.map((c: any) => ({
+              id: c.slug,
+              name: c.name,
+              slug: c.slug,
+              image: getImageUrl(c.image_url || c.image || ''),
+              itemCount: c.item_count_label || '',
+              description: c.description || '',
+              tagline: c.tagline || '',
+            }))
+          : [...CATEGORIES];
+
+        const rawSec = d.sections || {};
+        return {
+          heroSlides,
+          categories,
+          sectionsMeta: d.sections_meta || {},
+          sections: {
+            feedingCollection: Array.isArray(rawSec.feeding_collection)
+              ? rawSec.feeding_collection.map(mapDjangoProduct)
+              : [],
+            handstock: Array.isArray(rawSec.handstock)
+              ? rawSec.handstock.map(mapDjangoProduct)
+              : [],
+            sarees: Array.isArray(rawSec.sarees)
+              ? rawSec.sarees.map(mapDjangoProduct)
+              : [],
+            kidsWear: Array.isArray(rawSec.kids_wear)
+              ? rawSec.kids_wear.map(mapDjangoProduct)
+              : [],
+            newArrivals: Array.isArray(rawSec.new_arrivals)
+              ? rawSec.new_arrivals.map(mapDjangoProduct)
+              : [],
+            bestSellers: Array.isArray(rawSec.best_sellers)
+              ? rawSec.best_sellers.map(mapDjangoProduct)
+              : [],
+          },
+        };
+      }
+    } catch (e) {
+      console.warn('Failed to fetch home data from backend, using fallback:', e);
+    }
+
+    return {
+      heroSlides: [...HERO_SLIDES],
+      categories: [...CATEGORIES],
+      sections: {
+        feedingCollection: PRODUCTS.filter((p) => p.feedingConfig === 'both' || p.feedingConfig === 'feeding-only'),
+        handstock: PRODUCTS.filter((p) => Boolean(p.isHandstock)),
+        sarees: PRODUCTS.filter((p) => p.category === 'sarees'),
+        kidsWear: PRODUCTS.filter((p) => p.category === 'kids-collections'),
+        newArrivals: PRODUCTS.filter((p) => p.isNewArrival),
+        bestSellers: PRODUCTS.filter((p) => p.isFeatured || p.isBestseller),
+      },
+    };
   },
 
   async getReviews(): Promise<CustomerReview[]> {
     return [...CUSTOMER_REVIEWS];
-  },
-
-  async getSiteConfig() {
-    return {
-      shipping_policy: 'Official shipping rates to be confirmed by client upon launch',
-      tax_percentage: 0,
-      currency: 'INR',
-      currencySymbol: '₹',
-    };
   },
 };
 

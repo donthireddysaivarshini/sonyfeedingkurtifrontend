@@ -7,6 +7,26 @@ export function filterAndSortProducts(
 ): Product[] {
   // 1. Filter
   const filtered = products.filter((product) => {
+    // Section Filter (Homepage Sections)
+    if (filters.section) {
+      const sec = filters.section.toLowerCase();
+      if (sec === 'feeding-collection' || sec === 'feeding') {
+        if (!product.isFeedingCollection && product.feedingConfig !== 'both' && product.feedingConfig !== 'feeding-only') {
+          return false;
+        }
+      } else if (sec === 'handstock' || sec === 'handstocks') {
+        if (!product.isHandstock) return false;
+      } else if (sec === 'sarees') {
+        if (!product.isSareesCollection && product.category !== 'sarees') return false;
+      } else if (sec === 'kids-wear' || sec === 'kidswear') {
+        if (!product.isKidswearCollection && product.category !== 'kids-collections') return false;
+      } else if (sec === 'new-arrivals') {
+        if (!product.isNewArrival) return false;
+      } else if (sec === 'best-sellers') {
+        if (!product.isBestseller && !product.isFeatured) return false;
+      }
+    }
+
     // Handstock Filter
     if (filters.handstockOnly && !product.isHandstock) {
       return false;

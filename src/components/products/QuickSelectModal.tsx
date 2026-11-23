@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { CartItem } from '../../types/cart';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { FeedingOptionSelector } from './FeedingOptionSelector';
+import { getImageUrl } from '../../utils/imageUrl';
 
 interface QuickSelectModalProps {
   product: Product | null;
@@ -20,40 +21,81 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
   const { addToCart } = useCart();
 
   // Selection states:
-  // For 'both': selectedType starts as null to REQUIRE explicit customer selection!
-  // For 'feeding-only': automatically initialized to 'Feeding'
-  // For 'none': initialized to null
+  // 1. Feeding Type (Defaults to 'Feeding' if 'both' or 'feeding-only')
+  // 2. Colour (Derived from valid variants for selected clothing type)
+  // 3. Size (Derived from valid variants for selected type & colour)
+  // 4. Quantity
   const [selectedType, setSelectedType] = useState<ClothingType | null>(null);
   const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [addedSuccess, setAddedSuccess] = useState(false);
 
+  // Helper functions for strict hierarchy derivation
+  const getColorsForType = (
+    variants: Product['variants'],
+    feedingConfig: Product['feedingConfig'],
+    clothingType: ClothingType | null
+  ): ProductColor[] => {
+    const map = new Map<string, ProductColor>();
+    variants.forEach((v) => {
+      const typeMatch =
+        feedingConfig === 'none' ||
+        !clothingType ||
+        v.clothingType === clothingType;
+      if (typeMatch && v.color) {
+        const cid = String(v.color.id);
+        if (!map.has(cid)) {
+          map.set(cid, v.color);
+        }
+      }
+    });
+    return Array.from(map.values());
+  };
+
+  const getSizesForSelection = (
+    variants: Product['variants'],
+    feedingConfig: Product['feedingConfig'],
+    clothingType: ClothingType | null,
+    color: ProductColor | null
+  ): { size: ProductSize; inStock: boolean; stock: number }[] => {
+    if (!color) return [];
+    const matching = variants.filter((v) => {
+      const typeMatch =
+        feedingConfig === 'none' ||
+        !clothingType ||
+        v.clothingType === clothingType;
+      const colorMatch = String(v.color.id) === String(color.id);
+      return typeMatch && colorMatch;
+    });
+
+    return matching.map((v) => ({
+      size: v.size,
+      stock: v.stock,
+      inStock: v.stock > 0,
+    }));
+  };
+
   useEffect(() => {
     if (product) {
-      if (product.feedingConfig === 'both') {
-        setSelectedType(null); // REQUIRE explicit user choice
-      } else if (product.feedingConfig === 'feeding-only') {
-        setSelectedType('Feeding'); // Automatically store Feeding
-      } else {
-        setSelectedType(null); // None
+      let defaultType: ClothingType | null = null;
+      if (product.feedingConfig === 'both' || product.feedingConfig === 'feeding-only') {
+        defaultType = 'Feeding';
+      } else if (product.supportedClothingTypes?.includes('Feeding')) {
+        defaultType = 'Feeding';
+      } else if (product.supportedClothingTypes?.includes('Non-Feeding')) {
+        defaultType = 'Non-Feeding';
       }
+      setSelectedType(defaultType);
 
-      const initialColor = product.availableColors[0] || null;
+      const validColors = getColorsForType(product.variants, product.feedingConfig, defaultType);
+      const initialColor = validColors[0] || null;
       setSelectedColor(initialColor);
 
-      // Find first available size in stock for this initial configuration
       if (initialColor) {
-        const firstAvailable = product.availableSizes.find((size) => {
-          return product.variants.some((v) => {
-            const typeMatch =
-              product.feedingConfig === 'none' ||
-              (product.feedingConfig === 'feeding-only' && v.clothingType === 'Feeding') ||
-              (product.feedingConfig === 'both');
-            return typeMatch && v.color.id === initialColor.id && v.size === size && v.stock > 0;
-          });
-        });
-        setSelectedSize(firstAvailable || product.availableSizes[0] || null);
+        const validSizes = getSizesForSelection(product.variants, product.feedingConfig, defaultType, initialColor);
+        const inStockSize = validSizes.find((s) => s.inStock)?.size;
+        setSelectedSize(inStockSize || validSizes[0]?.size || null);
       } else {
         setSelectedSize(null);
       }
@@ -68,21 +110,17 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
   const requiresExplicitFeedingChoice = product.feedingConfig === 'both';
   const hasSelectedFeedingChoice = !requiresExplicitFeedingChoice || selectedType !== null;
 
-  // Check which sizes are valid and in stock for the current (selectedType, selectedColor)
-  const isSizeValidAndInStock = (size: ProductSize): boolean => {
-    return product.variants.some((v) => {
-      const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-      const colorMatch = v.color.id === selectedColor.id;
-      const sizeMatch = v.size === size;
-      return typeMatch && colorMatch && sizeMatch && v.stock > 0;
-    });
-  };
+  // Derived available colors strictly based on current clothing type
+  const availableColorsForType = getColorsForType(product.variants, product.feedingConfig, selectedType);
+
+  // Derived available sizes strictly based on current clothing type and selected color
+  const availableSizesForSelection = getSizesForSelection(product.variants, product.feedingConfig, selectedType, selectedColor);
 
   // Find exact matching variant
   const currentVariant = selectedSize
     ? product.variants.find((v) => {
         const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-        const colorMatch = v.color.id === selectedColor.id;
+        const colorMatch = String(v.color.id) === String(selectedColor.id);
         const sizeMatch = v.size === selectedSize;
         return typeMatch && colorMatch && sizeMatch;
       })
@@ -90,35 +128,37 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
 
   const isCurrentVariantInStock = Boolean(currentVariant && currentVariant.stock > 0);
 
-  // Automatically update selectedSize if it becomes invalid when color or type changes
+  // Smart color change handler
   const handleColorChange = (newColor: ProductColor) => {
     setSelectedColor(newColor);
-    if (selectedSize && !product.variants.some((v) => {
-      const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-      return typeMatch && v.color.id === newColor.id && v.size === selectedSize && v.stock > 0;
-    })) {
-      // Find new available size
-      const validSize = product.availableSizes.find((size) => {
-        return product.variants.some((v) => {
-          const typeMatch = product.feedingConfig === 'none' || v.clothingType === selectedType;
-          return typeMatch && v.color.id === newColor.id && v.size === size && v.stock > 0;
-        });
-      });
-      setSelectedSize(validSize || null);
+    if (!product) return;
+
+    const newSizes = getSizesForSelection(product.variants, product.feedingConfig, selectedType, newColor);
+    const currentSizeMatch = newSizes.find((s) => s.size === selectedSize && s.inStock);
+    if (!currentSizeMatch) {
+      const firstInStock = newSizes.find((s) => s.inStock);
+      setSelectedSize(firstInStock?.size || newSizes[0]?.size || null);
     }
   };
 
+  // Smart clothing type change handler
   const handleTypeChange = (newType: ClothingType) => {
     setSelectedType(newType);
-    if (selectedSize && !product.variants.some((v) => {
-      return v.clothingType === newType && v.color.id === selectedColor.id && v.size === selectedSize && v.stock > 0;
-    })) {
-      const validSize = product.availableSizes.find((size) => {
-        return product.variants.some((v) => {
-          return v.clothingType === newType && v.color.id === selectedColor.id && v.size === size && v.stock > 0;
-        });
-      });
-      setSelectedSize(validSize || null);
+    if (!product) return;
+
+    const newColors = getColorsForType(product.variants, product.feedingConfig, newType);
+    let nextColor = selectedColor;
+    if (!selectedColor || !newColors.some((c) => String(c.id) === String(selectedColor.id))) {
+      nextColor = newColors[0] || null;
+      setSelectedColor(nextColor);
+    }
+
+    if (nextColor) {
+      const newSizes = getSizesForSelection(product.variants, product.feedingConfig, newType, nextColor);
+      const inStockSize = newSizes.find((s) => s.inStock)?.size;
+      setSelectedSize(inStockSize || newSizes[0]?.size || null);
+    } else {
+      setSelectedSize(null);
     }
   };
 
@@ -145,7 +185,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
       productId: product.id,
       productTitle: product.title,
       productSlug: product.slug,
-      productImage: product.images[0],
+      productImage: getImageUrl(product.images[0]),
       category: product.category,
       variantId: currentVariant.id,
       sku: currentVariant.sku,
@@ -201,7 +241,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
           {/* Product Snapshot */}
           <div className="flex gap-4 items-center pb-4 border-b border-ivory-200">
             <img
-              src={product.images[0]}
+              src={getImageUrl(product.images[0])}
               alt={product.title}
               className="w-16 h-20 object-cover rounded-lg border border-ivory-300 shrink-0"
             />
@@ -264,7 +304,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
             </label>
 
             <div className="flex items-center gap-3">
-              {product.availableColors.map((color) => {
+              {availableColorsForType.map((color) => {
                 const isSelected = selectedColor.id === color.id;
                 return (
                   <button
@@ -314,31 +354,30 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {product.availableSizes.map((size) => {
+              {availableSizesForSelection.map(({ size, inStock }) => {
                 const isSelected = selectedSize === size;
-                const isAvailable = isSizeValidAndInStock(size);
 
                 return (
                   <button
                     key={size}
                     type="button"
-                    disabled={!isAvailable}
+                    disabled={!inStock}
                     onClick={() => setSelectedSize(size)}
                     className={`min-w-[48px] h-10 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center relative ${
-                      !isAvailable
+                      !inStock
                         ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through'
                         : isSelected
                         ? 'border-brand-700 bg-brand-700 text-white shadow-xs'
                         : 'border-ivory-300 hover:border-brand-400 text-ink-primary bg-white'
                     }`}
-                    title={isAvailable ? `Size ${size}` : `Size ${size} out of stock in ${selectedColor.name}`}
+                    title={inStock ? `Size ${size}` : `Size ${size} out of stock in ${selectedColor.name}`}
                   >
                     <span>{size}</span>
                   </button>
                 );
               })}
             </div>
-            {selectedSize && !isSizeValidAndInStock(selectedSize) && (
+            {selectedSize && !isCurrentVariantInStock && (
               <p className="text-[11px] text-rose-600 mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 Selected size is currently out of stock in this colour.

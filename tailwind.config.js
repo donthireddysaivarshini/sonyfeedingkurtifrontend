@@ -45,6 +45,7 @@ export default {
           DEFAULT: '#552058',
           accent: '#944799',
           gold: '#E58B12',
+          maroon: '#552058',
         },
         ivory: {
           50: '#FAF5FC',

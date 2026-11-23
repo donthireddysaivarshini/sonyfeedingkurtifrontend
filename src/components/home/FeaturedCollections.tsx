@@ -4,6 +4,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../../data/products';
 import { ProductCard } from '../products/ProductCard';
 import { Product, ClothingType } from '../../types/product';
+import { storeApi } from '../../services/api';
 
 interface FeaturedCollectionsProps {
   onQuickSelect: (product: Product) => void;
@@ -18,9 +19,16 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'feeding' | 'featured' | 'new-arrivals'>('featured');
   const [clothingFilter, setClothingFilter] = useState<'All' | ClothingType>('All');
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+
+  React.useEffect(() => {
+    storeApi.getProducts().then((res) => {
+      if (res && res.length > 0) setProductsList(res);
+    });
+  }, []);
 
   // Filter products based on tab, category, and clothing type
-  const filteredProducts = PRODUCTS.filter((product) => {
+  const filteredProducts = productsList.filter((product) => {
     // Category check
     if (selectedCategorySlug && product.category !== selectedCategorySlug) {
       return false;

@@ -1,100 +1,215 @@
 /**
- * SONY COLLECTIONS - Order Service
+ * SONY COLLECTIONS - Order & Checkout Service
  * 
- * Provides typed contract boundaries for order placement and payment orchestration.
- * In Phase 3, this interfaces cleanly with client-side state / sessionStorage.
- * In Stage 5, this will make REST calls to Django endpoints:
- * - POST /api/orders/
+ * Production service connecting to Django REST Framework:
+ * - POST /api/orders/checkout/
+ * - POST /api/payments/razorpay/verify/
  * - GET /api/orders/
- * - GET /api/orders/:id/
- * - POST /api/payments/razorpay/order/
+ * - GET /api/orders/<order_number>/
+ * - GET /api/orders/<order_number>/invoice/
  */
 
+import { apiClient } from './apiClient';
 import { Order } from '../types/order';
+import { getImageUrl } from '../utils/imageUrl';
 
-export interface CreateOrderResult {
-  success: boolean;
-  order: Order;
-  message?: string;
+export const mapBackendOrder = (fetched: any): Order => ({
+  id: String(fetched.id),
+  orderNumber: fetched.order_number,
+  date: new Date(fetched.created_at).toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }),
+  customerName: `${fetched.first_name || ''} ${fetched.last_name || ''}`.trim() || 'Customer',
+  customerEmail: fetched.email || '',
+  customerPhone: fetched.phone || '',
+  shippingAddress: {
+    fullName: `${fetched.first_name || ''} ${fetched.last_name || ''}`.trim() || 'Customer',
+    phone: fetched.phone || '',
+    houseFlat: fetched.shipping_address || '',
+    streetArea: fetched.apartment || '',
+    landmark: fetched.landmark || '',
+    city: fetched.city || '',
+    state: fetched.state || '',
+    pincode: fetched.zip_code || '',
+    country: 'India',
+  },
+  items: (fetched.items || []).map((it: any) => ({
+    id: String(it.id),
+    productId: String(it.id),
+    productTitle: it.product_name,
+    productSlug: it.product_slug || '',
+    productImage: getImageUrl(it.product_image) || '/images/frocks/teal-zari-tiered-frock.jpg',
+    category: it.clothing_type || 'Kurti',
+    variantId: String(it.id),
+    sku: it.product_sku,
+    clothingType: it.clothing_type,
+    selectedColor: { id: 'c', name: it.color || 'Royal Plum', hex: '#552058' },
+    selectedSize: it.size || 'M',
+    price: parseFloat(it.unit_price) || 0,
+    originalPrice: parseFloat(it.unit_price) || 0,
+    quantity: it.quantity || 1,
+    lineTotal: parseFloat(it.line_total) || 0,
+  })),
+  subtotal: parseFloat(fetched.subtotal) || 0,
+  discount: parseFloat(fetched.discount) || 0,
+  coupon_code: fetched.coupon_code || '',
+  shippingFee: parseFloat(fetched.shipping_fee) || 0,
+  total: parseFloat(fetched.total_amount) || 0,
+  paymentMethod: fetched.payment_method || 'razorpay',
+  paymentStatus: (fetched.payment_status || 'completed').toLowerCase() as any,
+  orderStatus: (fetched.order_status || 'placed').toLowerCase() as any,
+});
+
+export interface CouponValidationResponse {
+  valid: boolean;
+  code: string;
+  discount: number;
+  discount_type: 'percentage' | 'fixed';
+  value: number;
+  is_exchange_code: boolean;
+  message: string;
 }
 
-export interface RazorpayOrderInitResult {
-  razorpayOrderId: string;
-  keyId: string;
+export interface CheckoutInput {
+  address_id?: number | string;
+  address?: {
+    first_name?: string;
+    last_name?: string;
+    phone?: string;
+    shipping_address?: string;
+    houseFlat?: string;
+    streetArea?: string;
+    apartment?: string;
+    landmark?: string;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    pincode?: string;
+    country?: string;
+    is_default?: boolean;
+  };
+  payment_method: 'razorpay' | 'cod';
+  coupon_code?: string;
+  items?: Array<{
+    variant_id?: number | string;
+    sku?: string;
+    product_id?: number | string;
+    product_slug?: string;
+    product_title?: string;
+    clothing_type?: string;
+    color?: string;
+    size?: string;
+    quantity: number;
+  }>;
+}
+
+export interface RazorpayCheckoutResponse {
+  order_id: number;
+  order_number: string;
+  payment_method: 'razorpay';
+  razorpay_order_id: string;
   amount: number;
   currency: string;
+  key: string;
+  reservation_expires_at?: string;
+}
+
+export interface CodCheckoutResponse {
+  id: number;
+  order_number: string;
+  payment_method: 'cod';
+  payment_status: string;
+  order_status: string;
+  total_amount: string;
+  created_at: string;
 }
 
 export const orderService = {
   /**
-   * Submit an order for processing
+   * Initialize checkout: returns Razorpay order details or creates COD order
    */
-  async createOrder(payload: Order): Promise<CreateOrderResult> {
-    try {
-      // Store in session storage
-      sessionStorage.setItem('sony_feeding_kurtis_last_order', JSON.stringify(payload));
-      
-      const existingRaw = sessionStorage.getItem('sony_feeding_kurtis_orders');
-      const existing: Order[] = existingRaw ? JSON.parse(existingRaw) : [];
-      existing.unshift(payload);
-      sessionStorage.setItem('sony_feeding_kurtis_orders', JSON.stringify(existing));
-
-      return {
-        success: true,
-        order: payload,
-        message: 'Order created successfully.',
-      };
-    } catch (err) {
-      return {
-        success: false,
-        order: payload,
-        message: 'Failed to persist order in local session.',
-      };
-    }
+  async checkout(payload: CheckoutInput): Promise<RazorpayCheckoutResponse | CodCheckoutResponse> {
+    const res = await apiClient.post('/orders/checkout/', payload);
+    return res.data;
   },
 
   /**
-   * Retrieve order history for the current customer session
+   * Validate promo coupon or exchange store credit code
    */
-  async getOrders(): Promise<Order[]> {
-    try {
-      const raw = sessionStorage.getItem('sony_feeding_kurtis_orders');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
+  async validateCoupon(code: string, orderTotal: number): Promise<CouponValidationResponse> {
+    const res = await apiClient.post<CouponValidationResponse>('/orders/coupons/validate/', {
+      code,
+      order_total: orderTotal,
+    });
+    return res.data;
   },
 
   /**
-   * Retrieve a specific order by ID
+   * Verify Razorpay cryptographic signature after payment popup
    */
-  async getOrderById(orderId: string): Promise<Order | null> {
-    const orders = await this.getOrders();
-    return orders.find((o) => o.id === orderId || o.orderNumber === orderId) || null;
+  async verifyPayment(payload: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }): Promise<{ status: string; order_number: string }> {
+    const res = await apiClient.post('/payments/razorpay/verify/', payload);
+    return res.data;
   },
 
   /**
-   * Retrieve the latest order from the active session
+   * Fetch customer orders from backend and map to typed Order objects
    */
-  async getLastOrder(): Promise<Order | null> {
-    try {
-      const raw = sessionStorage.getItem('sony_feeding_kurtis_last_order');
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
+  async getUserOrders(): Promise<Order[]> {
+    const res = await apiClient.get<any[]>('/orders/');
+    const list = Array.isArray(res.data) ? res.data : (res.data as any)?.results || [];
+    return list.map(mapBackendOrder);
   },
 
   /**
-   * Prepare a Razorpay payment order (Stage 5 Integration Hook)
+   * Fetch order details by public order number
    */
-  async initiateRazorpayPayment(orderId: string, amount: number): Promise<RazorpayOrderInitResult> {
-    // When Django is connected, this issues POST /api/payments/razorpay/order/
-    return {
-      razorpayOrderId: `rzp_order_mock_${orderId}`,
-      keyId: 'rzp_test_placeholder',
-      amount: amount * 100, // in paise
-      currency: 'INR',
-    };
+  async getOrderByNumber(orderNumber: string): Promise<any> {
+    const res = await apiClient.get(`/orders/${orderNumber}/`);
+    return res.data;
+  },
+
+  /**
+   * Download official Order Invoice PDF blob
+   */
+  async downloadInvoice(orderNumber: string): Promise<void> {
+    const res = await apiClient.get(`/orders/${orderNumber}/invoice/`, {
+      responseType: 'blob',
+    });
+    const blob = new Blob([res.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `order_invoice_${orderNumber}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  },
+
+  /**
+   * Submit damaged product exchange request with mandatory photo/video proof
+   */
+  async requestExchange(orderNumber: string, formData: FormData): Promise<any> {
+    const res = await apiClient.post(`/orders/${orderNumber}/exchanges/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
+
+  /**
+   * Fetch customer exchange requests history
+   */
+  async getUserExchanges(): Promise<any[]> {
+    const res = await apiClient.get<any[]>('/orders/exchanges/');
+    return Array.isArray(res.data) ? res.data : (res.data as any)?.results || [];
   },
 };

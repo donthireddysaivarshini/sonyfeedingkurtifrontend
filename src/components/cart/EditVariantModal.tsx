@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check, Sparkles, AlertCircle } from 'lucide-react';
 import { CartItem } from '../../types/cart';
-import { ClothingType, ProductColor, ProductSize } from '../../types/product';
+import { ClothingType, ProductColor, ProductSize, Product } from '../../types/product';
 import { PRODUCTS } from '../../data/products';
+import { storeApi } from '../../services/api';
 import { useCart } from '../../context/CartContext';
 
 interface EditVariantModalProps {
@@ -16,7 +17,17 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
 
   if (!isOpen || !item) return null;
 
-  const product = PRODUCTS.find((p) => p.id === item.productId);
+  const [product, setProduct] = useState<Product | null>(
+    () => PRODUCTS.find((p) => p.id === item.productId || p.slug === item.productSlug) || null
+  );
+
+  useEffect(() => {
+    if (!product && item?.productSlug) {
+      storeApi.getProductBySlug(item.productSlug).then((fetched) => {
+        if (fetched) setProduct(fetched);
+      });
+    }
+  }, [item?.productSlug, product]);
 
   // Fallback if product not found in catalog
   if (!product) return null;
@@ -34,20 +45,52 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
   const [selectedColor, setSelectedColor] = useState<ProductColor>(item.selectedColor);
   const [selectedSize, setSelectedSize] = useState<ProductSize>(item.selectedSize);
 
+  // Derive valid colors for selected clothing type
+  const availableColorsForType = React.useMemo(() => {
+    const map = new Map<string, ProductColor>();
+    product.variants.forEach((v) => {
+      const typeMatch = product.feedingConfig === 'none' || !selectedType || v.clothingType === selectedType;
+      if (typeMatch && v.color) {
+        const cid = String(v.color.id);
+        if (!map.has(cid)) {
+          map.set(cid, v.color);
+        }
+      }
+    });
+    return Array.from(map.values());
+  }, [product, selectedType]);
+
+  // Derive valid sizes for selected clothing type & color
+  const availableSizesForSelection = React.useMemo(() => {
+    const matching = product.variants.filter((v) => {
+      const typeMatch = product.feedingConfig === 'none' || !selectedType || v.clothingType === selectedType;
+      const colorMatch = String(v.color.id) === String(selectedColor.id);
+      return typeMatch && colorMatch;
+    });
+    return matching.map((v) => ({
+      size: v.size,
+      stock: v.stock,
+      inStock: v.stock > 0,
+    }));
+  }, [product, selectedType, selectedColor]);
+
   // Variant matching
   const matchingVariant = product.variants.find((v) => {
     const typeMatch = product.feedingConfig === 'none' ? true : v.clothingType === selectedType;
-    return typeMatch && v.color.id === selectedColor.id && v.size === selectedSize;
+    return typeMatch && String(v.color.id) === String(selectedColor.id) && v.size === selectedSize;
   });
 
   const isCurrentVariantInStock = matchingVariant ? matchingVariant.stock > 0 : false;
   const currentMaxStock = matchingVariant ? matchingVariant.stock : 10;
 
-  const isCombinationAvailable = (type: ClothingType | null, colorId: string, size: ProductSize): boolean => {
-    return product.variants.some((v) => {
-      const typeMatch = product.feedingConfig === 'none' ? true : v.clothingType === type;
-      return typeMatch && v.color.id === colorId && v.size === size && v.stock > 0;
-    });
+  const handleTypeSelect = (newType: ClothingType) => {
+    setSelectedType(newType);
+    const newColors = product.variants
+      .filter((v) => product.feedingConfig === 'none' || v.clothingType === newType)
+      .map((v) => v.color);
+    if (!newColors.some((c) => String(c.id) === String(selectedColor.id)) && newColors[0]) {
+      setSelectedColor(newColors[0]);
+    }
   };
 
   const handleSave = () => {
@@ -114,7 +157,7 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  onClick={() => setSelectedType('Feeding')}
+                  onClick={() => handleTypeSelect('Feeding')}
                   className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                     selectedType === 'Feeding'
                       ? 'border-brand-700 bg-brand-50 text-brand-900 ring-1 ring-brand-700 font-bold'
@@ -128,7 +171,7 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSelectedType('Non-Feeding')}
+                  onClick={() => handleTypeSelect('Non-Feeding')}
                   className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
                     selectedType === 'Non-Feeding'
                       ? 'border-brand-700 bg-brand-50 text-brand-900 ring-1 ring-brand-700 font-bold'
@@ -158,7 +201,7 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
               <span className="text-brand-700 font-semibold">{selectedColor.name}</span>
             </label>
             <div className="flex flex-wrap gap-2">
-              {product.availableColors.map((color) => {
+              {availableColorsForType.map((color) => {
                 const isSelected = selectedColor.id === color.id;
                 return (
                   <button
@@ -189,9 +232,8 @@ export const EditVariantModal: React.FC<EditVariantModalProps> = ({ item, isOpen
               <span className="text-brand-700 font-semibold">{selectedSize}</span>
             </label>
             <div className="grid grid-cols-5 gap-2">
-              {product.availableSizes.map((size) => {
+              {availableSizesForSelection.map(({ size, inStock }) => {
                 const isSelected = selectedSize === size;
-                const inStock = isCombinationAvailable(selectedType, selectedColor.id, size);
                 return (
                   <button
                     key={size}

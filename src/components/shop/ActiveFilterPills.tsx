@@ -30,6 +30,7 @@ export const ActiveFilterPills: React.FC<ActiveFilterPillsProps> = ({
   }, [availableProducts]);
 
   const hasActiveFilters =
+    Boolean(filters.section) ||
     (!lockCategory && filters.category !== null) ||
     filters.feedingType !== 'All' ||
     filters.handstockOnly ||
@@ -46,6 +47,34 @@ export const ActiveFilterPills: React.FC<ActiveFilterPillsProps> = ({
   return (
     <div className="flex flex-wrap items-center gap-1.5 py-2.5">
       <span className="text-xs text-ink-muted mr-1 font-medium">Active:</span>
+
+      {/* Section Filter Pill */}
+      {filters.section && (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-800 text-white text-xs font-medium shadow-xs">
+          <span>
+            {filters.section === 'feeding-collection'
+              ? 'Collection: Feeding & Non-Feeding'
+              : filters.section === 'handstock'
+              ? 'Section: Handstocks'
+              : filters.section === 'sarees'
+              ? 'Section: Sarees'
+              : filters.section === 'kids-wear'
+              ? 'Section: Kids Wear'
+              : filters.section === 'new-arrivals'
+              ? 'Section: New Arrivals'
+              : filters.section === 'best-sellers'
+              ? 'Section: Best Sellers'
+              : `Section: ${filters.section}`}
+          </span>
+          <button
+            onClick={() => onFilterChange({ ...filters, section: null })}
+            className="hover:text-brand-200 transition-colors ml-0.5"
+            aria-label="Remove section filter"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </span>
+      )}
 
       {/* Handstock Ready-to-Ship Filter */}
       {filters.handstockOnly && (
