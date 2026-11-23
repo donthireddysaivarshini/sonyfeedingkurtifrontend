@@ -505,6 +505,9 @@ export const ProductDetailPage: React.FC = () => {
                     handleColorChange(match);
                   }
                 }}
+                isFavorited={isFavorited}
+                onToggleWishlist={() => toggleWishlist(product.id)}
+                onShare={handleShare}
               />
             </div>
           </div>

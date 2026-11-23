@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, Sparkles, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
+import { SlidersHorizontal, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { CartDrawer } from '../components/layout/CartDrawer';
@@ -19,7 +19,6 @@ import { CATEGORIES, resolveCategorySlug } from '../data/categories';
 import { Product, ProductSize, Category } from '../types/product';
 import { storeApi } from '../services/api';
 import { useCart } from '../context/CartContext';
-import { getImageUrl } from '../utils/imageUrl';
 
 function parseCategoryFilters(categorySlug: string | null, params: URLSearchParams): FilterState {
   const feedingParam = params.get('clothingType') || params.get('feeding');
@@ -182,39 +181,16 @@ export const CategoryPage: React.FC = () => {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
         
-        {/* Category Hero / Header Banner */}
-        <div className="relative rounded-3xl overflow-hidden mb-8 border border-ivory-300 bg-ivory-100 shadow-card">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            {/* Text Information */}
-            <div className="p-6 sm:p-10 md:w-3/5 space-y-3">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider border border-brand-200">
-                <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
-                <span>{category.tagline}</span>
-              </div>
-              <h1 className="font-serif text-2xl sm:text-4xl font-bold text-ink-primary leading-tight">
-                {category.name}
-              </h1>
-              <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed max-w-lg">
-                {category.description}
-              </p>
-              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-brand-800 font-semibold">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                  <span>{categoryProducts.length} Signature Styles</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Category Imagery */}
-            <div className="w-full md:w-2/5 h-48 md:h-64 overflow-hidden relative">
-              <img
-                src={getImageUrl(category.image)}
-                alt={category.name}
-                className="w-full h-full object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-ivory-100 via-transparent to-transparent" />
-            </div>
-          </div>
+        {/* Category Header */}
+        <div className="mb-6">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-ink-primary">
+            {category.name}
+          </h1>
+          {category.description && (
+            <p className="text-xs sm:text-sm text-ink-secondary mt-1 max-w-2xl">
+              {category.description}
+            </p>
+          )}
         </div>
 
         {/* Toolbar: Filter Toggle on Mobile, Count & Sort */}

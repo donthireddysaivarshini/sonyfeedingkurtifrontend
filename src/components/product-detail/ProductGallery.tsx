@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Sparkles, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Sparkles, Maximize2, ChevronLeft, ChevronRight, X, Heart, Share2 } from 'lucide-react';
 import { Product, ProductColor, ClothingType } from '../../types/product';
 import { getImageUrl } from '../../utils/imageUrl';
 
@@ -8,6 +9,9 @@ interface ProductGalleryProps {
   activeColor?: ProductColor | null;
   activeClothingType?: ClothingType | null;
   onColorSelect?: (colorId: string) => void;
+  isFavorited?: boolean;
+  onToggleWishlist?: () => void;
+  onShare?: () => void;
 }
 
 export const ProductGallery: React.FC<ProductGalleryProps> = ({
@@ -15,12 +19,24 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
   activeColor,
   activeClothingType,
   onColorSelect,
+  isFavorited = false,
+  onToggleWishlist,
+  onShare,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
 
+  // Close zoom modal with ESC key
+  useEffect(() => {
+    if (!isZoomModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsZoomModalOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isZoomModalOpen]);
+
   // Derive filtered images strictly adhering to Clothing Type (Option B - Myntra Fashion Model)
-  // Shows all photos of active clothing type, while activeColor focuses the corresponding photo.
   const displayImages = useMemo(() => {
     const rawList = product.galleryImages || [];
 
@@ -32,20 +48,16 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
     }
 
     // 1. Strict Clothing Type Filtering:
-    // If activeClothingType is Non-Feeding, ONLY show Non-Feeding (and neutral/standard) images!
-    // If activeClothingType is Feeding, ONLY show Feeding (and neutral/standard) images!
     let typeMatches = rawList.filter((g) => {
       if (!activeClothingType || product.feedingConfig === 'none') return true;
       if (!g.clothingType || g.clothingType === 'Standard') return true;
       return g.clothingType.toLowerCase() === activeClothingType.toLowerCase();
     });
 
-    // Fallback to neutral/standard images if no images exist for this specific clothing type
     if (typeMatches.length === 0) {
       typeMatches = rawList.filter((g) => !g.clothingType || g.clothingType === 'Standard');
     }
 
-    // If still empty, fallback safely
     if (typeMatches.length === 0) {
       typeMatches = rawList;
     }
@@ -100,58 +112,98 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           onClick={() => setIsZoomModalOpen(true)}
         />
 
-        {/* Feature / Feeding Badge */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10">
+        {/* Feature / Feeding Badge (Top Left) */}
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
           {product.feedingConfig === 'both' && (
-            <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-brand-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-brand-200 shadow-xs">
+            <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-brand-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-brand-200 shadow-xs pointer-events-auto">
               <Sparkles className="w-3 h-3 text-brand-gold" />
               <span>Feeding & Non-Feeding</span>
             </span>
           )}
 
           {product.feedingConfig === 'feeding-only' && (
-            <span className="inline-flex items-center gap-1 bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs">
+            <span className="inline-flex items-center gap-1 bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs pointer-events-auto">
               <Sparkles className="w-3 h-3 text-emerald-200" />
               <span>Feeding Friendly</span>
             </span>
           )}
 
           {product.badge && (
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-700 text-white shadow-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-700 text-white shadow-xs pointer-events-auto">
               {product.badge}
             </span>
           )}
         </div>
 
-        {/* Zoom Button */}
-        <button
-          onClick={() => setIsZoomModalOpen(true)}
-          aria-label="Enlarge image"
-          className="absolute top-3 right-3 p-2 rounded-full bg-white/85 hover:bg-white text-ink-primary shadow-md transition-all hover:scale-110 z-10"
-        >
-          <Maximize2 className="w-4 h-4" />
-        </button>
+        {/* Flipkart / Myntra Style Floating Action Buttons: Share & Wishlist & Zoom (Top Right) */}
+        <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
+          {onShare && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare();
+              }}
+              aria-label="Share product"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
+              title="Share this product"
+            >
+              <Share2 className="w-4 h-4 text-ink-secondary hover:text-brand-800" />
+            </button>
+          )}
 
-        {/* Mobile / Hover Carousel Arrows if more than 1 image */}
+          {onToggleWishlist && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleWishlist();
+              }}
+              aria-label={isFavorited ? 'Remove from wishlist' : 'Save to wishlist'}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
+              title={isFavorited ? 'In your Wishlist' : 'Add to Wishlist'}
+            >
+              <Heart
+                className={`w-4 h-4 sm:w-4.5 sm:h-4.5 transition-colors ${
+                  isFavorited ? 'fill-rose-500 text-rose-500' : 'text-ink-secondary hover:text-rose-500'
+                }`}
+              />
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsZoomModalOpen(true)}
+            aria-label="Enlarge image"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
+            title="Full view"
+          >
+            <Maximize2 className="w-4 h-4 text-ink-secondary hover:text-brand-800" />
+          </button>
+        </div>
+
+        {/* Carousel Arrows (Mobile/Tablet hover) */}
         {images.length > 1 && (
           <>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handlePrev();
               }}
               aria-label="Previous view"
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-ink-primary shadow-md transition-all z-10 opacity-70 hover:opacity-100"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-ink-primary shadow-md transition-all z-10 opacity-70 hover:opacity-100 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handleNext();
               }}
               aria-label="Next view"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-ink-primary shadow-md transition-all z-10 opacity-70 hover:opacity-100"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-ink-primary shadow-md transition-all z-10 opacity-70 hover:opacity-100 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -187,9 +239,10 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           {displayImages.map((g, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={() => handleThumbnailClick(idx)}
               aria-label={`View image ${idx + 1}`}
-              className={`relative w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all shrink-0 bg-ivory-100 ${
+              className={`relative w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden border-2 transition-all shrink-0 bg-ivory-100 cursor-pointer ${
                 safeIndex === idx
                   ? 'border-brand-700 ring-2 ring-brand-700/20 shadow-xs'
                   : 'border-ivory-300 opacity-70 hover:opacity-100'
@@ -212,26 +265,71 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
         </div>
       )}
 
-      {/* Fullscreen Zoom Modal */}
-      {isZoomModalOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
-          onClick={() => setIsZoomModalOpen(false)}
-        >
-          <div className="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
-            <img
-              src={getImageUrl(currentImageUrl)}
-              alt={product.title}
-              className="max-h-[82vh] w-auto object-contain rounded-xl shadow-2xl"
+      {/* Pure Fullscreen Image Viewer Modal (Rendered via React Portal at body level to prevent any stacking context leaks) */}
+      {isZoomModalOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200 select-none"
+            onClick={() => setIsZoomModalOpen(false)}
+          >
+            {/* Prominent Top-Right Close 'X' (Wrong) Button */}
+            <button
+              type="button"
+              onClick={() => setIsZoomModalOpen(false)}
+              aria-label="Close image zoom"
+              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[10000] p-2.5 rounded-full bg-white/20 hover:bg-white/35 text-white backdrop-blur-sm transition-all hover:scale-110 active:scale-95 cursor-pointer shadow-lg border border-white/25"
+              title="Close (ESC)"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Left & Right Fullscreen Nav Arrows */}
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrev();
+                  }}
+                  aria-label="Previous image"
+                  className="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 z-[10000] p-2.5 sm:p-3 rounded-full bg-white/20 hover:bg-white/35 text-white backdrop-blur-sm transition-all hover:scale-110 active:scale-95 cursor-pointer shadow-lg border border-white/25"
+                  title="Previous image"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNext();
+                  }}
+                  aria-label="Next image"
+                  className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-[10000] p-2.5 sm:p-3 rounded-full bg-white/20 hover:bg-white/35 text-white backdrop-blur-sm transition-all hover:scale-110 active:scale-95 cursor-pointer shadow-lg border border-white/25"
+                  title="Next image"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+
+            {/* Centered High-Resolution Image (Pure image without any color or size options) */}
+            <div
+              className="relative max-w-5xl max-h-[88vh] flex flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
-            />
-            <p className="text-ivory-200 text-xs mt-3 text-center">
-              {product.title} • {safeIndex + 1} of {images.length} (Tap anywhere outside to close)
-            </p>
-          </div>
-        </div>
-      )}
+            >
+              <img
+                src={getImageUrl(currentImageUrl)}
+                alt={product.title}
+                className="max-h-[84vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl"
+              />
+              <p className="text-white/70 text-xs sm:text-sm mt-3 text-center font-medium">
+                {product.title} • {safeIndex + 1} of {images.length} (Click ✕ or tap outside to close)
+              </p>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
-
