@@ -117,6 +117,10 @@ h1, h2, h3, h4, .font-serif, .font-display {
   animation-play-state: paused;
 }
 
+.safe-bottom {
+  padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+}
+
 /* Print Optimization for Clean A4 Order Receipts / Invoices */
 @media print {
   @page {

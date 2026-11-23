@@ -97,6 +97,8 @@ export interface Product {
   description: string;
   fabric: string;
   careInstructions: string[];
+  sizeGuideImageUrl?: string | null;
+  sizeGuideText?: string | null;
   feedingDetails?: {
     zipType: string;
     zipPlacement: string;

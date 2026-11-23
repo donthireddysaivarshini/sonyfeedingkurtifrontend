@@ -44,8 +44,8 @@ function parseCategoryFilters(categorySlug: string | null, params: URLSearchPara
   const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
   const colors = params.get('colors')?.split(',').filter(Boolean) || [];
   const fabrics = params.get('fabrics')?.split(',').filter(Boolean) || [];
-  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 800;
-  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 3000;
+  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 0;
+  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 10000;
 
   return {
     category: categorySlug,
@@ -54,7 +54,7 @@ function parseCategoryFilters(categorySlug: string | null, params: URLSearchPara
     sizes,
     colors,
     fabrics,
-    priceRange: [isNaN(minPrice) ? 800 : minPrice, isNaN(maxPrice) ? 3000 : maxPrice],
+    priceRange: [isNaN(minPrice) ? 0 : minPrice, isNaN(maxPrice) ? 10000 : maxPrice],
     sortBy,
   };
 }
@@ -75,27 +75,68 @@ export const CategoryPage: React.FC = () => {
   // Live categories and products from Django backend (with initial fallback)
   const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
   const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    storeApi.getCategories().then((cats) => {
-      if (isMounted && cats && cats.length > 0) setCategoriesList(cats);
-    });
-    storeApi.getProducts().then((prods) => {
-      if (isMounted && prods && prods.length > 0) setProductsList(prods);
-    });
+    Promise.all([
+      storeApi.getCategories(),
+      storeApi.getProducts(),
+      resolvedSlug ? storeApi.getCategoryBySlug(resolvedSlug) : Promise.resolve(null),
+    ])
+      .then(([cats, prods, directCat]) => {
+        if (!isMounted) return;
+        if (cats && cats.length > 0) {
+          const mergedCats = [...cats];
+          if (directCat && !mergedCats.some((c) => c.slug?.toLowerCase() === directCat.slug?.toLowerCase())) {
+            mergedCats.push(directCat);
+          }
+          setCategoriesList(mergedCats);
+        }
+        if (prods && prods.length > 0) {
+          setProductsList(prods);
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [resolvedSlug]);
 
-  // Find category metadata
-  const category = categoriesList.find((c) => c.slug === resolvedSlug);
+  // Find category metadata robustly
+  const category = useMemo(() => {
+    if (!resolvedSlug) return undefined;
+    const target = resolvedSlug.toLowerCase();
+    return categoriesList.find(
+      (c) => c.slug?.toLowerCase() === target || c.id?.toLowerCase() === target || c.name?.toLowerCase() === target
+    );
+  }, [categoriesList, resolvedSlug]);
 
-  // Products belonging to this category
+  // Products belonging to this category robustly
   const categoryProducts = useMemo(() => {
-    return productsList.filter((p) => p.category === resolvedSlug);
-  }, [productsList, resolvedSlug]);
+    if (!resolvedSlug) return [];
+    const targetSlug = resolvedSlug.toLowerCase();
+    const targetCat = categoriesList.find(
+      (c) => c.slug?.toLowerCase() === targetSlug || c.id?.toLowerCase() === targetSlug || c.name?.toLowerCase() === targetSlug
+    );
+    const targetId = targetCat ? String(targetCat.id).toLowerCase() : null;
+    const targetName = targetCat?.name ? targetCat.name.toLowerCase() : null;
+
+    return productsList.filter((p) => {
+      const pCat = String(p.category || '').toLowerCase();
+      const pCatName = String(p.categoryName || '').toLowerCase();
+      return (
+        pCat === targetSlug ||
+        (targetId && pCat === targetId) ||
+        (targetName && pCatName === targetName) ||
+        (targetName && pCat === targetName)
+      );
+    });
+  }, [productsList, resolvedSlug, categoriesList]);
 
   // Filters state (with category locked to current resolved category slug)
   const [filters, setFilters] = useState<FilterState>(() => parseCategoryFilters(resolvedSlug, searchParams));
@@ -127,11 +168,30 @@ export const CategoryPage: React.FC = () => {
     if (updated.sizes.length > 0) newParams.set('sizes', updated.sizes.join(','));
     if (updated.colors.length > 0) newParams.set('colors', updated.colors.join(','));
     if (updated.fabrics.length > 0) newParams.set('fabrics', updated.fabrics.join(','));
-    if (updated.priceRange[0] > 800) newParams.set('minPrice', String(updated.priceRange[0]));
-    if (updated.priceRange[1] < 3000) newParams.set('maxPrice', String(updated.priceRange[1]));
+    if (updated.priceRange[0] > 0) newParams.set('minPrice', String(updated.priceRange[0]));
+    if (updated.priceRange[1] < 10000) newParams.set('maxPrice', String(updated.priceRange[1]));
     if (updated.sortBy !== 'featured') newParams.set('sort', updated.sortBy);
     setSearchParams(newParams);
   };
+
+  if (isLoading && !category) {
+    return (
+      <div className="min-h-screen flex flex-col bg-ivory">
+        <Header
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          onOpenCart={openCart}
+        />
+        <main className="flex-1 flex items-center justify-center p-12">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-3 border-brand-700 border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs text-ink-muted">Loading collection...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!category) {
     return (
@@ -299,7 +359,7 @@ export const CategoryPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 justify-start sm:justify-center">
-            {CATEGORIES.filter((c) => c.slug !== resolvedSlug).map((otherCat) => (
+            {categoriesList.filter((c) => c.slug !== resolvedSlug).map((otherCat) => (
               <Link
                 key={otherCat.id}
                 to={`/category/${otherCat.slug}`}

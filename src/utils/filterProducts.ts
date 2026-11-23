@@ -33,8 +33,13 @@ export function filterAndSortProducts(
     }
 
     // Category Filter
-    if (filters.category && product.category !== filters.category) {
-      return false;
+    if (filters.category) {
+      const targetCat = filters.category.toLowerCase();
+      const pCat = String(product.category || '').toLowerCase();
+      const pCatName = String(product.categoryName || '').toLowerCase();
+      if (pCat !== targetCat && pCatName !== targetCat) {
+        return false;
+      }
     }
 
     // Feeding Type Filter

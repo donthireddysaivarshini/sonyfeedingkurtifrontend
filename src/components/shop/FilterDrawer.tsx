@@ -1,7 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { FilterSidebar, FilterState } from './FilterSidebar';
-import { Product } from '../../types/product';
+import { Product, Category } from '../../types/product';
 
 interface FilterDrawerProps {
   isOpen: boolean;
@@ -10,6 +10,7 @@ interface FilterDrawerProps {
   onFilterChange: (newFilters: FilterState) => void;
   onReset: () => void;
   availableProducts: Product[];
+  categories?: Category[];
   lockCategory?: boolean;
   matchingCount: number;
 }
@@ -21,6 +22,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   onFilterChange,
   onReset,
   availableProducts,
+  categories,
   lockCategory = false,
   matchingCount,
 }) => {
@@ -55,6 +57,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
           onFilterChange={onFilterChange}
           onReset={onReset}
           availableProducts={availableProducts}
+          categories={categories}
           lockCategory={lockCategory}
           isMobileDrawer={true}
           onCloseMobileDrawer={onClose}

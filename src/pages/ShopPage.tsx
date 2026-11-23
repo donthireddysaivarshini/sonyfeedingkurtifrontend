@@ -14,9 +14,9 @@ import { FilterDrawer } from '../components/shop/FilterDrawer';
 import { SortDropdown } from '../components/shop/SortDropdown';
 import { ActiveFilterPills } from '../components/shop/ActiveFilterPills';
 import { filterAndSortProducts } from '../utils/filterProducts';
-import { resolveCategorySlug } from '../data/categories';
+import { CATEGORIES, resolveCategorySlug } from '../data/categories';
 import { PRODUCTS } from '../data/products';
-import { Product, ProductSize } from '../types/product';
+import { Product, ProductSize, Category } from '../types/product';
 import { storeApi } from '../services/api';
 import { useCart } from '../context/CartContext';
 
@@ -46,8 +46,8 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
   const sizes = (params.get('sizes')?.split(',').filter(Boolean) as ProductSize[]) || [];
   const colors = params.get('colors')?.split(',').filter(Boolean) || [];
   const fabrics = params.get('fabrics')?.split(',').filter(Boolean) || [];
-  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 800;
-  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 3000;
+  const minPrice = params.get('minPrice') ? Number(params.get('minPrice')) : 0;
+  const maxPrice = params.get('maxPrice') ? Number(params.get('maxPrice')) : 10000;
 
   return {
     category,
@@ -57,7 +57,7 @@ function parseFiltersFromParams(params: URLSearchParams): FilterState {
     sizes,
     colors,
     fabrics,
-    priceRange: [isNaN(minPrice) ? 800 : minPrice, isNaN(maxPrice) ? 3000 : maxPrice],
+    priceRange: [isNaN(minPrice) ? 0 : minPrice, isNaN(maxPrice) ? 10000 : maxPrice],
     sortBy,
   };
 }
@@ -73,14 +73,20 @@ export const ShopPage: React.FC = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null);
 
-  // Live products loaded from Django backend (with initial fallback)
+  // Live products & categories loaded from Django backend (with initial fallback)
   const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+  const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
 
   useEffect(() => {
     let isMounted = true;
     storeApi.getProducts().then((res) => {
       if (isMounted && res && res.length > 0) {
         setProductsList(res);
+      }
+    });
+    storeApi.getCategories().then((cats) => {
+      if (isMounted && cats && cats.length > 0) {
+        setCategoriesList(cats);
       }
     });
     return () => {
@@ -116,8 +122,8 @@ export const ShopPage: React.FC = () => {
     if (newFilters.sizes.length > 0) newParams.set('sizes', newFilters.sizes.join(','));
     if (newFilters.colors.length > 0) newParams.set('colors', newFilters.colors.join(','));
     if (newFilters.fabrics.length > 0) newParams.set('fabrics', newFilters.fabrics.join(','));
-    if (newFilters.priceRange[0] > 800) newParams.set('minPrice', String(newFilters.priceRange[0]));
-    if (newFilters.priceRange[1] < 3000) newParams.set('maxPrice', String(newFilters.priceRange[1]));
+    if (newFilters.priceRange[0] > 0) newParams.set('minPrice', String(newFilters.priceRange[0]));
+    if (newFilters.priceRange[1] < 10000) newParams.set('maxPrice', String(newFilters.priceRange[1]));
     if (newFilters.sortBy !== 'featured') newParams.set('sort', newFilters.sortBy);
     setSearchParams(newParams);
   };
@@ -240,7 +246,7 @@ export const ShopPage: React.FC = () => {
           filters={filters}
           onFilterChange={handleFilterChange}
           onReset={handleResetFilters}
-          availableProducts={PRODUCTS}
+          availableProducts={productsList}
         />
 
         {/* Layout: Sidebar + Product Grid */}
@@ -252,7 +258,8 @@ export const ShopPage: React.FC = () => {
               filters={filters}
               onFilterChange={handleFilterChange}
               onReset={handleResetFilters}
-              availableProducts={PRODUCTS}
+              availableProducts={productsList}
+              categories={categoriesList}
               matchingCount={matchingProducts.length}
             />
           </aside>
@@ -307,7 +314,8 @@ export const ShopPage: React.FC = () => {
         filters={filters}
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
-        availableProducts={PRODUCTS}
+        availableProducts={productsList}
+        categories={categoriesList}
         matchingCount={matchingProducts.length}
       />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RotateCcw, Sparkles } from 'lucide-react';
-import { Product, ProductSize } from '../../types/product';
+import { Product, ProductSize, Category } from '../../types/product';
 import { CATEGORIES } from '../../data/categories';
 
 export interface FilterState {
@@ -15,7 +15,7 @@ export interface FilterState {
   sortBy: 'featured' | 'bestseller' | 'price-low' | 'price-high' | 'newest';
 }
 
-export const INITIAL_PRICE_BOUNDS: [number, number] = [800, 3000];
+export const INITIAL_PRICE_BOUNDS: [number, number] = [0, 10000];
 
 export const INITIAL_FILTERS: FilterState = {
   category: null,
@@ -34,6 +34,7 @@ interface FilterSidebarProps {
   onFilterChange: (newFilters: FilterState) => void;
   onReset: () => void;
   availableProducts: Product[];
+  categories?: Category[];
   lockCategory?: boolean;
   isMobileDrawer?: boolean;
   onCloseMobileDrawer?: () => void;
@@ -45,45 +46,105 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
   onReset,
   availableProducts,
+  categories = CATEGORIES,
   lockCategory = false,
   isMobileDrawer = false,
   onCloseMobileDrawer,
   matchingCount,
 }) => {
-  // Extract distinct fabrics actually present in available products
-  const availableFabrics = React.useMemo(() => {
-    const set = new Set<string>();
-    availableProducts.forEach((p) => {
-      if (p.fabric) set.add(p.fabric);
-    });
-    return Array.from(set).sort();
+  // 1. Dynamic Price Range Bounds calculated from products on this page
+  const priceRangeBounds = React.useMemo<[number, number]>(() => {
+    if (!availableProducts || availableProducts.length === 0) {
+      return [0, 5000];
+    }
+    const prices = availableProducts.map((p) => p.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const effectiveMin = Math.min(0, Math.floor(min));
+    const effectiveMax = Math.max(3000, Math.ceil(max / 500) * 500);
+    return [effectiveMin, effectiveMax];
   }, [availableProducts]);
 
-  // Extract distinct colors with hex actually present in available products
-  const availableColors = React.useMemo(() => {
-    const map = new Map<string, { id: string; name: string; hex: string }>();
+  // 2. Dynamic Clothing Type Facets & Live Counts
+  const clothingTypeCounts = React.useMemo(() => {
+    let feedingCount = 0;
+    let nonFeedingCount = 0;
     availableProducts.forEach((p) => {
-      p.availableColors.forEach((c) => {
-        if (!map.has(c.id)) {
-          map.set(c.id, c);
+      const hasFeeding =
+        p.feedingConfig === 'feeding-only' ||
+        (p.feedingConfig === 'both' && p.supportedClothingTypes?.includes('Feeding'));
+      const hasNonFeeding =
+        p.feedingConfig === 'none' ||
+        (p.feedingConfig === 'both' && p.supportedClothingTypes?.includes('Non-Feeding'));
+      if (hasFeeding) feedingCount++;
+      if (hasNonFeeding) nonFeedingCount++;
+    });
+    return {
+      all: availableProducts.length,
+      feeding: feedingCount,
+      nonFeeding: nonFeedingCount,
+    };
+  }, [availableProducts]);
+
+  // 3. Dynamic Fabrics actually present in available products with counts
+  const availableFabricsWithCount = React.useMemo(() => {
+    const map = new Map<string, number>();
+    availableProducts.forEach((p) => {
+      if (p.fabric && p.fabric.trim()) {
+        const f = p.fabric.trim();
+        map.set(f, (map.get(f) || 0) + 1);
+      }
+    });
+    return Array.from(map.entries())
+      .map(([fabric, count]) => ({ fabric, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [availableProducts]);
+
+  // 4. Dynamic Colors with HEX swatches actually present in available products with counts
+  const availableColorsWithCount = React.useMemo(() => {
+    const map = new Map<string, { id: string; name: string; hex: string; count: number }>();
+    availableProducts.forEach((p) => {
+      const productColors = new Map<string, { id: string; name: string; hex: string }>();
+      (p.availableColors || []).forEach((c) => {
+        productColors.set(String(c.id), c);
+      });
+      (p.variants || []).forEach((v) => {
+        if (v.color && (v.stock > 0 || v.inStock)) {
+          productColors.set(String(v.color.id), v.color);
+        }
+      });
+      productColors.forEach((color, id) => {
+        if (!map.has(id)) {
+          map.set(id, { ...color, count: 1 });
+        } else {
+          map.get(id)!.count += 1;
         }
       });
     });
-    return Array.from(map.values());
+    return Array.from(map.values()).sort((a, b) => b.count - a.count);
   }, [availableProducts]);
 
-  // Extract sizes present in available in-stock variants
-  const availableSizes = React.useMemo(() => {
+  // 5. Dynamic Sizes present in available in-stock variants with counts
+  const availableSizesWithCount = React.useMemo(() => {
     const sizeOrder: ProductSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', 'Free Size'];
-    const presentSizes = new Set<string>();
+    const countMap = new Map<string, number>();
     availableProducts.forEach((p) => {
-      p.variants.forEach((v) => {
+      const productSizes = new Set<string>();
+      (p.variants || []).forEach((v) => {
         if (v.stock > 0) {
-          presentSizes.add(v.size);
+          productSizes.add(v.size);
         }
       });
+      productSizes.forEach((size) => {
+        countMap.set(size, (countMap.get(size) || 0) + 1);
+      });
     });
-    return sizeOrder.filter((s) => presentSizes.has(s));
+    return sizeOrder
+      .filter((s) => countMap.has(s))
+      .map((size) => ({
+        size,
+        count: countMap.get(size) || 0,
+      }));
   }, [availableProducts]);
 
   const hasActiveFilters =
@@ -93,8 +154,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     filters.colors.length > 0 ||
     filters.sizes.length > 0 ||
     filters.fabrics.length > 0 ||
-    filters.priceRange[0] !== INITIAL_PRICE_BOUNDS[0] ||
-    filters.priceRange[1] !== INITIAL_PRICE_BOUNDS[1];
+    filters.priceRange[0] > priceRangeBounds[0] ||
+    filters.priceRange[1] < priceRangeBounds[1];
 
   const handleFeedingChange = (type: 'All' | 'Feeding' | 'Non-Feeding') => {
     onFilterChange({ ...filters, feedingType: type });
@@ -162,31 +223,55 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         )}
       </div>
 
-      {/* 1. Feeding Friendly Filter (Signature Feature) */}
+      {/* 1. Dynamic Feeding Friendly Filter (Signature Feature) */}
       <div className="space-y-2.5">
         <label className="text-xs font-bold uppercase tracking-wider text-ink-primary flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
           <span>Feeding Access</span>
         </label>
         <div className="grid grid-cols-1 gap-1.5">
-          {[
-            { id: 'All', label: 'All Silhouettes' },
-            { id: 'Feeding', label: '🤱 Feeding Friendly (Discreet Zips)' },
-            { id: 'Non-Feeding', label: '✨ Regular Ethnic Fit' },
-          ].map((opt) => (
+          <button
+            key="All"
+            onClick={() => handleFeedingChange('All')}
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
+              filters.feedingType === 'All'
+                ? 'bg-brand-700 text-white shadow-xs'
+                : 'bg-ivory-100/80 hover:bg-ivory-200 text-ink-secondary hover:text-ink-primary border border-ivory-300'
+            }`}
+          >
+            <span>All Silhouettes ({clothingTypeCounts.all})</span>
+            {filters.feedingType === 'All' && <span className="text-[10px]">✓</span>}
+          </button>
+
+          {clothingTypeCounts.feeding > 0 && (
             <button
-              key={opt.id}
-              onClick={() => handleFeedingChange(opt.id as any)}
+              key="Feeding"
+              onClick={() => handleFeedingChange('Feeding')}
               className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
-                filters.feedingType === opt.id
+                filters.feedingType === 'Feeding'
                   ? 'bg-brand-700 text-white shadow-xs'
                   : 'bg-ivory-100/80 hover:bg-ivory-200 text-ink-secondary hover:text-ink-primary border border-ivory-300'
               }`}
             >
-              <span>{opt.label}</span>
-              {filters.feedingType === opt.id && <span className="text-[10px]">✓</span>}
+              <span>🤱 Feeding Friendly ({clothingTypeCounts.feeding})</span>
+              {filters.feedingType === 'Feeding' && <span className="text-[10px]">✓</span>}
             </button>
-          ))}
+          )}
+
+          {clothingTypeCounts.nonFeeding > 0 && (
+            <button
+              key="Non-Feeding"
+              onClick={() => handleFeedingChange('Non-Feeding')}
+              className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-between ${
+                filters.feedingType === 'Non-Feeding'
+                  ? 'bg-brand-700 text-white shadow-xs'
+                  : 'bg-ivory-100/80 hover:bg-ivory-200 text-ink-secondary hover:text-ink-primary border border-ivory-300'
+              }`}
+            >
+              <span>✨ Regular Ethnic Fit ({clothingTypeCounts.nonFeeding})</span>
+              {filters.feedingType === 'Non-Feeding' && <span className="text-[10px]">✓</span>}
+            </button>
+          )}
         </div>
       </div>
 
@@ -216,7 +301,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             Category
           </label>
           <div className="space-y-1 max-h-48 overflow-y-auto no-scrollbar pr-1">
-            {CATEGORIES.map((cat) => {
+            {categories.map((cat) => {
               const isSelected = filters.category === cat.slug;
               return (
                 <button
@@ -237,26 +322,30 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {/* 3. Sizes Filter */}
-      {availableSizes.length > 0 && (
+      {/* 3. Dynamic Sizes Filter */}
+      {availableSizesWithCount.length > 0 && (
         <div className="space-y-2.5 pt-4 border-t border-ivory-200">
           <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block">
             Size
           </label>
           <div className="flex flex-wrap gap-1.5">
-            {availableSizes.map((size) => {
+            {availableSizesWithCount.map(({ size, count }) => {
               const isSelected = filters.sizes.includes(size);
               return (
                 <button
                   key={size}
                   onClick={() => toggleSize(size)}
-                  className={`min-w-[40px] h-9 px-2.5 rounded-xl text-xs font-bold transition-all border ${
+                  className={`min-w-[44px] h-9 px-2 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1 ${
                     isSelected
                       ? 'bg-brand-700 text-white border-brand-700 shadow-xs scale-105'
                       : 'bg-white hover:bg-ivory-100 text-ink-secondary border-ivory-300'
                   }`}
+                  title={`${size} (${count} styles)`}
                 >
-                  {size}
+                  <span>{size}</span>
+                  <span className={`text-[10px] ${isSelected ? 'text-white/80' : 'text-ink-muted'}`}>
+                    ({count})
+                  </span>
                 </button>
               );
             })}
@@ -264,30 +353,32 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {/* 4. Colours Filter */}
-      {availableColors.length > 0 && (
+      {/* 4. Dynamic Colours Filter */}
+      {availableColorsWithCount.length > 0 && (
         <div className="space-y-2.5 pt-4 border-t border-ivory-200">
           <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block">
             Colour
           </label>
-          <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto no-scrollbar pr-1">
-            {availableColors.map((color) => {
+          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto no-scrollbar pr-1">
+            {availableColorsWithCount.map((color) => {
               const isSelected = filters.colors.includes(color.id);
               return (
                 <button
                   key={color.id}
                   onClick={() => toggleColor(color.id)}
-                  className={`flex items-center gap-2 p-1.5 rounded-lg text-xs transition-all border text-left ${
+                  className={`flex items-center gap-1.5 p-1.5 rounded-lg text-xs transition-all border text-left ${
                     isSelected
                       ? 'bg-brand-50 border-brand-700 text-brand-900 font-semibold'
                       : 'bg-white border-ivory-300 text-ink-secondary hover:bg-ivory-100'
                   }`}
+                  title={`${color.name} (${color.count} styles)`}
                 >
                   <span
-                    className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0"
+                    className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0 shadow-2xs"
                     style={{ backgroundColor: color.hex }}
                   />
-                  <span className="truncate text-[11px]">{color.name}</span>
+                  <span className="truncate text-[11px] flex-1">{color.name}</span>
+                  <span className="text-[10px] text-ink-muted">({color.count})</span>
                 </button>
               );
             })}
@@ -295,14 +386,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {/* 5. Fabric Filter */}
-      {availableFabrics.length > 0 && (
+      {/* 5. Dynamic Fabric Filter */}
+      {availableFabricsWithCount.length > 0 && (
         <div className="space-y-2.5 pt-4 border-t border-ivory-200">
           <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block">
             Fabric
           </label>
-          <div className="space-y-1.5 max-h-40 overflow-y-auto no-scrollbar pr-1">
-            {availableFabrics.map((fabric) => {
+          <div className="space-y-1.5 max-h-44 overflow-y-auto no-scrollbar pr-1">
+            {availableFabricsWithCount.map(({ fabric, count }) => {
               const isSelected = filters.fabrics.includes(fabric);
               return (
                 <label
@@ -315,9 +406,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     onChange={() => toggleFabric(fabric)}
                     className="rounded border-ivory-400 text-brand-700 focus:ring-brand-500 w-4 h-4"
                   />
-                  <span className={`truncate ${isSelected ? 'font-semibold text-brand-900' : ''}`}>
+                  <span className={`truncate flex-1 ${isSelected ? 'font-semibold text-brand-900' : ''}`}>
                     {fabric}
                   </span>
+                  <span className="text-[10px] text-ink-muted shrink-0">({count})</span>
                 </label>
               );
             })}
@@ -325,7 +417,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {/* 6. Price Range Filter */}
+      {/* 6. Dynamic Price Range Filter */}
       <div className="space-y-3 pt-4 border-t border-ivory-200">
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold uppercase tracking-wider text-ink-primary block">
@@ -342,7 +434,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <span className="text-[10px] text-ink-muted block mb-0.5">Min (₹)</span>
               <input
                 type="number"
-                min={INITIAL_PRICE_BOUNDS[0]}
+                min={priceRangeBounds[0]}
                 max={filters.priceRange[1]}
                 step={50}
                 value={filters.priceRange[0]}
@@ -355,7 +447,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <input
                 type="number"
                 min={filters.priceRange[0]}
-                max={INITIAL_PRICE_BOUNDS[1]}
+                max={priceRangeBounds[1]}
                 step={50}
                 value={filters.priceRange[1]}
                 onChange={(e) => handlePriceChange(e, 1)}
@@ -366,10 +458,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           <input
             type="range"
-            min={INITIAL_PRICE_BOUNDS[0]}
-            max={INITIAL_PRICE_BOUNDS[1]}
+            min={priceRangeBounds[0]}
+            max={priceRangeBounds[1]}
             step={50}
-            value={filters.priceRange[1]}
+            value={Math.min(filters.priceRange[1], priceRangeBounds[1])}
             onChange={(e) => handlePriceChange(e, 1)}
             aria-label="Filter maximum price"
             className="w-full accent-brand-700 cursor-pointer"

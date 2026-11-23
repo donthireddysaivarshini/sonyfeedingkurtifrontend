@@ -31,6 +31,8 @@ export interface DjangoProductResponse {
   description: string;
   fabric: string;
   care_instructions: string;
+  size_guide_image_url?: string | null;
+  size_guide_text?: string | null;
   feeding_config?: 'both' | 'feeding-only' | 'none';
   is_new_arrival: boolean;
   is_best_seller: boolean;

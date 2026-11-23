@@ -95,6 +95,7 @@ export const ProductDetailPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [addSuccessMessage, setAddSuccessMessage] = useState<string | null>(null);
   const [shareSuccessToast, setShareSuccessToast] = useState(false);
+  const [sizePromptNotice, setSizePromptNotice] = useState<string | null>(null);
 
   // Amazon-style Customer Reviews State
   const [reviewsData, setReviewsData] = useState<{
@@ -330,6 +331,29 @@ export const ProductDetailPage: React.FC = () => {
   const isCurrentVariantInStock = Boolean(currentVariant && currentVariant.stock > 0);
   const availableStock = currentVariant ? currentVariant.stock : 0;
 
+  const validateSelection = (): boolean => {
+    if (!hasSelectedFeedingChoice) {
+      setSizePromptNotice('Please choose Feeding or Non-Feeding first');
+      const el = document.getElementById('feeding-type-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setSizePromptNotice(null), 3500);
+      return false;
+    }
+    if (!selectedSize) {
+      setSizePromptNotice('Please select your size');
+      const el = document.getElementById('size-selector-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setSizePromptNotice(null), 3500);
+      return false;
+    }
+    if (!currentVariant || !isCurrentVariantInStock) {
+      setSizePromptNotice('Selected size/color combination is currently out of stock');
+      setTimeout(() => setSizePromptNotice(null), 3500);
+      return false;
+    }
+    return true;
+  };
+
   const buildCartItem = (): CartItem | null => {
     if (!hasSelectedFeedingChoice || !selectedColor || !selectedSize || !currentVariant || !isCurrentVariantInStock) {
       return null;
@@ -365,6 +389,7 @@ export const ProductDetailPage: React.FC = () => {
   };
 
   const handleAddToCart = () => {
+    if (!validateSelection()) return;
     const item = buildCartItem();
     if (!item) return;
 
@@ -400,6 +425,7 @@ export const ProductDetailPage: React.FC = () => {
   };
 
   const handleBuyNow = () => {
+    if (!validateSelection()) return;
     const item = buildCartItem();
     if (!item) return;
 
@@ -489,7 +515,7 @@ export const ProductDetailPage: React.FC = () => {
       </div>
 
       {/* Main Product Layout */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10 pb-28 sm:pb-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
           
           {/* Left Column: Product Gallery (5 cols on lg) */}
@@ -564,7 +590,7 @@ export const ProductDetailPage: React.FC = () => {
 
             {/* Feeding / Non-Feeding Option */}
             {product.feedingConfig === 'both' && (
-              <div className="p-4 bg-brand-50/70 rounded-2xl border border-brand-200">
+              <div id="feeding-type-section" className="p-4 bg-brand-50/70 rounded-2xl border border-brand-200">
                 <FeedingOptionSelector
                   selectedType={selectedType}
                   onSelect={handleTypeChange}
@@ -624,7 +650,13 @@ export const ProductDetailPage: React.FC = () => {
             )}
 
             {/* Size Selector */}
-            <div className="space-y-2.5">
+            <div id="size-selector-section" className="space-y-2.5">
+              {sizePromptNotice && (
+                <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-900 flex items-center gap-2 animate-pulse">
+                  <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
+                  <span className="font-semibold">{sizePromptNotice}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-xs">
                 <label className="font-bold uppercase tracking-wider text-ink-primary">
                   Select Size{' '}
@@ -1362,6 +1394,7 @@ export const ProductDetailPage: React.FC = () => {
       <SizeGuideModal
         isOpen={isSizeGuideOpen}
         onClose={() => setIsSizeGuideOpen(false)}
+        product={product}
       />
 
       {/* Search Modal */}
@@ -1416,6 +1449,46 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Flipkart-Style Sticky Bottom Action Bar on Mobile */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-ivory-300 px-3 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.12)] flex items-center gap-2 safe-bottom">
+        {/* Live Price Display */}
+        <div className="flex flex-col justify-center px-1.5 shrink-0 min-w-[76px]">
+          <span className="font-serif text-base font-extrabold text-brand-900 leading-tight">
+            ₹{(currentVariant ? currentVariant.price : product.price).toLocaleString('en-IN')}
+          </span>
+          {product.discountPercentage && product.discountPercentage > 0 ? (
+            <span className="text-[10px] text-emerald-700 font-bold leading-tight">
+              {product.discountPercentage}% off
+            </span>
+          ) : (currentVariant?.originalPrice ?? product.originalPrice) ? (
+            <span className="text-[10px] text-ink-muted line-through leading-tight">
+              ₹{Number(currentVariant?.originalPrice ?? product.originalPrice).toLocaleString('en-IN')}
+            </span>
+          ) : null}
+        </div>
+
+        {/* Add to Bag Button */}
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          disabled={!isCurrentVariantInStock}
+          className="flex-1 py-3 px-3 rounded-xl bg-ivory-100 hover:bg-ivory-200 border border-brand-300 text-brand-900 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <ShoppingBag className="w-4 h-4 text-brand-700" />
+          <span>Add to Bag</span>
+        </button>
+
+        {/* Buy Now Button */}
+        <button
+          type="button"
+          onClick={handleBuyNow}
+          disabled={!isCurrentVariantInStock}
+          className="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-brand-700 to-brand-900 hover:from-brand-800 hover:to-brand-950 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span>Buy Now</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };

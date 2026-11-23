@@ -116,6 +116,8 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
     description: dto.description,
     fabric: dto.fabric,
     careInstructions: dto.care_instructions ? dto.care_instructions.split('\n').filter(Boolean) : [],
+    sizeGuideImageUrl: dto.size_guide_image_url ? getImageUrl(dto.size_guide_image_url) : null,
+    sizeGuideText: dto.size_guide_text || null,
     isNewArrival: dto.is_new_arrival,
     isBestseller: dto.is_best_seller,
     isFeatured: dto.is_best_seller,
