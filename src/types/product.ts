@@ -47,6 +47,7 @@ export interface ProductReview {
   id: string;
   userName: string;
   rating: number;
+  headline?: string;
   comment: string;
   date: string;
   verifiedPurchase: boolean;

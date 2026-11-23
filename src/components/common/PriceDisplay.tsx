@@ -17,11 +17,13 @@ export const PriceDisplay: React.FC<PriceDisplayProps> = ({
   showDecimals = false,
 }) => {
   const hasDiscount = Boolean(originalPrice && originalPrice > price);
-  const computedDiscount =
-    discountPercentage ??
-    (hasDiscount
+  const rawDiscount =
+    discountPercentage && discountPercentage > 0
+      ? discountPercentage
+      : hasDiscount
       ? Math.round(((originalPrice! - price) / originalPrice!) * 100)
-      : null);
+      : null;
+  const computedDiscount = rawDiscount && rawDiscount > 0 ? rawDiscount : null;
 
   const formatAmount = (amount: number) =>
     `₹${amount.toLocaleString('en-IN')}${showDecimals ? '.00' : ''}`;
@@ -46,10 +48,10 @@ export const PriceDisplay: React.FC<PriceDisplayProps> = ({
   return (
     <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2">
       <span className={spClass}>{formatAmount(price)}</span>
-      {hasDiscount && originalPrice && (
-        <span className={mrpClass}>{formatAmount(originalPrice)}</span>
+      {Boolean(hasDiscount && originalPrice) && (
+        <span className={mrpClass}>{formatAmount(originalPrice!)}</span>
       )}
-      {computedDiscount && computedDiscount > 0 && (
+      {Boolean(computedDiscount && computedDiscount > 0) && (
         <span className={discountClass}>{computedDiscount}% OFF</span>
       )}
     </div>

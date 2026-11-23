@@ -2,7 +2,7 @@ import { CATEGORIES } from '../../data/categories';
 import { PRODUCTS } from '../../data/products';
 import { HERO_SLIDES, HeroSlide } from '../../data/banners';
 import { CUSTOMER_REVIEWS, CustomerReview } from '../../data/reviews';
-import { Product, Category, ClothingType, ProductColor, ProductSize, ProductVariant, ProductGalleryImage, FeedingConfiguration } from '../../types/product';
+import { Product, Category, ClothingType, ProductColor, ProductSize, ProductVariant, ProductGalleryImage, FeedingConfiguration, ProductReview } from '../../types/product';
 import { DjangoProductResponse } from '../../types/api';
 import { apiClient } from '../apiClient';
 import { getImageUrl } from '../../utils/imageUrl';
@@ -29,9 +29,12 @@ export function mapDjangoProduct(dto: DjangoProductResponse): Product {
   const sp = Number(dto.price);
   const mrpRaw = dto.mrp ?? dto.original_price;
   const originalPrice = mrpRaw ? Number(mrpRaw) : null;
-  const discountPercentage =
-    dto.discount_percentage ??
-    (originalPrice && originalPrice > sp ? Math.round(((originalPrice - sp) / originalPrice) * 100) : undefined);
+  const rawDiscount = dto.discount_percentage && dto.discount_percentage > 0
+    ? dto.discount_percentage
+    : originalPrice && originalPrice > sp
+    ? Math.round(((originalPrice - sp) / originalPrice) * 100)
+    : undefined;
+  const discountPercentage = rawDiscount && rawDiscount > 0 ? rawDiscount : undefined;
 
   let feedingConfig: FeedingConfiguration = 'both';
   if (dto.feeding_config === 'feeding-only') feedingConfig = 'feeding-only';
@@ -439,6 +442,87 @@ export const storeApi = {
 
   async getReviews(): Promise<CustomerReview[]> {
     return [...CUSTOMER_REVIEWS];
+  },
+
+  async getProductReviews(slug: string): Promise<{
+    averageRating: number;
+    totalReviews: number;
+    distribution: Record<string, { stars: number; count: number; percentage: number }>;
+    reviews: ProductReview[];
+  }> {
+    try {
+      const res = await apiClient.get<any>(`/catalog/products/${slug}/reviews/`);
+      if (res.data) {
+        const reviews: ProductReview[] = (res.data.reviews || []).map((r: any) => ({
+          id: String(r.id),
+          userName: r.user_name || 'Verified Customer',
+          rating: Number(r.rating) || 5,
+          headline: r.headline || '',
+          comment: r.comment || '',
+          date: r.created_at
+            ? new Date(r.created_at).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })
+            : 'Recently',
+          verifiedPurchase: Boolean(r.verified_purchase),
+        }));
+        return {
+          averageRating: Number(res.data.average_rating) || 4.8,
+          totalReviews: Number(res.data.total_reviews) || reviews.length,
+          distribution: res.data.distribution || {},
+          reviews,
+        };
+      }
+    } catch (e) {
+      console.warn(`Could not load reviews for ${slug}:`, e);
+    }
+    return {
+      averageRating: 4.8,
+      totalReviews: 0,
+      distribution: {
+        '5': { stars: 5, count: 0, percentage: 0 },
+        '4': { stars: 4, count: 0, percentage: 0 },
+        '3': { stars: 3, count: 0, percentage: 0 },
+        '2': { stars: 2, count: 0, percentage: 0 },
+        '1': { stars: 1, count: 0, percentage: 0 },
+      },
+      reviews: [],
+    };
+  },
+
+  async submitProductReview(
+    slug: string,
+    data: { rating: number; headline?: string; comment: string }
+  ): Promise<{
+    averageRating: number;
+    totalReviews: number;
+    distribution: Record<string, { stars: number; count: number; percentage: number }>;
+    reviews: ProductReview[];
+  }> {
+    const res = await apiClient.post<any>(`/catalog/products/${slug}/reviews/`, data);
+    const reviews: ProductReview[] = (res.data.reviews || []).map((r: any) => ({
+      id: String(r.id),
+      userName: r.user_name || 'Verified Customer',
+      rating: Number(r.rating) || 5,
+      headline: r.headline || '',
+      comment: r.comment || '',
+      date: r.created_at
+        ? new Date(r.created_at).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })
+        : 'Recently',
+      verifiedPurchase: Boolean(r.verified_purchase),
+    }));
+    return {
+      averageRating: Number(res.data.average_rating) || 4.8,
+      totalReviews: Number(res.data.total_reviews) || reviews.length,
+      distribution: res.data.distribution || {},
+      reviews,
+    };
   },
 };
 

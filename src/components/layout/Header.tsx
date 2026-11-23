@@ -194,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Wishlist */}
             <Link
-              to="/account"
+              to="/wishlist"
               aria-label="Wishlist"
               className="p-1.5 sm:p-2 hover:text-maroon-800 transition-colors relative rounded-full hover:bg-stone-100"
               title="Saved Wishlist"

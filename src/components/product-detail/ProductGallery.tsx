@@ -91,8 +91,8 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Main Image Frame (3:4 ratio) */}
-      <div className="relative aspect-[3/4] bg-ivory-100 rounded-2xl overflow-hidden border border-ivory-300 group shadow-card">
+      {/* Main Image Frame (Responsive 4:5 on mobile, 3:4 on tablet/desktop) */}
+      <div className="relative aspect-[4/5] sm:aspect-[3/4] max-h-[50vh] sm:max-h-none bg-ivory-100 rounded-2xl overflow-hidden border border-ivory-300 group shadow-card">
         <img
           src={getImageUrl(currentImageUrl)}
           alt={`${product.title} - View ${safeIndex + 1}`}
