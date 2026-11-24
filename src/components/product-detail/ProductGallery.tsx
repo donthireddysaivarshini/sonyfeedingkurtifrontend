@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Sparkles, Maximize2, ChevronLeft, ChevronRight, X, Heart, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Heart, Share2 } from 'lucide-react';
 import { Product, ProductColor, ClothingType } from '../../types/product';
 import { getImageUrl } from '../../utils/imageUrl';
 
@@ -112,46 +112,8 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           onClick={() => setIsZoomModalOpen(true)}
         />
 
-        {/* Feature / Feeding Badge (Top Left) */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
-          {product.feedingConfig === 'both' && (
-            <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-xs text-brand-800 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-brand-200 shadow-xs pointer-events-auto">
-              <Sparkles className="w-3 h-3 text-brand-gold" />
-              <span>Feeding & Non-Feeding</span>
-            </span>
-          )}
-
-          {product.feedingConfig === 'feeding-only' && (
-            <span className="inline-flex items-center gap-1 bg-emerald-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs pointer-events-auto">
-              <Sparkles className="w-3 h-3 text-emerald-200" />
-              <span>Feeding Friendly</span>
-            </span>
-          )}
-
-          {product.badge && (
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-700 text-white shadow-xs pointer-events-auto">
-              {product.badge}
-            </span>
-          )}
-        </div>
-
-        {/* Flipkart / Myntra Style Floating Action Buttons: Share & Wishlist & Zoom (Top Right) */}
-        <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
-          {onShare && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onShare();
-              }}
-              aria-label="Share product"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
-              title="Share this product"
-            >
-              <Share2 className="w-4 h-4 text-ink-secondary hover:text-brand-800" />
-            </button>
-          )}
-
+        {/* Vertical Floating Action Buttons at Bottom Right (Line-wise Wishlist & Share) */}
+        <div className="absolute bottom-3 right-3 flex flex-col items-center gap-2 z-20">
           {onToggleWishlist && (
             <button
               type="button"
@@ -160,7 +122,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
                 onToggleWishlist();
               }}
               aria-label={isFavorited ? 'Remove from wishlist' : 'Save to wishlist'}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/95 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/80 cursor-pointer"
               title={isFavorited ? 'In your Wishlist' : 'Add to Wishlist'}
             >
               <Heart
@@ -171,15 +133,20 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={() => setIsZoomModalOpen(true)}
-            aria-label="Enlarge image"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/60 cursor-pointer"
-            title="Full view"
-          >
-            <Maximize2 className="w-4 h-4 text-ink-secondary hover:text-brand-800" />
-          </button>
+          {onShare && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare();
+              }}
+              aria-label="Share product"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/95 hover:bg-white text-ink-primary shadow-md backdrop-blur-xs flex items-center justify-center transition-all hover:scale-105 active:scale-95 border border-ivory-300/80 cursor-pointer"
+              title="Share this product"
+            >
+              <Share2 className="w-4 h-4 text-ink-secondary hover:text-brand-800" />
+            </button>
+          )}
         </div>
 
         {/* Carousel Arrows (Mobile/Tablet hover) */}

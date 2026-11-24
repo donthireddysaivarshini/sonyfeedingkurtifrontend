@@ -449,7 +449,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
             {addedSuccess ? (
               <>
                 <Check className="w-4 h-4" />
-                <span>Added to Bag!</span>
+                <span>Added to Cart!</span>
               </>
             ) : !hasSelectedFeedingChoice ? (
               <span>Select Feeding Option</span>
@@ -458,7 +458,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
             ) : (
               <>
                 <ShoppingBag className="w-4 h-4" />
-                <span>Add to Bag</span>
+                <span>Add to Cart</span>
               </>
             )}
           </button>

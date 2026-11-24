@@ -358,7 +358,7 @@ export const OrderConfirmationPage: React.FC = () => {
 
                   <div className="space-y-3 text-sm font-sans mb-4 pb-4 border-b border-neutral-stone/30">
                     <div className="flex justify-between text-neutral-charcoal/80">
-                      <span>Bag Subtotal</span>
+                      <span>Cart Subtotal</span>
                       <span className="font-medium text-neutral-charcoal">₹{order.subtotal.toLocaleString('en-IN')}</span>
                     </div>
 

@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
                 to="/cart"
                 className="text-stone-600 transition-colors hover:text-maroon-600 block"
               >
-                Shopping Bag
+                Shopping Cart
               </Link>
             </li>
           </ul>

@@ -49,7 +49,7 @@ export const CartDrawer: React.FC = () => {
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-brand-800" />
             <h3 className="font-serif text-lg font-bold text-neutral-charcoal">
-              Shopping Bag ({totalItemsCount})
+              Shopping Cart ({totalItemsCount})
             </h3>
           </div>
           <button
@@ -75,7 +75,7 @@ export const CartDrawer: React.FC = () => {
                 <ShoppingBag className="w-8 h-8 text-brand-800" />
               </div>
               <div>
-                <h4 className="font-serif text-lg font-bold text-neutral-charcoal">Your bag is empty</h4>
+                <h4 className="font-serif text-lg font-bold text-neutral-charcoal">Your cart is empty</h4>
                 <p className="text-xs text-neutral-charcoal/70 mt-1 max-w-xs">
                   Browse our collections of frocks, co-ords, sarees, and feeding-friendly kurtis.
                 </p>

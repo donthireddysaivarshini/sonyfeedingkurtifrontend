@@ -449,7 +449,7 @@ export const CheckoutPage: React.FC = () => {
       {/* Breadcrumb Navigation */}
       <Breadcrumbs
         items={[
-          ...(isBuyNow ? [{ label: 'Collections', path: '/shop' }] : [{ label: 'Shopping Bag', path: '/cart' }]),
+          ...(isBuyNow ? [{ label: 'Collections', path: '/shop' }] : [{ label: 'Shopping Cart', path: '/cart' }]),
           { label: isBuyNow ? 'Express Checkout' : 'Secure Checkout' },
         ]}
       />
@@ -484,10 +484,10 @@ export const CheckoutPage: React.FC = () => {
               <ShoppingBag className="w-8 h-8 text-brand-accent" />
             </div>
             <h2 className="font-serif text-xl font-bold text-ink-primary">
-              No items in bag to checkout
+              No items in cart to checkout
             </h2>
             <p className="text-xs text-ink-secondary">
-              Your bag is currently empty. Please select products from our collections before proceeding to checkout.
+              Your cart is currently empty. Please select products from our collections before proceeding to checkout.
             </p>
             <Link
               to="/shop"
@@ -515,7 +515,7 @@ export const CheckoutPage: React.FC = () => {
             <div className="p-3 bg-brand-50 border border-brand-200 rounded-xl text-left flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-ink-primary">
-                  {isBuyNow ? 'Direct Purchase' : 'Shopping Bag'} ({activeItems.length} {activeItems.length === 1 ? 'item' : 'items'})
+                  {isBuyNow ? 'Direct Purchase' : 'Shopping Cart'} ({activeItems.length} {activeItems.length === 1 ? 'item' : 'items'})
                 </p>
                 <p className="text-[11px] text-ink-secondary">
                   Total: <strong>₹{subtotal.toLocaleString('en-IN')}</strong> • Safely preserved during login
@@ -981,7 +981,7 @@ export const CheckoutPage: React.FC = () => {
                       to="/cart"
                       className="text-xs font-semibold text-brand-700 hover:text-brand-900"
                     >
-                      Edit Bag
+                      Edit Cart
                     </Link>
                   )}
                 </div>

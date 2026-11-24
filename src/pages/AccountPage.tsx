@@ -762,7 +762,7 @@ export const AccountPage: React.FC = () => {
                             No Orders Found
                           </h3>
                           <p className="text-sm font-sans text-neutral-charcoal/70 max-w-sm mx-auto mb-6">
-                            You have not placed any orders during this session. Add your favourite kurtis to the bag and experience our checkout flow!
+                            You have not placed any orders during this session. Add your favourite kurtis to the cart and experience our checkout flow!
                           </p>
                           <Link
                             to="/shop"

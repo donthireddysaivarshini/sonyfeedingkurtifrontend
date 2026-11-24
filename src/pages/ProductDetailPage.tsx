@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
-  Heart,
   ShoppingBag,
   Sparkles,
   Ruler,
@@ -12,7 +11,6 @@ import {
   ChevronDown,
   Layers,
   Shirt,
-  Share2,
   Star,
   ShieldCheck,
   CheckCircle2,
@@ -394,7 +392,7 @@ export const ProductDetailPage: React.FC = () => {
     if (!item) return;
 
     addToCart(item);
-    setAddSuccessMessage(`Added "${product.title}" (${item.selectedSize}, ${item.selectedColor.name}) to your bag!`);
+    setAddSuccessMessage(`Added "${product.title}" (${item.selectedSize}, ${item.selectedColor.name}) to your cart!`);
     setTimeout(() => setAddSuccessMessage(null), 4000);
     openCart();
   };
@@ -755,12 +753,12 @@ export const ProductDetailPage: React.FC = () => {
                   onClick={openCart}
                   className="font-bold underline text-emerald-900 hover:text-emerald-950 ml-2"
                 >
-                  View Bag
+                  View Cart
                 </button>
               </div>
             )}
 
-            {/* SELECTION ORDER STEP 5: Add to Bag & Buy Now Actions */}
+            {/* SELECTION ORDER STEP 5: Add to Cart & Buy Now Actions */}
             <div className="pt-2 flex flex-col sm:flex-row gap-3">
               <button
                 type="button"
@@ -769,7 +767,7 @@ export const ProductDetailPage: React.FC = () => {
                 className="flex-1 py-3.5 px-6 rounded-full bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs sm:text-sm shadow-md transition-all hover:shadow-lg disabled:bg-ivory-300 disabled:text-ink-muted disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Add to Bag</span>
+                <span>Add to Cart</span>
               </button>
 
               <button
@@ -780,30 +778,6 @@ export const ProductDetailPage: React.FC = () => {
               >
                 <span>Buy Now</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => toggleWishlist(product.id)}
-                aria-label={isFavorited ? 'Remove from wishlist' : 'Save to wishlist'}
-                className={`p-3.5 rounded-full border transition-all flex items-center justify-center ${
-                  isFavorited
-                    ? 'border-rose-300 bg-rose-50 text-rose-600'
-                    : 'border-ivory-300 bg-white text-ink-secondary hover:text-rose-600 hover:bg-ivory-100'
-                }`}
-                title={isFavorited ? 'Saved in Wishlist' : 'Save to Wishlist'}
-              >
-                <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
-              </button>
-
-              <button
-                type="button"
-                onClick={handleShare}
-                aria-label="Share product"
-                className="p-3.5 rounded-full border border-ivory-300 bg-white text-ink-secondary hover:text-brand-800 hover:bg-brand-50 hover:border-brand-300 transition-all flex items-center justify-center cursor-pointer shadow-xs"
-                title="Share this product (Myntra/Amazon style)"
-              >
-                <Share2 className="w-5 h-5" />
               </button>
             </div>
 
@@ -1449,33 +1423,17 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       )}
-      {/* Flipkart-Style Sticky Bottom Action Bar on Mobile */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-ivory-300 px-3 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.12)] flex items-center gap-2 safe-bottom">
-        {/* Live Price Display */}
-        <div className="flex flex-col justify-center px-1.5 shrink-0 min-w-[76px]">
-          <span className="font-serif text-base font-extrabold text-brand-900 leading-tight">
-            ₹{(currentVariant ? currentVariant.price : product.price).toLocaleString('en-IN')}
-          </span>
-          {product.discountPercentage && product.discountPercentage > 0 ? (
-            <span className="text-[10px] text-emerald-700 font-bold leading-tight">
-              {product.discountPercentage}% off
-            </span>
-          ) : (currentVariant?.originalPrice ?? product.originalPrice) ? (
-            <span className="text-[10px] text-ink-muted line-through leading-tight">
-              ₹{Number(currentVariant?.originalPrice ?? product.originalPrice).toLocaleString('en-IN')}
-            </span>
-          ) : null}
-        </div>
-
-        {/* Add to Bag Button */}
+      {/* Flipkart-Style Sticky Bottom Action Bar on Mobile (Cart & Buy Now only, no price) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-ivory-300 px-3 py-2.5 shadow-[0_-4px_20px_rgba(0,0,0,0.12)] flex items-center gap-2.5 safe-bottom">
+        {/* Add to Cart Button */}
         <button
           type="button"
           onClick={handleAddToCart}
           disabled={!isCurrentVariantInStock}
-          className="flex-1 py-3 px-3 rounded-xl bg-ivory-100 hover:bg-ivory-200 border border-brand-300 text-brand-900 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-3 px-3 rounded-xl bg-ivory-100 hover:bg-ivory-200 border border-brand-300 text-brand-900 font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ShoppingBag className="w-4 h-4 text-brand-700" />
-          <span>Add to Bag</span>
+          <span>Add to Cart</span>
         </button>
 
         {/* Buy Now Button */}
@@ -1483,7 +1441,7 @@ export const ProductDetailPage: React.FC = () => {
           type="button"
           onClick={handleBuyNow}
           disabled={!isCurrentVariantInStock}
-          className="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-brand-700 to-brand-900 hover:from-brand-800 hover:to-brand-950 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-3 px-3 rounded-xl bg-gradient-to-r from-brand-700 to-brand-900 hover:from-brand-800 hover:to-brand-950 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <span>Buy Now</span>
           <ArrowRight className="w-4 h-4" />

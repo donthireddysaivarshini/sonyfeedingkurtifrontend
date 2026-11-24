@@ -67,11 +67,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           <span className="text-[10px] font-medium tracking-tight">Search</span>
         </button>
 
-        {/* 4. Bag */}
+        {/* 4. Cart */}
         <button
           type="button"
           onClick={onOpenCart}
-          aria-label="Shopping Bag"
+          aria-label="Shopping Cart"
           className="relative flex flex-1 flex-col items-center justify-center gap-1 py-1 text-center text-stone-500 transition-colors hover:text-stone-800"
         >
           <span className="relative flex h-7 w-7 items-center justify-center rounded-full">
@@ -82,7 +82,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               </span>
             )}
           </span>
-          <span className="text-[10px] font-medium tracking-tight">Bag</span>
+          <span className="text-[10px] font-medium tracking-tight">Cart</span>
         </button>
 
         {/* 5. Account */}

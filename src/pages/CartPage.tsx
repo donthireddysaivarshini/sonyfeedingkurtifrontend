@@ -64,7 +64,7 @@ export const CartPage: React.FC = () => {
       />
 
       {/* Breadcrumb Navigation */}
-      <Breadcrumbs items={[{ label: 'Shopping Bag' }]} />
+      <Breadcrumbs items={[{ label: 'Shopping Cart' }]} />
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
@@ -73,10 +73,10 @@ export const CartPage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold uppercase tracking-wider mb-2 border border-brand-200">
               <ShoppingBag className="w-3.5 h-3.5 text-brand-gold" />
-              <span>Review Bag Selection</span>
+              <span>Review Cart Selection</span>
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-ink-primary">
-              Your Shopping Bag
+              Your Shopping Cart
             </h1>
           </div>
 
@@ -85,9 +85,9 @@ export const CartPage: React.FC = () => {
               <button
                 type="button"
                 onClick={clearCart}
-                className="text-xs text-ink-muted hover:text-rose-600 font-medium transition-colors"
+                className="text-xs text-ink-muted hover:text-rose-600 font-medium transition-colors cursor-pointer"
               >
-                Clear Bag
+                Clear Cart
               </button>
               <Link
                 to="/shop"
@@ -108,7 +108,7 @@ export const CartPage: React.FC = () => {
             </div>
             <div>
               <h2 className="font-serif text-2xl font-bold text-ink-primary">
-                Your shopping bag is empty
+                Your shopping cart is empty
               </h2>
               <p className="text-xs sm:text-sm text-ink-secondary mt-1.5 leading-relaxed">
                 You haven't added any ethnic wear or feeding-friendly kurtis yet. Explore our curated collections to get started.
