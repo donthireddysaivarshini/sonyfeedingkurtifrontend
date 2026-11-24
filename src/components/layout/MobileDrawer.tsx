@@ -1,12 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { X, Sparkles, ChevronRight, ShoppingBag, Grid, Heart, Phone, ShieldCheck, User, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, Sparkles, ChevronRight, Grid, Phone, ShieldCheck, User, Search } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { Category } from '../../types/product';
 import { storeApi } from '../../services/api';
 import { SITE_CONFIG } from '../../config/siteConfig';
-import { useWishlist } from '../../context/WishlistContext';
-import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { getImageUrl } from '../../utils/imageUrl';
 
@@ -17,10 +15,7 @@ interface MobileDrawerProps {
   onOpenSearch?: () => void;
 }
 
-export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onOpenCart, onOpenSearch }) => {
-  const navigate = useNavigate();
-  const { wishlistCount } = useWishlist();
-  const { totalItemsCount } = useCart();
+export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onOpenSearch }) => {
   const { isAuthenticated, user } = useAuth();
   const [categoriesList, setCategoriesList] = React.useState<Category[]>(CATEGORIES);
 
@@ -31,15 +26,6 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
   }, []);
 
   if (!isOpen) return null;
-
-  const handleCartClick = () => {
-    onClose();
-    if (onOpenCart) {
-      onOpenCart();
-    } else {
-      navigate('/cart');
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex lg:hidden">
@@ -180,38 +166,28 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
         </div>
 
         {/* Drawer Bottom Actions */}
-        <div className="p-4 border-t border-ivory-300 bg-white space-y-2">
-          {/* Account Shortcut */}
+        <div className="p-4 border-t border-ivory-300 bg-white space-y-3">
+          {/* Highlighted Account Action (Cart & Wishlist removed as requested since they are already in the main header) */}
           <Link
             to="/account"
             onClick={onClose}
-            className="flex items-center justify-between p-2.5 rounded-xl border border-ivory-300 bg-ivory-50 hover:bg-ivory-100 transition-colors text-xs font-semibold text-ink-primary"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 hover:from-brand-950 hover:to-brand-800 text-white transition-all shadow-md hover:shadow-lg cursor-pointer group"
           >
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-brand-700" />
-              <span>{isAuthenticated ? `My Account (${user?.name?.split(' ')[0]})` : 'My Account / Sign In'}</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-xs text-white group-hover:scale-105 transition-transform">
+                <User className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-left">
+                <span className="block font-serif text-sm font-bold text-white leading-tight">
+                  {isAuthenticated ? `My Account (${user?.name?.split(' ')[0] || 'Customer'})` : 'My Account'}
+                </span>
+                <span className="text-[10px] text-ivory-200 font-normal">
+                  {isAuthenticated ? 'Manage Orders & Addresses' : 'Sign In with Google / Orders'}
+                </span>
+              </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-ink-muted" />
+            <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 transition-transform" />
           </Link>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleCartClick}
-              className="flex-1 flex items-center justify-center gap-2 bg-brand-700 text-white py-2.5 rounded-xl text-xs font-semibold hover:bg-brand-800 transition-colors shadow-sm"
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span>Cart ({totalItemsCount})</span>
-            </button>
-            <Link
-              to="/account"
-              onClick={onClose}
-              aria-label="Wishlist"
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 border border-ivory-300 text-ink-primary rounded-xl text-xs font-medium hover:bg-ivory-100"
-            >
-              <Heart className="w-4 h-4 text-brand-700" />
-              <span>{wishlistCount}</span>
-            </Link>
-          </div>
 
           <a
             href={SITE_CONFIG.phoneHref}
@@ -221,7 +197,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose, onO
             <span>{SITE_CONFIG.phoneDisplay} • {SITE_CONFIG.businessHours}</span>
           </a>
 
-          <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-muted pt-1">
+          <div className="flex items-center justify-center gap-1.5 text-[10px] text-ink-muted pt-0.5">
             <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
             <span>Pan-India Courier Delivery Service</span>
           </div>

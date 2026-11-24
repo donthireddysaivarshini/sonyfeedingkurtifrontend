@@ -311,7 +311,7 @@ export const ProductDetailPage: React.FC = () => {
     );
   }
 
-  const isFavorited = isInWishlist(product.id);
+  const isFavorited = isInWishlist(product.id, product.slug);
   const requiresExplicitFeedingChoice = product.feedingConfig === 'both';
   const hasSelectedFeedingChoice = !requiresExplicitFeedingChoice || selectedType !== null;
 
@@ -530,7 +530,7 @@ export const ProductDetailPage: React.FC = () => {
                   }
                 }}
                 isFavorited={isFavorited}
-                onToggleWishlist={() => toggleWishlist(product.id)}
+                onToggleWishlist={() => toggleWishlist(product.id, product.slug)}
                 onShare={handleShare}
               />
             </div>

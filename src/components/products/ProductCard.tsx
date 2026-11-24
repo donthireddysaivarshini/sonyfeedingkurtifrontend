@@ -22,7 +22,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { isInWishlist, toggleWishlist } = useWishlist();
   const [selectedColor, setSelectedColor] = useState<ProductColor>(product.availableColors[0]);
 
-  const isFavorited = isInWishlist(product.id);
+  const isFavorited = isInWishlist(product.id, product.slug);
   const currentImage = product.images[0];
 
   const handleDetailsClick = () => {
@@ -77,7 +77,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            toggleWishlist(product.id);
+            toggleWishlist(product.id, product.slug);
           }}
           aria-label={isFavorited ? 'Remove from wishlist' : 'Save to wishlist'}
           className={`absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-2xs backdrop-blur-xs transition-all duration-200 hover:scale-110 hover:bg-white z-10 ${

@@ -1155,7 +1155,7 @@ export const CheckoutPage: React.FC = () => {
                     <>
                       <Lock className="w-4 h-4" />
                       <span>
-                        Pay with Razorpay (UPI / Cards) • ₹{effectiveTotal.toLocaleString('en-IN')}
+                        Pay ₹{effectiveTotal.toLocaleString('en-IN')}
                       </span>
                     </>
                   )}

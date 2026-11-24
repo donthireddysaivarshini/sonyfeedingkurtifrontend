@@ -15,7 +15,7 @@ import { Product } from '../types/product';
 import { PRODUCTS } from '../data/products';
 
 export const WishlistPage: React.FC = () => {
-  const { wishlist, wishlistCount } = useWishlist();
+  const { wishlistCount, isInWishlist } = useWishlist();
   const { openCart } = useCart();
   const [allProducts, setAllProducts] = useState<Product[]>(PRODUCTS);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -34,7 +34,7 @@ export const WishlistPage: React.FC = () => {
     };
   }, []);
 
-  const wishlistProducts = allProducts.filter((p) => wishlist.includes(p.id));
+  const wishlistProducts = allProducts.filter((p) => isInWishlist(p.id, p.slug));
 
   return (
     <div className="min-h-screen flex flex-col bg-ivory">
