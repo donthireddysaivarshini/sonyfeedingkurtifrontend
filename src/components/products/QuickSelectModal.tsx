@@ -6,6 +6,7 @@ import { CartItem } from '../../types/cart';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { FeedingOptionSelector } from './FeedingOptionSelector';
 import { getImageUrl } from '../../utils/imageUrl';
+import { SizeGuideModal } from '../product-detail/SizeGuideModal';
 
 interface QuickSelectModalProps {
   product: Product | null;
@@ -30,6 +31,7 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [addedSuccess, setAddedSuccess] = useState(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
 
   // Helper functions for strict hierarchy derivation
   const getColorsForType = (
@@ -344,10 +346,8 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
               </label>
               <button
                 type="button"
-                onClick={() =>
-                  alert('Standard Indian Sizing: S (36"), M (38"), L (40"), XL (42"), XXL (44"). Relaxed comfortable fit.')
-                }
-                className="text-[11px] text-brand-700 hover:underline"
+                onClick={() => setIsSizeGuideOpen(true)}
+                className="text-[11px] text-brand-700 hover:underline cursor-pointer"
               >
                 Size Guide
               </button>
@@ -465,6 +465,13 @@ export const QuickSelectModal: React.FC<QuickSelectModalProps> = ({
         </div>
 
       </div>
+
+      {/* Official Size Guide Modal with Uploaded Chart & Tailored Fitting Notes */}
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+        product={product}
+      />
     </div>
   );
 };

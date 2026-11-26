@@ -39,7 +39,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
   };
 
   const renderCard = (product: Product, keySuffix = '') => {
-    const isFavorited = isInWishlist(product.id);
+    const isFavorited = isInWishlist(product.id, product.slug);
     const hasDiscount = product.originalPrice && product.originalPrice > product.price;
     const discountPercent = hasDiscount
       ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
@@ -104,7 +104,7 @@ export const ProductSliderSection: React.FC<ProductSliderSectionProps> = ({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                toggleWishlist(product.id);
+                toggleWishlist(product.id, product.slug);
               }}
               aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
               className={`absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-2xs backdrop-blur-xs transition-all duration-200 hover:scale-110 hover:bg-white ${
